@@ -1,2 +1,6 @@
-# study
-개인 공부 기록
+# 공부 기록 🌱🍀
+## HTML
+
+## CSS
+
+## JavaScript
