@@ -13,6 +13,7 @@
 - css3 : 현재까지 계속 개발중 ( 표준화 버전)
 
 <hr>
+
 # 2. html에 css 적용하는 방법
 
 ## 1) 인라인 스타일
@@ -47,6 +48,8 @@
 ## 4) 우선순위
 
        인라인 스타일    >    내부 스타일    >     외부 스타일
+
+<hr>
 
 # 3. CSS 선수 내용
 
@@ -90,6 +93,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
     </html>
     ```
     
+<hr>
 
 # 4. 선택자
 
@@ -189,6 +193,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
     : [속성명 *= ”속성값”],  태그[속성명 *= ”속성값”]
     
     - a[href *= ”www”]{ color : red; }
+
+
+<hr>
 
 # 5. 의사코드 ( pseudo code )
 
