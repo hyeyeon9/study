@@ -256,8 +256,6 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 ## 2) 구성요소
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/cf912b07-9573-40b9-a9de-cba4e24ea0d5/76981d12-a6d3-44db-968a-4752a10d387d.png)
-
 ### - content
 
 : 실질적 내용 ( 텍스트, 이미지, .. )
@@ -325,7 +323,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 ## 1) 기능
 
-: box와 box 간 사이의 **여백**을 제어한다 .
+: **요소(content)의 테두리(border) 바깥쪽 여백**을 제어한다 .
 
 - px와 % 지정 가능
 
@@ -384,7 +382,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 ## 1) 기능
 
-:
+: **요소(content) 내용과 테두리(border) 사이의 여백**을 제어한다.
 
 ## 2) 문법
 
@@ -482,7 +480,6 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 - `border-radius : 50%  // 원`
 - `border-radius : 10px`
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/ac5d0156-5f0f-469a-b3be-ff038a939c88/0564dd3b-33f2-4178-892f-b5643bbf076c.png)
 
 # 11. 요소배치
 
