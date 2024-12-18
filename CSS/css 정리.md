@@ -255,7 +255,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 : css(html)에서 모든 요소는 box로 관리한다.
 
 ## 2) 구성요소
-
+![image](https://github.com/user-attachments/assets/02ccdfdd-22f2-4dbe-95f9-4186781e90d2)
 ### - content
 
 : 실질적 내용 ( 텍스트, 이미지, .. )
