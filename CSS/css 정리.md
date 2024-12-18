@@ -800,7 +800,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 ---
 
-# 19. 구글폰트
+# 18. 구글폰트
 
 https://fonts.google.com/
 
@@ -811,7 +811,7 @@ https://fonts.google.com/
 
 ---
 
-# 20. text 관련 속성
+# 19. text 관련 속성
 
 ## 1) color : 색상
 
@@ -833,3 +833,271 @@ https://fonts.google.com/
 
 - `line-height: 2;`
 - font-size : 16px 값에 비례해서 적용
+
+  ---
+  # 20. Flex Box 모델
+
+## 1) 개념
+
+: Flex Box를 이용하면 **매우 쉽게 레이아웃 및 수직/수평 정렬, 요소 순서(ordering), 동적 사이징이 가능**하다.
+
+## 2) 구성요소 2가지
+
+- 부모(flex Container)와 부모안의 자식요소(flex item)로 구성된다. flex를 사용하기 위해서는 반드시 **부모 컨테이너**가 필요하고, 부모에 flex를 지정하면 **자식요소에 영향을 주는 것**이다.
+1. **flex Container**
+    - **`display : flex;`**
+    - 정렬의 **기본 배치는 가로 정렬**이다. **flex-direction 속성**으로 변경 가능하다.
+        - **`flex-direction: column;`  : 세로 정렬**
+            - 세로 정렬시 자식의 width 중 가장 큰 width 기준으로 맞춰진다.
+        - **`flex-direction: row;` : 가로 정렬**
+            - 가로 정렬시 자식요소 중 가장 큰 height를 기준으로 맞춰진다.
+2. **flex item**
+    - item의 부모 Container에서 **display:flex** 를 지정해 정렬되는 요소를 의미한다.
+    - **order, align-self, flow-grow** 속성을 지정할 수 있다.
+
+## 3) Flex Box 속성 ( Container )
+
+### flex-direction
+
+: flex  정렬 기준을 변경할 수 있다.
+
+- **`flex-direction: column;`  : 세로 정렬**
+- **`flex-direction: row;` : 가로 정렬**
+- **`flex-direction: row-reverse;` : 가로 반대로 ( 오 → 왼)**
+- **`flex-direction: column-reverse;` : 세로 반대로 ( 아래 → 위 )**
+
+### flex-wrap
+
+: 화면 크기를 줄였을 떄 **item이 다음줄로 넘겨가도록** 하는 속성
+
+- `flex-wrap: wrap;`
+- `flex-wrap:nowrap;` ( 디폴트 )
+- `flex-wrap:wrap-reverse;` : 하단 기준으로 wrap
+
+### flex-flow
+
+:flex-direction과 flex-wrap 한번에 표현하는 속성
+
+- `flex-flow : row warp;`
+
+### justify-content
+
+: **주축에 대한 정렬** 
+
+- `justify-content : center | flex-start | flex-end | space-around | space-between | space-evenly`
+    - center
+    - flex-start
+    - flex-end
+    - space-around
+    - space-between
+    - space-evenly
+    
+
+### align-items
+
+: **교차축에 대한 정렬**
+
+- align-items: center | flex-start| flex-end | stretch(기본) | baseline
+    - stretch : item을 늘려서 컨테이너에 꽉 채운다. ( width나 height )
+    - center : 원래 값을 가지고 중앙정렬
+    - flex-start : 요소의 위쪽 테두리를 맞춰서 정렬
+    - flex-end : 요소의 아래 테두리에 맞줘서 정렬
+    - baseline :item 안의 content의 위치에 맞춰서 정렬
+
+### align-content
+
+: justify-content와 align-items 합성 기능
+
+- wrap 항목에서만 적용된다.
+- `align-content: center | flex-start | flex-end | stretch(기본) | space-around | space-between | space-evenly`
+
+## 4) Flex Box 속성 (item)
+
+### order
+
+: 기본적으로는 코드에 명시된 순서로 표현되지만 **order 속성을 사용하면 순서를 변경할 수 있다.**
+
+- `order : 0; ( 0이 기본값 )`
+- -1(앞)  0 (기본)  1(뒤)
+
+### align-self
+
+: Container에서 설정된 **align-items 속성을 재정의**할 수 있다.
+
+- `align-self : center | flex-start | flex-end | stretch(기본) | baseline`
+
+### flow-grow
+
+: 화면을 크게할 때 **item이 커지는 비율을 관리**하는 방법
+
+- flow-grow : 0 (0이 기본값)
+- 예 >
+    - `flow-grow : 1` 로 지정하면 flow-grow : 0인 요소들은 자신의 너비만큼 차지하고, 나머지 영역을 flow-grow:1이 차지한다.
+    - `flow-grow : 1` , `flow-grow : 3` 로 지정하면 flow-grow : 0 인 요소들은 자신의 너비만큼 차지하고, 나머지를 **flow-grow : 1 은 1/4를 차지, flow-grow : 3 은 3/4를 차지**한다.
+
+### flow-shrink
+
+: 화면을 작게할 떄 **item의 작아지는 비율을 관리**하는 방법
+
+- flow-shrink : 1 (1이 기본값)
+- flow-shrink : 0  ⇒ 크기변경이 안 됨
+
+### flow-basis
+
+: item의 기본 크기 설정 용도로, **기존에 지정한 width, height를 flex-basis 지정값으로 덮어쓴다.**
+
+- flex-basis : auto | px | %
+
+- 동작방식
+
+- 주축이 row인 경우 ( width 고려)
+    
+    flex-basis : auto   ⇒ 기존의 width를 사용
+    
+    flex-basis: 100px  ⇒ 기존 width : 50px 가 아니라 100px를 사용
+    
+- 주축이 column 인 경우 ( height 고려)
+    
+    flex-basis : auto     ⇒ 기존의 height 를 사용
+    
+    flex-basis: 100px    ⇒ 기존 height : 50px 가 아니라 100px를 사용
+    
+
+---
+
+# 21. Grid 모델
+
+: **grid는 2차원인 행/열 같이 제어가 가능**하다.
+
+## 2) 구성요소 2가지
+
+: 반드시 부모에 display:grid 를 지정해야 한다. 실행결과는 행으로 추가된다. ( 세로나열 )
+
+- Grid Container
+- Grid item
+
+## 3) Grid 속성 (Container)
+
+### grid-auto-flow
+
+- item 배치
+- `grid-auto-flow : row(기본) | column;`
+
+### grid-template-columns
+
+- 열을 생성
+- `grid-template-columns : 값1 값2 값3 값4`
+    - 예 > `grid-template-columns : 20px 20px 20px 20px`
+    - `grid-template-columns : repeat(4, 20px)`
+    - `grid-template-columns : 20px 30px 1fr 2fr`
+        - fr : fraction이고 나머지 여백을 비율로 계산
+
+### grid-template-rows
+
+- 행을 생성
+- `grid-template-rows : 값1 값2 값3`
+    - 예 > `grid-template-rows: 130px 240px 125px 200px;`
+    - `grid-template-rows: 25% 25% 250px auto;`
+
+### 행/열 만들기
+
+```html
+      grid-template-rows: 120px 1fr 250px;
+      grid-template-columns: 1fr 2fr;
+```
+
+### item 간 gap 지정
+
+- `row-gap: 10px;`       : 행 간격
+- `column-gap: 10px;`  : 열 간격
+- `gap: 10px 10px;`      : 행/열 간격
+
+### 정렬
+
+- 셀 안에서의 item 정렬
+    - x축 정렬 : **`justify-items** : center | flex-start …`
+    - y축 정렬 : **`align-items** : center | flex-start …`
+
+- container 정렬
+    - x축 정렬 : **`justify-content** : center | flex-start …`
+    - y축 정렬 : **`align-content** : center | flex-start …`
+
+## 4) Grid 속성 (item)
+
+### 셀 안에서의 item 정렬 재정의
+
+- x축 정렬 : **`justify-self**: center | flex-start …`
+- y축 정렬 : **`align-self**: center | flex-start …`
+
+### item을 원하는 위치에 정렬 - 위치 번호 이용
+
+- `grid-column-start: 시작값(번호);`
+- `grid-column-end: 값(번호);`
+    - `grid-column: 시작값(번호)/값(번호);`  :  축약 표현
+- `grid-row-start: 시작값(번호);`
+- `grid-row-end: 값(번호);`
+    - `grid-row: 시작값(번호)/값(번호);`  :  축약 표현
+
+### item을 원하는 위치에 정렬 - 갯수 이용
+
+- `grid-column-start: 값;`
+- `grid-column-end: span n(갯수) ;`
+    - `grid-column: 값/span n(갯수);`  :  축약 표현
+- `grid-row-start: 값;`
+- `grid-row-end: span n(갯수);`
+    - `grid-row: 값/span n(갯수);`  :  축약 표현
+
+### item을 원하는 위치에 정렬 - 셀 이름 이용
+
+![image (1)](https://github.com/user-attachments/assets/09a1141d-f85b-4506-aedb-d59ba824950e)
+
+
+```css
+container {
+		 grid-template-areas:
+        "header header header1 header2"
+        "main1 main main main"
+        "footer footer footer4 footer4";
+}
+.item-1 {
+      background: red;
+      grid-area: main1; /*main1 위치에 정렬*/
+    }
+    
+.item-2 {
+      background: blue;
+      grid-area: main; /*main 위치에 정렬 == 3개의 셀*/
+    }
+```
+
+---
+
+# 22. media 쿼리
+
+: 반응형 웹을 구축할 때 사용하는 방법
+
+### *반응형 웹
+
+: 현재 대부분 모바일 기기를 사용하기애 개발자는 하나의 웹 페이지를 일반 PC에서도 잘 보여주고 모바일 기기에서도 잘 보여질 수 있도록 구축해야된다. 이떄 반응형 웹을 사용한다.
+
+- 방법1 : 디바이스마다 html을 따로 만듦
+- 방법2 : 하나의 html을 만들어서 **화면의 크기에 따라 레이아웃을 변경시키는 방법**. 이것이 **반응형 웹**이고 **media 쿼리를 이용**해서 구축할 수 있다.
+
+### 문법
+```css
+/* 화면이 700px보다 같거나 작을떄의 css */
+@media screen (max-width : 700px) {
+				...
+}
+```
+```css
+ body {
+      background-color: yellow;
+    }
+
+ @media screen and (max-width: 700px) {
+      body {
+        background-color: tomato;
+      }
+    }
+ `` 
