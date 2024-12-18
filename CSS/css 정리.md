@@ -386,6 +386,8 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 - 반드시 **블럭레벨**이면서 **width 값을 가져야** 적용이 된다.
 
+---
+
 # 9. Padding
 
 ## 1) 기능
@@ -415,6 +417,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
         
         `padding: 10px  /*(top|bottom|right|left*/` 
         
+---
 
 # 10. border ( 테두리 )
 
@@ -488,6 +491,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 - `border-radius : 50%  // 원`
 - `border-radius : 10px`
 
+---
 
 # 11. 요소배치
 
@@ -651,6 +655,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
     - rem ( root em )
         - root인 html(body)를 상속해서 글꼴크기가 정해진다.
 
+
+---
+
 # 14. 색상
 
 ## 1) 영단어 표기
@@ -690,6 +697,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
     }
 ```
 
+
+---
+
 # 15. visibility  속성
 
 : 요소를 보이거나 안 보이게 설정 할 수 있다.
@@ -702,7 +712,10 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
     
 - hidden은 요소가 안 보이더라도 영역유지 O
 - collapse는 <table> 렌더링을 방지 ( 안보이게 )하고, 영역유지 X
-    - display: none도 영역유지 X
+- display: none도 영역유지 X
+
+
+---
 
 # 16. 투명도 (opacity) 속성
 
@@ -711,6 +724,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 - opacity :  0 ~ 1 값
     - 0 : 완전투명
     - 1 : 완전불투명
+
+
+---
 
 # 17. 글꼴(font)
 
@@ -781,6 +797,9 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 - `font: italic bold 2rem 'Times New Roman', Georgia, sans-serif;`
 
+
+---
+
 # 19. 구글폰트
 
 https://fonts.google.com/
@@ -788,6 +807,9 @@ https://fonts.google.com/
 - 웹 폰트라고 부른다.
 - 로컬에 글꼴이 없어도 링크를 통해 가져와 사용할 수 있다.
 - [구글 폰트](https://fonts.google.com/) > 원하는 폰트 선택 > Get Font 클릭 > Get embed code > 복사해서 사용
+
+
+---
 
 # 20. text 관련 속성
 
