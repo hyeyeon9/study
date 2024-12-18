@@ -706,13 +706,13 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity
 
 - visibility  : visibile(기본)
     
-                   : hidden     ⇒  요소가 안보이게  
+ 	      : hidden     ⇒  요소가 안보이게  
     
               : collapse   ⇒  <table>을 안보이게
     
 - hidden은 요소가 안 보이더라도 영역유지 O
 - collapse는 <table> 렌더링을 방지 ( 안보이게 )하고, 영역유지 X
-- - display: none도 영역유지 X
+- display: none도 영역유지 X
 
 
 ---
