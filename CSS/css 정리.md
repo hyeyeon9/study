@@ -1,4 +1,4 @@
-# CSS (12.16)
+# CSS
 
 # 1. CSS (Cascading StyleSheet)
 
