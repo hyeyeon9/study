@@ -10,4 +10,4 @@
 ## JavaScript
 [JavaScript정리][jslink]
 
-[jslink] : https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
+[jslink]: https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
