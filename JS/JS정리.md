@@ -88,18 +88,23 @@
 
 - **수치 데이터** : 정수와 실수
     - Number 객체
+      
 - **문자 데이터** : 문자와 문자열 포함
     - String 객체
     - 홑따옴표/쌍따옴표 구분 X
+      
 - **논리 데이터** : 참/거짓
     - Boolean 객체 : true/false
     - false 로 처리되는 값
         - 0, “”, null, undefined, NaN
     - 주로 조건문 및 논리연산자에 사용
+      
 - **undefined** : 변수가 선언후 초기화 안 된 상태
     - Object 객체
+      
 - **null** : 변수 초기화 된 상태지만 값 없는 상태
     - Object 객체
+      
 - **NaN** : Not a Number
     - Number 객체
     - 일반적으로 숫자가 아닌 문자열을 수치형으로 변경할 때 발생할 수 있다.
@@ -107,6 +112,7 @@
             
                    “민지” ⇒   ~~Number.parseInt(”민지”)~~   ⇒   NaN 발생
             
+
 
 ## 2) 참조 데이터형
 
@@ -128,6 +134,7 @@
     - 함수 호출시 인자값으로사용
     - 위 3가지 특징을 갖는 함수(객체)를 일급객체(first-class)라 부른다.
         - 일급객체 언어 : JS, Python, 자바(람다)
+        
 - **클래스** (class) :
     
     ```
@@ -138,7 +145,8 @@
     new 클래스명();
     ```
     
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/4a2fca1d-9188-47ff-97ef-cc2fe1409bc3/010e60a8-0383-4c6b-b79b-9a68ad842fc2.png)
+![image (2)](https://github.com/user-attachments/assets/70a5a71d-6e3a-44d8-ac92-297204506047)
+
     
 
 ---
