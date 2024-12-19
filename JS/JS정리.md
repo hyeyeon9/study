@@ -247,3 +247,230 @@
 ```
 
 ---
+# 9. 연산자
+
+- **산술연산자**
+    - +
+    - -
+    - *
+    - / : 소수점까지 출력
+    - % : 나머지
+
+⇒ 문자열로 된 숫자와의 연산이 가능하다. (  +  제외)
+
+- **+ 로는 문자열로 합해진다.**
+
+```jsx
+      console.log("10" + 3); // 103
+      console.log(Number.parseInt("10") + 3); // 13
+      console.log("10"  -3); // 7
+      console.log("10" * 3); // 30
+      console.log("10" / 3); // 3.3333333333333335
+      console.log("10" % 3); // 1
+```
+
+- **대입연산자**
+    - =
+    - +=
+    - -=
+    - *=
+    - /=
+    - %=
+
+- **비교연산자**
+    - a == b  |  a ! =  b
+    - a > b  |  a >= b
+    - a < b  | a <= b
+    - **a === b**
+        - **`값과 데이터 타입`까지 비교**, identical 연산자
+        
+        ```jsx
+              console.log("10" == 10);  // true
+              console.log("10" === 10); // false
+        ```
+        
+        - **`undefined` 비교할 떄는 반드시 === 연산자를 사용**
+        
+        ```jsx
+              let v = undefined;
+              console.log(v == undefined); // true
+              console.log(v === undefined); // true
+        
+              let v2 = null;
+              console.log(v2 == undefined); // true
+              console.log(v2 === undefined); // false
+        ```
+        
+        - 실제값이 null일떄도 undefined와 == 비교를 하면 true 값이 나오기에 === 연산자를 사용해야 한다.
+    - **a ! == b**
+    
+- **논리연산자**
+    - && (and)
+    - || (or)
+    - ! (not)
+
+⇒ JS 에서는 **true/false 가 아닌 임의의 값도 논리값으로 사용**될 수 있다.
+
+- **`false`로 사용되는 5가지의 값**
+    - 0,””, null, undefined, NaN
+
+⇒ **A && B** :  중요 ( 리액트에서 자주 사용됨 )
+
+- A가 참이면 B가 반환
+- A가 거짓이면 A가 반환
+
+```jsx
+console.log(10 && "홍길동"); // 홍길동
+console.log(0 && "홍길동");  // 0
+```
+
+**A || B**
+
+- A 가 참이면 A 가 반환
+- A 가 거짓이면 B 가 반환
+
+**!A**
+
+- A의 반대 반환 ( true ↔ false)
+
+- **증감연산자**
+    - ++n  : 전치 증가
+    - n++  : 후치 증가
+    - - - n  : 전치 감소
+    - n - -  : 후치 감소
+    
+    ```jsx
+          let n = 10;
+          console.log(n++); // 10
+          console.log(++n); // 12
+    
+          console.log(n--); // 12
+          console.log(--n); //10
+    
+          let n2 = 10;
+          let result = ++n2; // 11
+          console.log(result, n2); // 11, 11
+    
+          let n3 = 10;
+          let result2 = n3++; // 10
+          console.log(result2, n3); // 10, 11
+    ```
+    
+
+- 3항 연산자
+    - (조건식) ? 참 : 거짓;
+        
+        `100 > 102 ? "O" : "X”`
+        
+
+---
+
+# 10. 문장
+
+## 1) 문장 종류
+
+1. 실행문
+    - 순차문
+    - 제어문
+        - **조건문  ( if문, if ~ else문, 다중 if문, switch문 )**
+            
+            ```jsx
+                  // 1. 단일if문
+                  if (3 > 2) {
+                    console.log("true");
+                  }
+            
+                  console.log("=================");
+            
+                  // 2. if ~ else 문
+                  if (3 > 20) {
+                    console.log("true");
+                  } else {
+                    console.log("false");
+                  }
+            
+                  console.log("=================");
+            
+                  // 3. 다중 if문
+                  let num = 90;
+                  let grade;
+                  if (num >= 90) {
+                    grade = "A";
+                  } else if (num >= 80) {
+                    grade = "B";
+                  } else {
+                    grade = "C";
+                  }
+                  console.log("학점 : ", grade);
+            
+                  console.log("=================");
+            
+                  // 동적으로 값 입력받기
+                  let num2 = prompt("점수입력");
+                  num2 = Number.parseInt(num2);
+                  let grade2;
+                  if (num2 >= 90) {
+                    grade2 = "A";
+                  } else if (num2 >= 80) {
+                    grade2 = "B";
+                  } else {
+                    grade2 = "C";
+                  }
+                  console.log("학점 : ", grade2);
+                  console.log("=================");
+            
+                  // 4. switch문
+                  let x = "100";
+                  switch (
+                    x // 스위치문은 값과 데이터 타입을 같이 비교한다.
+                  ) {
+                    case 10:
+                      console.log("10");
+                      break;
+                    case 100: {
+                      console.log("100");
+                      break;
+                    }
+                    default:
+                      console.log("default");
+                      break;
+                  }
+            ```
+            
+        - **반복문 ( for문, while문 , do ~ while문, foreach 문 )**
+            
+            ```jsx
+                  // 1. for문
+                  for (let i = 0; i < 5; i++) {
+                    console.log(i);
+                  }
+                  console.log("================");
+                  //2. while문
+                  let n = 0;
+                  while (n < 5) {
+                    n++;
+                  }
+                  console.log(n);
+                  console.log("================");
+                  // 3. do ~ while문
+                  let n2 = 1;
+                  do {
+                    n2++;
+                    console.log(n2);
+                  } while (n2 < 6);
+            
+                  console.log("================");
+                  
+                  //4.breka, continue문
+                  let i = 0;
+                  for (i = 0; i < 5; i++) {
+                    if (i == 2) continue;
+                    if (i == 4) break;
+                    console.log(i);
+                  }
+            ```
+            
+    - 비실행문
+        - 주석문 : //, /* … */
+
+---
