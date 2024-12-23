@@ -364,113 +364,114 @@ console.log(0 && "홍길동");  // 0
         
 
 ---
-
 # 10. 문장
 
-## 1) 문장 종류
+## 실행문
 
-1. 실행문
-    - 순차문
-    - 제어문
-        - **조건문  ( if문, if ~ else문, 다중 if문, switch문 )**
-            
-            ```jsx
-                  // 1. 단일if문
-                  if (3 > 2) {
-                    console.log("true");
-                  }
-            
-                  console.log("=================");
-            
-                  // 2. if ~ else 문
-                  if (3 > 20) {
-                    console.log("true");
-                  } else {
-                    console.log("false");
-                  }
-            
-                  console.log("=================");
-            
-                  // 3. 다중 if문
-                  let num = 90;
-                  let grade;
-                  if (num >= 90) {
-                    grade = "A";
-                  } else if (num >= 80) {
-                    grade = "B";
-                  } else {
-                    grade = "C";
-                  }
-                  console.log("학점 : ", grade);
-            
-                  console.log("=================");
-            
-                  // 동적으로 값 입력받기
-                  let num2 = prompt("점수입력");
-                  num2 = Number.parseInt(num2);
-                  let grade2;
-                  if (num2 >= 90) {
-                    grade2 = "A";
-                  } else if (num2 >= 80) {
-                    grade2 = "B";
-                  } else {
-                    grade2 = "C";
-                  }
-                  console.log("학점 : ", grade2);
-                  console.log("=================");
-            
-                  // 4. switch문
-                  let x = "100";
-                  switch (
-                    x // 스위치문은 값과 데이터 타입을 같이 비교한다.
-                  ) {
-                    case 10:
-                      console.log("10");
-                      break;
-                    case 100: {
-                      console.log("100");
-                      break;
-                    }
-                    default:
-                      console.log("default");
-                      break;
-                  }
-            ```
-            
-        - **반복문 ( for문, while문 , do ~ while문, foreach 문 )**
-            
-            ```jsx
-                  // 1. for문
-                  for (let i = 0; i < 5; i++) {
-                    console.log(i);
-                  }
-                  console.log("================");
-                  //2. while문
-                  let n = 0;
-                  while (n < 5) {
-                    n++;
-                  }
-                  console.log(n);
-                  console.log("================");
-                  // 3. do ~ while문
-                  let n2 = 1;
-                  do {
-                    n2++;
-                    console.log(n2);
-                  } while (n2 < 6);
-            
-                  console.log("================");
-                  
-                  //4.breka, continue문
-                  let i = 0;
-                  for (i = 0; i < 5; i++) {
-                    if (i == 2) continue;
-                    if (i == 4) break;
-                    console.log(i);
-                  }
-            ```
-            
-    - 비실행문
-        - 주석문 : //, /* … */
+- 순차문
+- 제어문
+    - **조건문  ( if문, if ~ else문, 다중 if문, switch문 )**
+        
+        ```jsx
+              // 1. 단일if문
+              if (3 > 2) {
+                console.log("true");
+              }
+        
+              console.log("=================");
+        
+              // 2. if ~ else 문
+              if (3 > 20) {
+                console.log("true");
+              } else {
+                console.log("false");
+              }
+        
+              console.log("=================");
+        
+              // 3. 다중 if문
+              let num = 90;
+              let grade;
+              if (num >= 90) {
+                grade = "A";
+              } else if (num >= 80) {
+                grade = "B";
+              } else {
+                grade = "C";
+              }
+              console.log("학점 : ", grade);
+        
+              console.log("=================");
+        
+              // 동적으로 값 입력받기
+              let num2 = prompt("점수입력");
+              num2 = Number.parseInt(num2);
+              let grade2;
+              if (num2 >= 90) {
+                grade2 = "A";
+              } else if (num2 >= 80) {
+                grade2 = "B";
+              } else {
+                grade2 = "C";
+              }
+              console.log("학점 : ", grade2);
+              console.log("=================");
+        
+              // 4. switch문
+              let x = "100";
+              switch (
+                x // 스위치문은 값과 데이터 타입을 같이 비교한다.
+              ) {
+                case 10:
+                  console.log("10");
+                  break;
+                case 100: {
+                  console.log("100");
+                  break;
+                }
+                default:
+                  console.log("default");
+                  break;
+              }
+        ```
+        
+    - **반복문 ( for문, while문 , do ~ while문, foreach 문 )**
+        
+        ```jsx
+              // 1. for문
+              for (let i = 0; i < 5; i++) {
+                console.log(i);
+              }
+              console.log("================");
+              //2. while문
+              let n = 0;
+              while (n < 5) {
+                n++;
+              }
+              console.log(n);
+              console.log("================");
+              // 3. do ~ while문
+              let n2 = 1;
+              do {
+                n2++;
+                console.log(n2);
+              } while (n2 < 6);
+        
+              console.log("================");
+              
+              //4.breka, continue문
+              let i = 0;
+              for (i = 0; i < 5; i++) {
+                if (i == 2) continue;
+                if (i == 4) break;
+                console.log(i);
+              }
+        ```
+        
+
+## 비실행문
+
+- 주석문 : //, /* … */
 
 ---
+
