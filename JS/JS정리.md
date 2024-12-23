@@ -475,3 +475,382 @@ console.log(0 && "홍길동");  // 0
 
 ---
 
+# 11. 객체종류
+
+## 데이터 관련 객체
+
+### **문자열 객체 ( String )**
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String
+
+- **`문자열 속성 및 메서드`**
+    - **문자열 길이 : lenght 속성**
+        
+        ```jsx
+        let s = "HeLLO";
+        
+        console.log("1. 문자열 길이 : ", s.length); // 5
+        ```
+        
+    - **문자열 연결 : concat()**
+        
+        ```jsx
+         console.log("3. 문자열 연결 : ", s.concat("!!!")); // HeLLO!!!
+         console.log("3. 문자열 연결 : ", s.concat("!!", "~~~")); // HeLLO!!~~~
+        ```
+        
+    - **특정 문자 얻기 : charAt()**
+        
+        ```jsx
+        console.log("2. 특정 문자 얻기 : ", s.charAt(0)); // H
+        ```
+        
+    - **특정 문자 위치 얻기 : indexOf()**
+        
+        ```jsx
+        console.log("4. 특정 문자 위치 얻기: ", s.indexOf("e")); // 1
+              console.log("4. 특정 문자 위치 얻기: ", s.indexOf("a")); // 없으면 -1
+        ```
+        
+    - **부분열 :  substring(start, end)  / substr( start, len )**
+        
+        ```jsx
+        console.log("5. 부분열 ", s.substring(0, 4)); //  start, end  //  HeLL
+              console.log("5. 부분열 ", s.substr(0, 4)); // start, len // HeLL
+        ```
+        
+    - **소문자 / 대문자 : toLowerCase() / toUpperCase()**
+        
+        ```jsx
+        console.log("6. 소문자 ", s.toLowerCase()); // hello
+        console.log("7. 대문자 ", s.toUpperCase());
+        
+        ```
+        
+    - **특정값 시작여부 / 종료여부 : startsWith()  /  endsWith()**
+        
+        ```jsx
+        console.log("8. 특정값 시작여부 ", s.startsWith("H")); //  true
+              console.log("9. 특정값 종료여부 ", s.endsWith("a")); // false
+              console.log("9. 특정값 종료여부 ", s.endsWith("l", 4)); // 문자열 4개(HeLl)의 종료가 l인지 확인 => false
+        
+        ```
+        
+    - **특정값 포함 여부 : includes()**
+        
+        ```jsx
+        console.log("10. 특정값 포함 여부 : ", s.includes("e")); // true
+        ```
+        
+    - **치환 :  replace()  /  replaceAll()**
+        
+        ```jsx
+          console.log("11. 치환 : ", s.replace("H", "h")); // heLlO
+              console.log("11. 치환 ALL : ", s.replaceAll("L", "l")); // HellO
+        ```
+        
+    - **공백제거 : trim()  /  trimStart()  /  trimEnd()**
+        
+        ```jsx
+         let s2 = "      world     ";
+              console.log("12. 공백제거(양쪽) : ", s2.trim()); // world
+              console.log("12. 공백제거(왼쪽) : ", s2.trimStart()); // world
+              console.log("12. 공백제거(오른쪽) : ", s2.trimEnd()); //        world
+        
+              console.log("12. 공백제거후 길이 :", s2.trim().length); // 5
+        ```
+        
+    - **구분자로 분리 : split()**
+        
+        ```jsx
+         let s3 = "홍길동/이순신/유관순";
+              let result_arr = s3.split("/");
+              console.log("13. 구분자로 분리 : ", result_arr, result_arr[0]); // (3) ['홍길동', '이순신', '유관순']0: "홍길동"1: "이순신"2: "유관순"length: 3[[Prototype]]: Array(0) 홍길동
+        ```
+        
+    - **문자열 반복 : repeat()**
+        
+        ```jsx
+        let s4 = "hello";
+              console.log("14.문자열 반복 : ", s4.repeat(2)); //hellohello
+        ```
+        
+    - **문자열 길이만큼 채우기 : padStart() /  padEnd()**
+        
+        ```jsx
+        let s5 = "홍길동";
+              console.log("15. LPAD : ", s5.padStart(10, "*")); // *******홍길동
+              console.log("16. RPAD : ", s5.padEnd(10, "*")); // 홍길동*******
+        ```
+        
+    - **이스케이프 문자**
+        
+        ```jsx
+              // aaa"bbb
+              console.log("aaa'bbb"); // aaa'bbb
+              console.log("aaa\tbbb"); // aaa	bbb
+              console.log("aaa\nbbb"); // aaa
+              // bbb
+              console.log("aaa\\nbbb"); // aaa\nbbb
+        ```
+        
+
+### **수치 객체 ( Number )**
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+- **`수치 속성 및 메서드`**
+    - **최대값 / 최소값  :  MAX_VALUE / MIN_VALUE**
+        
+        ```jsx
+         // 1. 수치 데이터 생성 방벙
+              let n = 100;
+              let n2 = Number(100);
+              let n3 = new Number(100);
+        
+              console.log(n, n2, n3); // 100 100 Number {100}
+        
+              // 속성 및 메서드
+              console.log("1. 최대값 : ", Number.MAX_VALUE); // 1.7976931348623157e+308
+              console.log("2. 최소값 : ", Number.MIN_VALUE); // 5e-324
+        ```
+        
+    - **문자열로 변경  :  toString()**
+        
+        ```jsx
+         let n4 = 10;
+              console.log("3. 문자열로 변경(10진수) : ", n4.toString()); // 10
+              console.log("3. 문자열로 변경(2진수) : ", n4.toString(2)); // 1010
+              console.log("3. 문자열로 변경(8진수) : ", n4.toString(8)); // 12
+              console.log("3. 문자열로 변경(16진수) : ", n4.toString(16)); // a
+        ```
+        
+    - **문자열로 고정 소수점 표기법  :  toFixed()**
+        
+        ```jsx
+         let n5 = 3.141586;
+              console.log("4. 문자열로 고정 소수점 표기법 : ", n5.toFixed()); //  3
+              console.log("4. 문자열로 고정 소수점 표기법 : ", n5.toFixed(2)); // 3.14
+              console.log("4. 문자열로 고정 소수점 표기법 : ", n5.toFixed(4)); // 3.1416 => 반올림됨
+        ```
+        
+    - **NaN 여부  :  isNaN()**
+        
+        ```jsx
+              console.log("5. NaN 이냐 : ", Number.isNaN(NaN)); // true
+              console.log("5. NaN 이냐 : ", Number.isNaN(null)); // false
+              console.log("5. NaN 이냐 : ", Number.isNaN(undefined)); // false
+              console.log("5. NaN 이냐 : ", Number.isNaN("홍길동")); // false
+              console.log("5. NaN 이냐 : ", Number.isNaN(10)); // false
+        
+        ```
+        
+    - **정수 여부  :  isInteger()**
+        
+        ```jsx
+                   console.log("6. 정수인가? :  ", Number.isInteger(NaN)); //  false
+              console.log("6. 정수인가? :  ", Number.isInteger(null)); //  false
+              console.log("6. 정수인가? :  ", Number.isInteger(undefined)); //  false
+              console.log("6. 정수인가? :  ", Number.isInteger(10)); // true
+              console.log("6. 정수인가? :  ", Number.isInteger(3.14)); //  false
+              console.log("6. 정수인가? :  ", Number.isInteger(-10)); // true
+              console.log("6. 정수인가? :  ", Number.isInteger("10")); //  false
+        ```
+        
+    - **문자열을 정수/실수로 변환   :  parseInt()  /   parseFloat()**
+        
+        ```jsx
+        // "10" -> 10
+              console.log("7. 문자열을 정수로 반환 : ", Number.parseInt("10") + 10); // 20
+        
+              // "3.14" -> 3.14
+              console.log("8. 문자열을 실수로 반환 : ", Number.parseFloat("3.14") + 10); //  13.14
+        ```
+        
+
+### **날짜 객체 ( Date )**
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+- **`날짜 생성 및 메서드`**
+    - **날짜 데이터 생성**
+        
+        ```jsx
+          // 날짜 데이터 생성 방법
+              let d = new Date(); // 객체로 반환
+              let d2 = Date(); // 문자열
+              let d3 = Date.now();
+              console.log(d); // Thu Dec 19 2024 14:17:44 GMT+0900 (한국 표준시)
+              console.log(d2); // Thu Dec 19 2024 14:17:44 GMT+0900 (한국 표준시)
+              console.log(d3); // 1970/0101/00:00:00 ~ 현재시간 까지 시간을 밀리세컨즈로 반환 : 1734585505861
+        ```
+        
+    - **toString()**
+        
+        ```jsx
+         console.log("1. toString() : ", d.toString()); // Thu Dec 19 2024 14:23:08 GMT+0900 (한국 표준시)
+              console.log("2. toDateString() : ", d.toDateString()); // Thu Dec 19 2024
+              console.log("3. toISOString() : ", d.toISOString()); // 2024-12-19T05:22:57.377Z
+              console.log("3. toISOString() : ", d.toISOString().slice(0, 10)); //  2024-12-19
+        ```
+        
+    - **날짜 및 시간 데이터 얻기**
+        
+        ```jsx
+         console.log("4. getFullYear()", d.getFullYear()); //2024
+              console.log("5. getMonth() :", d.getMonth() + 1); // 12
+              console.log("6. getDate() : ", d.getDate()); // 19
+              console.log("7. getMinutes() : ", d.getMinutes()); // 36
+        ```
+        
+
+### **Boolean 객체**
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+```jsx
+      // 불린 객체 생성 방법
+
+      // false로 처리되는 값
+      let b1 = new Boolean(0); // 객체가 나옴
+      let b2 = Boolean("");
+      let b3 = Boolean(null);
+      let b4 = Boolean(undefined);
+      let b5 = Boolean(NaN);
+      console.log(b1, b1.valueOf(), b1.toString()); // Boolean {false} false 'false'
+      console.log(b2, b3, b4, b5); // false false false false
+
+      if (b1.toString()) {
+        // 문자열이 들어가기에 false 아님
+        console.log("AAA"); //AAA
+      }
+
+      if (b1.valueOf()) {
+        // false 임
+        console.log("BBB");
+      }
+
+      // true 처리되는 값
+      let v = Boolean(10);
+      let v2 = Boolean("aaa");
+      let v3 = Boolean([]);
+      let v4 = Boolean({});
+      console.log(v, v2, v3, v4); // true true true true
+```
+
+### **배열 객체 ( Array )**
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+- 자바의 ArrayList와 유사하다.
+- 배열의 크기 변경이 가능하고, 저장되는 데이터 타입 무관
+- **`배열 메서드`**
+    - **map 함수**
+        
+        : 배열 안의 요소들을 가공할 떄 사용하는 함수
+        
+        ```jsx
+              let y = ["hello", "world", "happy"];
+              let result4 = y.map((item, index, array) => {
+                return item.toUpperCase();
+              });
+              console.log(result4);  // ['HELLO', 'WORLD', 'HAPPY']
+        ```
+        
+    - **filter 함수**
+        
+        : 배열 안의 요소들 중 조건에 일치하는 값을 찾을 때 사용하는 함수
+        
+        ```jsx
+        let x2 = [10, 11, 20, 21, 30, 31];
+              let result3 = x2.filter((ele, index, array) => {
+                return ele % 2 == 0; // 짝수인 값만 반환
+              });
+              console.log("짝수만 : ", result3); // [10, 20, 30] => 배열로 반환됨
+        ```
+        
+    - **split 함수**
+        
+        : 문자열을 구분자 기준으로 나누어 배열로 반환하는 함수
+        
+        ```jsx
+         let y3 = "hello World !!";
+         console.log(y3.split(" ")); // ['hello', 'World', '!!']
+        ```
+        
+    - **join 함수**
+        
+        : 배열 안의 값들을 하나의 문자열로 합치는 함수
+        
+        - 구분자를 지정해서 합칠 수 있다.
+        
+        ```jsx
+        let y2 = ["hello", 2, "happy"];
+        let result5 = y2.join(" "); // 구분자 공백하나 지정함
+        console.log(result5); // hello 2 happy
+        ```
+        
+    - **fill 함수**
+        
+        : 배열값들을 지정한 값으로 변경(채우기)하는 함수
+        
+        ```jsx
+        let y4 = [1, 2, 3, 4, 5];
+        console.log(y4.fill(100)); // [100, 100, 100, 100, 100]
+        console.log(y4.fill(99, 2)); // (채울값, 시작인덱스)  [100, 100, 99, 99, 99]
+        console.log(y4.fill(88, 0, 3)); // (채울값, 시작인덱스, 끝인덱스)  [88, 88, 88, 99, 99]
+        ```
+        
+    - **Array.from()**
+        
+        : 배열이 아닌 것을 배열로 만들어 반환
+        
+        ```jsx
+         console.log("8. Arrray.from() ");
+              let y6 = "hello";
+              console.log(Array.from(y6)); // ['h', 'e', 'l', 'l', 'o']
+        
+              let result6 = Array.from(y6, (s) => {
+                return s.toUpperCase(); // y6 요소들을 한번씩 순회함
+              });
+              console.log(result6); // ['H', 'E', 'L', 'L', 'O']
+        ```
+        
+    - **Arrray.isArray()**
+        
+        : 배열인지 아닌지 boolean값으로 반환
+        
+        ```jsx
+        console.log("9. 배열인지 여부 : Arrray.isArray(배열) ");
+        console.log(Array.isArray([1, 2, 3])); // true
+        console.log(Array.isArray([])); // true
+        console.log(Array.isArray("AAA")); // false
+        ```
+        
+    - **spread 연산자**
+        
+        : `let x = [ …배열 ];`
+        
+        ```jsx
+        let x = [10, 20, 30];
+        
+              // 1. 배열값 복사
+              let copy_x = [...x];
+              copy_x[0] = 100;
+              console.log(copy_x); // [100, 20, 30]
+        
+              // 2. 기본배열에 값 추가
+              let x2 = [10, 20, 30];
+              let new_x2 = [0, ...x2, 40, 50];
+              console.log(new_x2); //[0, 10, 20, 30, 40, 50]
+        
+              // 3. 배열 연결
+              let x3 = [10, 20, 30];
+              let x4 = [100, 200, 300];
+              let result = [...x3, ...x4];
+              console.log(result); // [10, 20, 30, 100, 200, 300]
+        
+              //4. 문자열 --> 배열로 변경
+              console.log([..."hello"]); // ['h', 'e', 'l', 'l', 'o']
+        ```
+        
