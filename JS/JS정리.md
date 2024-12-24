@@ -477,7 +477,7 @@ console.log(0 && "홍길동");  // 0
 
 # 11. 객체종류
 
-## 데이터 관련 객체
+## 1) 데이터 관련 객체
 
 ### **문자열 객체 ( String )**
 
@@ -990,4 +990,138 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Ar
           person.setName = "이순신";
           console.log(person.getName); // 이순신
     ```
-  
+
+  ### **Object 객체**
+
+- `Object.keys(json)`
+    
+    : JSON의 key값을 배열로 반환
+    
+- `Object.values(json)`
+    
+    : JSON의 value가 value값을 배열로 반환
+    
+- `Object.entries(json)`
+    
+    : [key, value] 쌍으로 반환
+    
+
+## 2) 웹브라우저 관련 객체 ( Browser Object Model : BOM )
+
+- **Window 객체** : 웹 브라우저의 창(윈도우)를 관리하는 객체 == 전역객체
+    - https://developer.mozilla.org/ko/docs/Web/API/Window
+- **Screen 객체** : 웹 브라우저의 화면(너비, 높이)를 관리하는 객체
+    - https://developer.mozilla.org/en-US/docs/Web/API/Screen
+    ![image (6)](https://github.com/user-attachments/assets/232731ee-1363-4ab5-98aa-0f751674b53e)
+
+
+- **Navigator 객체** : 웹 브라우저를 관리하는 객체
+    - https://developer.mozilla.org/ko/docs/Web/API/Navigator
+- **History 객체** : 웹 브라우저의  기록(뒤로가기/앞으로 가기)을 관리하는 객체
+    - https://developer.mozilla.org/ko/docs/Web/API/History
+- **Location 객체** : 웹 브라우저의 URL 항목을 관리하는 객체
+    - https://developer.mozilla.org/ko/docs/Web/API/Location
+
+⇒ 특징 : **웹 브라우저를 open하면 5개의 BOM 객체가 자동으로 생성**이 된다.
+
+```jsx
+let window = new **Window**();
+let screen = new **Screen**();
+let navigator = new **Navigator**();
+let history = new **History**();
+let location = new **Location**();
+```
+
+- screen, navigator. history, location은 Window 객체의 속성으로 되어 있다. 따라서  `window.screen` 으로 사용해야 한다.
+    - 하지만 Window는 전역객체 이기에 window 속성을 생략할 수 있다.
+
+### 실습
+
+- **window 객체**
+    
+    부모창에서 현재창 닫기, 자식창 열기&닫기 / 자식창에서 현재창 닫기, 부모창 닫기 구현
+    
+
+```jsx
+// 부모창
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>window 객체</title>
+    <style>
+      button {
+        font-size: 2rem;
+      }
+    </style>
+    <script>
+      console.log(window);
+
+      let childWin;
+      function child_open() {
+        childWin = window.open(
+          "child.html",
+          "",
+          "left=100,top=100,width=300,height=300"
+        );
+      }
+
+      function child_close() {
+        childWin.close();
+      }
+
+      function current_close() {
+        window.close();
+        // close();
+      }
+    </script>
+  </head>
+  <body>
+    <button onclick="child_open()">자식창 열기</button> <br />
+    <button onclick=" child_close()">자식창 닫기</button> <br />
+    <button onclick="current_close()">현재창 닫기</button> <br />
+  </body>
+</html>
+
+```
+
+```jsx
+// 자식창
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>child</title>
+  </head>
+  <script>
+    function current_close() {
+      window.close();
+    }
+
+    // 자식창을 오픈한 부모 == opener
+    function parent_close() {
+      opener.close();
+    }
+  </script>
+  <body>
+    <h1>자식창</h1>
+    <button onclick="current_close()">현재창 닫기</button>
+    <button onclick="parent_close()">부모창 닫기</button>
+  </body>
+</html>
+```
+
+## 3) html 문서 관련 객체 ( Document Object Model : DOM )
+
+- **Document 객체**
+    
+    : html 문서를 관리하는 객체
+    
+    - 웹 브라우저에서 html문서를 렌더링하면 자동으로 **`DOM 객체`**가 생성된다.
+    - `var documnet = new Document();`
+        - `documnet` 는 Window 객체의 속성으로 되어있다.
+
+---
+
