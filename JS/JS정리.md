@@ -853,4 +853,141 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Ar
               //4. 문자열 --> 배열로 변경
               console.log([..."hello"]); // ['h', 'e', 'l', 'l', 'o']
         ```
+
+### **JSON 객체**
+
+`: { key : value, key : value }`
+
+- value 값은 JS이 모든 데이터형 가능
+    
+    ```jsx
+    // JSON 생성
+          let person = {
+            name: "홍길동",
+            age: 20,
+            email: ["a@naver.com", "b@google.com"],
+            phone: {
+              mobile: "010",
+              tel: "051",
+            },
+    
+            // 메서드 (객체 안의 함수)
+            setName: function (n) {
+              this.name = n;
+            },
+            getName: function () {
+              return this.name;
+            },
+          };
+    ```
+    
+- 접근은 **.(dot)** 또는 **연관배열** 사용 가능
+    - **.(dot)으로 접근**
         
+        ```jsx
+        person.setName("홍길동");
+              console.log(person.getName()); // 홍길동
+              console.log(
+                person.name,
+                person.age,
+                person.email,
+                person.phone.mobile,
+                person.phone.tel
+              ); // 홍길동 20 (2) ['a@naver.com', 'b@google.com'] 010 051
+        ```
+        
+    - **연관배열로 접근**
+        
+        ```jsx
+         // 나. ["property의 key"] (연관 배열)
+              console.log(
+                person["name"],
+                person["age"],
+                person["email"],
+                person["phone"]
+              ); // 홍길동 20 (2) ['a@naver.com', 'b@google.com'] {mobile: '010', tel: '051'}
+        ```
+        
+        - **연관배열 특징: 변수로 사용 가능**
+            
+            ```jsx
+             // 연관 배열의 특징은 변수로 사용 가능하다는 점 => 동적으로 필요한 값을 지정가능
+                  let xxx = "name";
+                  let xxx2 = "age";
+                  console.log(person[xxx], person[xxx2]); // 홍길동 2
+            ```
+            
+- value 값 지정시 변수 사용이 가능
+    - key와 vlaue로 지정한 변수 이름이 같으면 key만 지정할 수 있다.
+        
+        ```jsx
+        // JSON 생성
+              let name = "홍길동";
+              let age = 20;
+              let email2 = ["a@naver.com", "b@google.com"];
+              let phone = {
+                mobile: "010",
+                tel: "051",
+              };
+              let person = {
+                name, // name: name
+                age, //  age: age
+                email: email2,
+                phone,
+              };
+              console.log(person.name, person.age); // 홍길동 20
+        ```
+        
+- key 값도 변수로 지정해서 사용 가능
+    
+    ```jsx
+     // JSON 생성
+          let name = "홍길동";
+          let xxx = "age";
+          let yyy = "address";
+          let person = {
+            name,
+            [xxx]: 20,
+            // address1 : "서울",
+            // address2 : "부산",
+            [yyy + "1"]: "서울",
+            [yyy + "2"]: "부산",
+            email: ["a@naver.com", "b@google.com"],
+            phone: {
+              mobile: "010",
+              tel: "051",
+            },
+          };
+          console.log(person.age, 
+                      person.address1, person.address2); // 20 '서울' '부산'
+    ```
+    
+- JSON  < — > 문자열
+    - JSON   →  문자열 : `JSON.stringfy(json)`
+    - 문자열 →  JSON   : `JSON.parse(str)`
+- JSON의 set, get
+    - JSON 객체의 메서드에 set, get 키워드를 줘서 속성으로 사용할 수 있다.
+    
+    ```jsx
+          let person = {
+            name: "홍길동",
+            age: 20,
+    
+            // set, get을 지정하면 메서드로 동작하지 않고 속성으로 동작된다.
+            set setName(n) {
+              this.name = n;
+            },
+    
+            get getName() {
+              return this.name;
+            },
+          };
+    
+          // person.setName("이순신");
+          // console.log(person.getName());
+    
+          // 속성처럼 접근해야 한다.
+          person.setName = "이순신";
+          console.log(person.getName); // 이순신
+    ```
+  
