@@ -1124,4 +1124,249 @@ let location = new **Location**();
         - `documnet` 는 Window 객체의 속성으로 되어있다.
 
 ---
+# 12. 함수 (function)
+
+## 1) 역할
+
+- 기능 처리 ( 자바의 메서드 역할 담당 )
+- JSON객체 또는 클래스안에서 함수가 정의되면 메서드(method)라고 부른다.
+
+## 2) 함수 작성 방법
+
+### 함수 선언식 ( 이름있는 함수 )
+
+- JS 실행전에 생성된다. 따라서 함수정의 전에 호출이 가능하다.
+
+```jsx
+function 함수명([변수, ...]){
+				문장;
+				[return 값;]
+}
+```
+
+### 함수 표현식 ( 이름없는 함수 )
+
+- 변수명이 함수명 대신 사용된다.
+- JS 실행할 때 생성된다. 반드시 함수정의 후 호출이 가능하다.
+
+```jsx
+변수명 = function([변수, ...]){
+								문장;
+								[return 값;]
+			};
+```
+
+## 3) 함수 특징
+
+- **반드시 호출**해야 된다.
+    
+    함수가 수행된 이후에는 **호출한 곳으로 돌아온다.**
+    
+- 호출할 때 인자값을 설정할 수 있고, 돌아올 때는 **리턴값** 하나만 가져올 수 있다.
+- **호출할 떄 인자값의 갯수와 파라미터 갯수가 달라도 된다.**
+    
+    ```jsx
+     function fun2(n, n2, n3) {
+            console.log(n, n2, n3);
+          }
+    
+    fun2(1, 2, 3, 4); // 1 2 3
+    fun2(10); // 10 undefined undefined
+    fun2(1, 2); // 1 2 undefined
+    ```
+    
+    - 인자값이 더 적은 경우에 함수의 파라미터 변수에는 undefined 가 저장된다. 이떄, **파라미터에 초기값을 설정(default 파라미터)**할 수 있다.
+        
+        ```jsx
+         function fun2(**n = 10, n2= 20, n3= 30**) {
+                console.log(n, n2, n3);
+              }
+        
+        fun2(); // 10 20 30
+        fun2(100); // 100 20 30
+        fun2(100, 200); // 100 200 30
+        ```
+        
+    - 인자값이 더 많은 경우엔 전달되는 인자값이 소실된다. **소실되는 인자값은 `rest 연산자`를 통해 배열로 전달 받을 수 있다.**
+        
+        ```jsx
+        function fun2(n = 10, n2 = 20, ...n3) {
+                console.log(n, n2, n3);
+              }
+        
+        fun2(10, 20, 30, 40, 50); // 10 20 Array(3)
+        ```
+        
+- **인자값으로 배열의 요소를 전달할 때 spread 연산자 사용** 가능하다.
+    
+    ```jsx
+    function fun2(n, n2) {
+            console.log(n, n2);
+         }
+    
+    let arr = [10, 20];
+    
+    // fun2( arr[0], arr[1] );
+    **fun2(...arr);**
+    ```
+    
+
+## 4) 함수 기능에 따른 4가지 형태
+
+### 파라미터 없고 리턴값 없는 형태
+
+```jsx
+      // 1. 파라미터 없고 리턴값 없는 형태
+      function fun() {
+        console.log("fun");
+      }
+
+      fun(); // fun
+
+      let fun2 = function () {
+        console.log("fun2");
+      };
+
+      fun2(); // fun2
+```
+
+### 파라미터 있고 리턴값 없는 형태
+
+```jsx
+      // 2. 파라미터 있고 리턴값 없는 형태
+      function fun3(x) {
+        console.log("fun3", x);
+      }
+
+      fun3(10); // fun3 10
+
+      let fun4 = function (y1, y2) {
+        console.log("fun4", y1, y2);
+      };
+
+      fun4(100, 200); // fun4 100 200
+```
+
+### 파라미터 없고 리턴값 있는 형태
+
+```jsx
+      // 3. 파라미터 없고 리턴값 있는 형태
+      function fun5() {
+        return "return";
+      }
+
+      let return_value1 = fun5();
+      console.log(return_value1); // return
+
+      let fun6 = function () {
+        return 100;
+      };
+
+      let return_value2 = fun6();
+      console.log(return_value2); // 100
+```
+
+### 파라미터 있고 리턴값 있는 형태
+
+```jsx
+	     // 4. 파라미터 있고 리턴값 있는 형태
+      function fun7(n) {
+        return n * 100;
+      }
+
+      let return_value3 = fun7(10);
+      console.log("10 * 100 = ", return_value3); // 10 * 100 =  1000
+
+      let fun8 = function (m) {
+        return m + "을 받았습니다.";
+      };
+
+      let return_value4 = fun8(200);
+      console.log(return_value4); // 200을 받았습니다.
+```
+
+## 5) JS 함수는 일급객체
+
+: 일급객체의 핵심개념은 **JS의 함수를 `데이터`로 처리한다는 점** 
+
+- 함수를 변수에 저장
+    
+    ```jsx
+          // 가. 함수를 변숭에 저장
+          // - 함수 선언식
+          function fun() {
+            console.log("fun");
+          }
+          // 위 코드는 내부적으로 var fun = 함수객체;
+    
+          let x = fun; // 변수 x는 fun 함수와 같은 주소값을 가지게 된다.
+          x(); // fun
+          // fun();
+    
+          // - 함수 표현식
+    
+          let fun2 = function () {
+            console.log("fun2");
+          };
+    
+          let x2 = fun2;
+          x2(); // fun2
+          // fun2();
+    ```
+    
+- 함수를 함수 호출시 인자값으로 넣을 수 있다. ( 예 > 콜백함수 )
+    
+    ```jsx
+          // 나. 함수 호출시 인자값으로 사용할 수 있다.
+          function fun() {
+            console.log("fun");
+          }
+    
+          let fun2 = function (x) {
+            // 파라미터 x변수에 fun함수 주소값 저장
+            x(); // fun      => fun함수 호출
+            console.log("fun2"); // fun2
+          };
+    
+          fun2(fun); // 인자값으로 함수 전달 => fun() 전달 아님 주의
+    
+          var fun4 = function () {
+            console.log("fun4");
+          };
+    
+          var fun5 = function (y) {
+            y();
+          };
+    
+          fun5(fun4); // fun4
+    ```
+    
+- 함수를 리턴값으로 사용할 수 있다. ( 예> 중첩함수 )
+    
+    ```jsx
+          // 다. 함수를 리턴값으로 사용할 수 있다. ( 예> 중첩함수 )
+          function fun() {
+            console.log("fun");
+          }
+    
+          function fun2() {
+            return fun;
+          }
+    
+          let result = fun2();
+          result(); // fun\
+    
+          function fun3() {
+            return function () {
+              console.log("fun3");
+            };
+          }
+    
+          let result2 = fun3();
+          result2(); // fun3
+    ```
+    
+
+---
+
 
