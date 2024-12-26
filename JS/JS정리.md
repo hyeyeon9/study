@@ -1369,4 +1369,123 @@ function 함수명([변수, ...]){
 
 ---
 
+# 13. arrow 함수 ( ⇒ )
 
+: 함수 선언식 및 표현식 모두 **`arrow 함수`**로 표현한다. 
+
+- 디폴트 파라미터 및 rest 파라미터 다 사용 가능
+
+### 파라미터 없고 리턴값 없는 형태
+
+```jsx
+      // 1. 파라미터 없고 리턴값 없는 형태
+      function fun() {
+        console.log("일반 fun");
+      }
+
+      fun(); // 일반 fun
+
+      var fun = () => {
+        console.log("arrow fun");
+      };
+
+      fun(); //arrow fun
+```
+
+### 파라미터 있고 리턴값 없는 형태
+
+```jsx
+      // 2. 파라미터 있고 리턴값 없는 형태
+      function fun2(x) {
+        console.log("일반 fun2", x);
+      }
+
+      fun2(10); // 일반 fun2 10
+
+      var fun2 = (y) => console.log("arrow fun2", y);
+
+      fun2(100); // arrow fun2 100
+
+      var fun3 = (x, y) => console.log(x, y);
+      fun3(10, 20); // 10 20
+```
+
+### 파라미터 없고 리턴값 있는 형태
+
+```jsx
+      // 3. 파라미터 없고 리턴값 있는 형태
+      function fun4() {
+        return "일반 fun4";
+      }
+
+      let return_value1 = fun4();
+      console.log(return_value1); // 일반 fun4
+
+      var fun4 = () => "arrow fun4";
+
+      let return_value2 = fun4();
+      console.log(return_value2); // arrow fun4
+```
+
+### 파라미터 있고 리턴값 있는 형태
+
+```jsx
+      // 4. 파라미터 있고 리턴값 있는 형태
+      function fun5(n) {
+        return "일반 fun5  10 * 100 = " + n * 100;
+      }
+
+      let return_value3 = fun5(10);
+      console.log(return_value3); // 일반 fun5  10 * 100 = 1000
+
+      var fun5 = (m) => "arrow fun5 " + m + "을 받았습니다.";
+
+      let return_value4 = fun5(200);
+      console.log(return_value4); // arrow fun5 200을 받았습니다.
+```
+
+---
+
+# 14. generator 함수
+
+## 1) 문법
+
+```jsx
+function* fun(){
+			문장1;
+			yield
+			문장2;
+			yield	
+ }
+```
+
+## 2) 특징
+
+- **함수를 호출하면** 함수가 실행되지 않고 **Generator 객체를 반환**한다.
+- 함수를 실행하려면 **`next() 메서드`**를 호출해야 한다.
+- 함수 블럭내의 **실행문을 분할해서** 실행할 수 있다.
+    - **`yield 키워드`를 사용**한다.
+- yield 사용시 값을 지정할 수 있고, next() 호출시 **yield에 지정한 값을 JSON 표현식으로 반환**받을 수 있다.
+- **generator 중단하기  ⇒  `return() 메서드` 사용**
+
+## 3) 활용
+
+: 대용량 데이터 처리시 한번에 처리하는 것이 아니고 단계적으로 처리할 때 주로 사용한다. ( 머신러닝, 딥러닝 )
+
+```jsx
+      // generator 함수 - 활용(대용량 대아터)
+      function* fun(s) {
+        // 5글자씩 끊어서 대문자로 변경
+        yield s.substring(0, 5).toUpperCase();
+        yield s.substring(5, 10).toUpperCase();
+        yield s.substring(10, 15).toUpperCase();
+      }
+ 
+      // 대용량 문자열 데이터라고 가정
+      var gen = fun("HelloWorldHappy");
+      console.log(gen.next().value); // HELLO
+      console.log(gen.next().value); // WORLD
+      console.log(gen.next().value); // HAPPY
+```
+
+---
