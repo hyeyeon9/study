@@ -1514,3 +1514,217 @@ function* fun(){
 ## 중첩함수란?
 
 : **함수 내의 또 다른 함수**를 의미한다. 자바에서의 중첩 클래스 용도와 비슷하다.
+
+---
+# 17. 이벤트 (event)
+
+: **사용자 및 시스템이 특정 상황에서 발생시키는 사건(동작)을 이벤트라고 한다.**
+
+- 마우스 클릭/드래그, 키보드 input, 버튼 클릭 ..
+
+## 1) 이벤트 타입
+
+### 마우스 관련 :
+
+- `click, dbclick, change, mouseover, mouseout, …`
+
+### 키보드 관련 :
+
+- `keyup, keydown, keypress, ..`
+
+### 포커스 관련 :
+
+- `focus, blur`
+
+### 시스템 관련 :
+
+- `load`
+    
+    : DOM 트리 구축이 모두 완성되었을 때 발생
+    
+
+---
+
+## 이벤트 핸들러
+
+: *이벤트가 발생되었을 때 **실제로 처리되는 코드를 가진 함수***를 의미한다.
+
+## 이벤트 소스
+
+: 실제 이벤트가 발생된 태그를 의미한다.
+
+---
+
+## 2) 이벤트 처리 방법
+
+### DOM Level 0
+
+- 인라인 방식
+    
+    : html 시작태그에서 **`on 이벤트타입 속성`**을 이용
+    
+    `<button **onclick** = ”이벤트 핸들러()” > OK </button>`
+    
+    - html 태그와 이벤트 처리코드가 분리되지 않은 구조
+    
+- 고전 방식
+    
+    : html태그와 이벤트 처리코드가 분리된 구조
+    
+    ```jsx
+    <script>
+    // 이벤트 핸들러 함수
+    function buttonHandler(){
+    	console.log("btn");
+    }
+    // 1. 이벤트 소스 접근 (DOM 개념 이용)
+    let btn = document.querySelector("#id");
+    
+    // 2. 이벤트 처리	
+    btn.onclick = buttonHandler;
+    </script>
+    <body>
+    <button id="btn">ok</button>
+    ```
+    
+
+---
+
+### DOM Level 2
+
+https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener
+
+: html 태그와 이벤트 처리코드가 분리된 구조
+
+```jsx
+addEventListener(type, listener);
+addEventListener(type, listener, options);
+addEventListener(type, listener, useCapture);
+```
+
+```jsx
+document
+          .querySelector("#btn1")
+          .addEventListener("click", buttonHandler);
+
+document.querySelector("#userid").addEventListener("keyup", () => {
+          console.log("keyup");
+        });  
+```
+
+**`type`**
+
+수신할 **이벤트 유형**(타입)
+
+**`listener`**
+
+지정한 이벤트를 수신할 객체(**핸들러 함수**)
+
+`options`
+
+[`capture`](https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener#capture)
+
+[`once`](https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener#once)
+
+[`passive`](https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener#passive)
+
+[`signal`](https://developer.mozilla.org/ko/docs/Web/API/EventTarget/addEventListener#signal)
+
+**`useCapture`**
+
+**이벤트 버블링**과 **캡처링**은 부모-자식 관계에서 서로 같은 이벤트를 가지고 있는 경우, **이벤트가 전파되는 유형**이다. 
+
+- **버블링 : *자식 먼저 이벤트 =⇒ 부모***
+- **캡처링 : *부모 먼저 이벤트 =⇒ 자식***
+
+`useCapture`의 디폴트 값은 `false`로  버블링이 디폴트다. 
+
+- 실습코드
+    - **HTML 구조**
+    
+    ```html
+    **<div id="x" style="background-color: yellow">
+      a
+      <div id="y" style="background-color: blue">b</div>
+    </div>**
+    ```
+    
+    div#x(부모) 안에 div#y(자식)이 중첩되어 있는 구조이다.
+    
+    - **JavaScript**
+    
+    ```jsx
+    **function init() {
+      document.querySelector("#x").addEventListener(
+        "click",
+        () => {
+          console.log("a");
+        },
+        false
+      );
+    
+      document.querySelector("#y").addEventListener(
+        "click",
+        () => {
+          console.log("b");
+        },
+        false
+      );
+    }**
+    ```
+    
+    **#x 클릭시 ‘a’ , #y 클릭시 ‘b’ → ‘a’ 출력** 
+    
+    자식 이벤트가 먼저 실행되고 부모로 이벤트 버블링이 된다. `stopPropagation()` 를 사용해 버블링을 막는 것도 가능하다.
+    
+
+## 3) 이벤트 객체
+
+: 이벤트가 발생되었을 때 자동 생성되어 해**당 이벤트 정보를 관리하는 객체  ⇒  Event 객체**
+
+내부적으로 `var event = new Event()` 로 생성된다.
+
+따라서 이벤트 핸들러 함수에서 이벤트 객체를 접근할 때 **`event`** 변수를 사용한다.
+
+- **이벤트 객체에 속성과 메서드가 제공**된다.
+    - **속성 : `event.target` , …**
+        - **event.target, event.target.value, event.target.id , event.target.innerHTML, event.target.innerText**
+            
+            ```jsx
+            function buttonHandler(v) {
+                    console.log("이벤트 객체 : ", event);
+                    console.log("event.target : ", event.target);
+                    console.log("event.target.value : ", event.target.value);
+                    console.log("event.target.id : ", event.target.id);
+                    console.log("event.target.innerHTML : ", event.target.innerHTML);
+            
+                    // 값 변경도 가능
+                    event.target.innerText = "OKKK";
+                  }
+            ```
+            
+    - **메서드 : event.preventDefault(), …**
+        - **event.stopPropagation()**
+            
+            ```jsx
+                  var handler = () => {
+                    console.log("b");
+                    event.stopPropagation();
+                  };
+            
+                  function init() {
+                    document.querySelector("#x").addEventListener(
+                      "click",
+                      () => {
+                        console.log("a");
+                      },
+                      false
+                    );
+            
+                    document.querySelector("#y").addEventListener("click", handler, false);
+                  }
+            ```
+            
+
+---
+
