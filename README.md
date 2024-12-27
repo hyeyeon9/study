@@ -15,8 +15,7 @@
 
 [jslink]: https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
 
-## Java
+## JQuery
+[JavaScript정리][jslink]
 
-## SQL
-
-## MyBatis
+[jslink]: https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
