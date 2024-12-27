@@ -1727,4 +1727,51 @@ document.querySelector("#userid").addEventListener("keyup", () => {
             
 
 ---
+### a태그에 이벤트 함수 호출하는 방법
 
+: href 속성에  *javascript:호출함수()* 를 지정해서 호출할 수 있다.
+
+`<a href="javascript:go('12345')">12345</a>`
+
+---
+
+### Enter 이벤트
+
+- `event.keyCode === 13`
+- `event.key == “Enter”`
+
+*onkeyup 이벤트* / *keypress 이벤트*를 통해 Enter를 눌렀을 때 위 두가지 조건을 확인해서 핸들링 할 수 있다.
+
+```jsx
+// HTML
+값:<input type="search" name="v1" id="v1" onkeyup="enter()" />
+==============================================================
+// JS
+function enter() {
+        let v1 = document.querySelector("#v1");
+        let result = document.querySelector("#result");
+
+        if (event.key == "Enter") { ; // event,keyCode === 13 
+          result.innerHTML += `<li>${v1.value}</li>`;
+          v1.value = "";
+        }
+      }
+```
+
+```jsx
+// HTML
+값:<input type="search" name="v1" id="v1" />
+==============================================================
+// JS
+function init() {
+      let v1 = document.querySelector("#v1");
+      let result = document.querySelector("#result");
+
+      v1.addEventListener("keypress", (event) => {
+          if (event.key === "Enter") {
+            result.innerHTML += `<h4>${v1.value}</h4>`;
+              v1.value = "";
+          }
+        });
+      }
+```
