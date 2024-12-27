@@ -16,6 +16,6 @@
 [jslink]: https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
 
 ## JQuery
-[JavaScript정리][jslink]
+[jQuery정리][jqlink]
 
-[jslink]: https://github.com/hyeyeon9/study/blob/main/JS/JS%EC%A0%95%EB%A6%AC.md
+[jqlink]:https://github.com/hyeyeon9/study/blob/main/JQuery/jquery%EC%A0%95%EB%A6%AC.md
