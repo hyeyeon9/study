@@ -1878,3 +1878,60 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destruc
 ```
 
 ## JSON
+
+**`이전방식`**
+
+```jsx
+      // 1. 이전 방식
+      var json = { name: "홍길동", age: 20 };
+      var name = json.name;
+      var age = json.age;
+      console.log(name, age); // 홍길동 20
+      console.log(json["name"], json["age"]); // 홍길동 20
+```
+
+**`객체 분해 할당`**
+
+```jsx
+      // 2. 객체 분해 할당
+      var { name, age } = { name: "이순신", age: 40 };
+      console.log(name, age); // 이순신 40
+
+      var { name, age } = { name: "이순신", age: 40, email: "www.com" };
+      console.log(name, age); // 이순신 40
+
+      var { name, age, ...etc } = { name: "이순신", age: 40, email: "www.com" };
+      console.log(name, age, etc); // 이순신 40  > {email: 'www.com'}
+
+      var { name, age, email } = { name: "이순신", age: 40 };
+      console.log(name, age, email); // 이순신 40 undefined
+
+      **// 디폴트 값 지정가능**
+      var { name, age, email = "11@naver.com" } = { name: "이순신", age: 40 };
+      console.log(name, age, email); // 이순신 40 11@naver.com
+
+      **// 변수명 변경**
+      var { name: useranme, age: userage } = { name: "이순신", age: 40 };
+      console.log(useranme, userage); // 이순신 40
+
+      **// 선언과 초기화 분리시 소괄호로 감싸야 가능**
+      var name, age;
+      ({ name, age } = { name: "이순신", age: 40 });
+      console.log(name, age); // 이순신 40
+```
+
+- **함수 호출시 인자값에 적용**
+  ```
+        function fun({ name, age }) {
+        console.log(name, age);
+      }
+      fun({ name: "홍길동", age: 20 }); // 홍길동 20
+
+      const fun2 = ({ name, age }) => {
+        console.log(name, age);
+      };
+
+      fun2({ name: "이순신", age: 100 }); // 이순신 100
+  ```
+
+  ---
