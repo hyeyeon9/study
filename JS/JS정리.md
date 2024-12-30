@@ -1935,7 +1935,7 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destruc
   ```
 
   ---
-  # 20. 모듈
+# 20. 모듈
 
 ## 개념
 
@@ -1959,6 +1959,9 @@ import fun3 from 'a.js';             // export default 된 자원 (하나뿐이�
 import {fun1, fun2}, fun3 form 'a.js'; // 조합해서 사용 가능
 
 ```
+
+---
+
 # 21. 클래스
 
 : 현재는 함수 자체를 많이 사용해 잘 사용하지는 않음
