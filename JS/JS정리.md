@@ -1777,3 +1777,60 @@ function init() {
 ```
 
 ---
+# 18. DOM ( Document Object Model )
+
+https://www.w3schools.com/jsref/default.asp
+
+: 사용자가 만든 html을 웹 브라우저에 렌더링하기 위해 html 요소들을 객체화해서 이를 트리구조(DOM Tree)로 만들어 참조할 수 있도록 관리하는 방법론
+
+## DOM 접근 방법
+
+: Document 객체를 참조하는 document 변수명을 사용한다.  ( document는 Window 객체의 속성으로 제공된다. )
+
+- Document 객체의 속성 및 메서드를 활용해서 DOM 트리를 관리한다.
+- 속성
+    
+    document.body, …
+    
+- 메서드
+    
+    document.**querySelector**(”css 선택자”) : 해당되는 값 하나만 찾음
+    
+    document.**querySelectorAll**(”css 선택자”) : 해당되는 값 전부 배열로 리턴
+    
+    document.**getElementById**({”아이디”)  : 아이디에 해당하는 값 하나 리턴 ( 아이디는 유일해야 함)
+    
+    document.**getElementsByClassName**{”클래스”) : 클래스에 해당하는 태그 값들을 배열로 리턴 ( 클래스는 중복이 가능)
+    
+    document.**createElement**
+    
+    document.**createAttribute**
+    
+
+## 태그의 값 조회/설정 방법
+
+- innerText, innerHTML 속성
+    - <h1> 값 </h1>
+- 태그의 value 속성
+    - <input type=”text” value=”input” />
+
+<aside>
+💡
+
+**커스텀 속성** 
+
+**`data-”속성”`** 을 지정해 **커스텀 속성을 사용할 수 있다.** 이런 커스텀 속성은 **`dataset 키워드`**로 접근한다.
+
+</aside>
+
+```
+<td><input type="checkbox" id="notebook" data-price="1000" /></td>
+====================================================
+//data-price 속성값 가지고오기
+input_list.forEach((item, index) => {
+        result += Number.parseInt(item.dataset.price);
+});
+```
+
+---
+
