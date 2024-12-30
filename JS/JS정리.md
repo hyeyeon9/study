@@ -1810,9 +1810,9 @@ https://www.w3schools.com/jsref/default.asp
 ## 태그의 값 조회/설정 방법
 
 - innerText, innerHTML 속성
-    - <h1> 값 </h1>
+    - `<h1> 값 </h1>`
 - 태그의 value 속성
-    - <input type=”text” value=”input” />
+    - `<input type=”text” value=”input” />`
 
 <aside>
 💡
