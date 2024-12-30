@@ -1833,4 +1833,48 @@ input_list.forEach((item, index) => {
 ```
 
 ---
+# 19. 객체 분해 할당 ( 구조 분해 할당 )
 
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
+
+: JS의 배열 또는 JSON 값을 매우 쉽게 변수에 저장하는 방법
+
+## 배열
+
+**`이전방식`**
+
+```jsx
+      // 1. 이전 방식
+      var arr = [10, 20];
+      var v1 = arr[0];
+      var v2 = arr[1];
+      console.log(v1, v2); ;// 10 20 
+```
+
+ **`객체 분해 할당`**
+
+```jsx
+      // 2. 객체 분해 할당
+      **var [v3, v4] = [10, 20];**
+      console.log(v3, v4);   // 10 20
+
+      **var [v5, v6, ...v7] = [100, 200, 300, 400];**
+      console.log(v5, v6, v7); // 100 200  > (2) [300, 400]
+      
+      // 변수가 많은경우
+      **var [a, b, c, d] = [10, 20];**
+      console.log(a, b, c, d); // 10 20 undefined undefined
+     
+	    // 디폴트 값 지정 가능 
+      **var [a2, b2, c2 = 50, d2 = 60] = [10, 20];**
+      console.log(a2, b2, c2, d2); // 10 20 50 60
+      
+      var [, , , n] = [10, 20, 30, 40];
+      console.log(n); // 40
+
+      // 활용 1
+      var [a, b, [c, d]] = [10, 20, [30, 40]];
+      console.log(a, b, c, d); // 10 20 30 40
+```
+
+## JSON
