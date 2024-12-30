@@ -1921,7 +1921,7 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destruc
 ```
 
 - **함수 호출시 인자값에 적용**
-  ```
+  ```jsx
         function fun({ name, age }) {
         console.log(name, age);
       }
