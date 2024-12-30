@@ -1934,7 +1934,8 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destruc
       fun2({ name: "이순신", age: 100 }); // 이순신 100
   ```
 
-  ---
+---
+
 # 20. 모듈
 
 ## 개념
