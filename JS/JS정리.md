@@ -1935,3 +1935,159 @@ https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Destruc
   ```
 
   ---
+  # 20. 모듈
+
+## 개념
+
+: ***.js 파일을 여러 개 만들고, js 파일간에 접근해서 사용할 수 있도**록 **`모듈`**이라는 개념이 나오게 되었다. *만들어진 각각의 js 파일은 독립적인 코드로 작성되고, 이를 모듈이라고 부른다.*
+
+만약 main.js에서 a.js 를 접근하고자 한다면,
+
+a.js 에서는 ***export***(여러번 가능) 또는 ***export default***(한번만 가능)를 사용해야하고 main.js에서는 a.js를 ***import*** 해야한다. 
+
+```jsx
+// a.js
+export function fun1(){}
+export function fun2(){}
+
+export default function fun3(){}
+
+// main.js
+// import {자원, 자원2} from '경로'
+import {fun1, fun2} form 'a.js';     // export 된 자원
+import fun3 from 'a.js';             // export default 된 자원 (하나뿐이기에 괄호 X)
+import {fun1, fun2}, fun3 form 'a.js'; // 조합해서 사용 가능
+
+```
+# 21. 클래스
+
+: 현재는 함수 자체를 많이 사용해 잘 사용하지는 않음
+
+- 접근지정자 지원 안함 (public, private 지원X)
+- **class 키워드** 사용
+- **클래스내에서 멤버 변수 생성 및 접근시에는 반드시 this 키워드를 사용해야 한다.**
+- 클래스 작성 후 **객체 생성 이후 사용**한다.
+- 메서드명 앞에 **set, get을 지정해서 속성으로 메서드 접근 가능**
+    
+    ```jsx
+          class Person {
+            set userAge(age) {
+              this.age = age;
+            }
+            get userAge() {
+              return this.age;
+            }
+          }
+    
+          var person = new Person();
+          person.userAge = 200; // setName으로 작동
+          console.log("나이:", person.userAge);  // getName으로 작동
+          // 나이: 200
+    ```
+    
+
+## 생성자
+
+: **JS에서는 생성자명(constructor)이 정해져 있다. 또한 오버로딩이 불가능하다.**
+
+- Java에서는 클래스명으로 생성자를 설정하고 오버로딩이 가능했다.
+
+```jsx
+      // 클래스 작설
+      var xxx = "setName";
+      var yyy = "getName";
+
+      class Person {
+        // 생성자
+        // 기능은 변수 초기화
+        **constructor**(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+
+        [xxx](name) {
+          this.name = name;
+        }
+        [yyy]() {
+          return this.name;
+        }
+
+        set userAge(age) {
+          this.age = age;
+        }
+        get userAge() {
+          return this.age;
+        }
+      }
+
+      var person = new Person("홍길동", 20);
+
+      console.log("이름", person.getName(), "나이:", person.userAge);
+      // 이름 홍길동 나이: 20
+```
+
+### 상속 및 오버라이딩
+
+: **extends** 키워드로 상속이 적용되며 부모 메서드를 오버라이딩해서 사용 가능하다.
+
+```jsx
+      class Employee {
+        setName(name) {
+          this.name = name;
+        }
+        getName() {
+          return this.name;
+        }
+
+        setSal(sal) {
+          this.sal = sal;
+        }
+        getSal() {
+          return this.sal;
+        }
+
+        getEmployee() {
+          return this.name + "\t" + this.sal;
+        }
+      }
+
+      class Manager extends Employee {
+        setDepart(depart) {
+          this.depart = depart;
+        }
+        getDepart() {
+          return this.depart;
+        }
+        // 오버라이딩
+        getEmployee() {
+          return this.name + "\t" + this.sal + "/t" + this.depart;
+        }
+      }
+```
+
+### static 메서드
+
+: static 메서드는 클래스명으로 접근가능하다.
+
+```jsx
+      class Person {
+        setName(name) {
+          this.name = name;
+        }
+        getName() {
+          return this.name;
+        }
+
+        setAge(age) {
+          this.age = age;
+        }
+        getAge() {
+          return this.age;
+        }
+
+        static getInfo() {
+          console.log("getInfo");
+        }
+      }
+       Person.getInfo(); // static 메서드는 클래스명으로 접근 가능하다.
+```
