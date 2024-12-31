@@ -112,3 +112,13 @@ $( document ).ready(function() {
 					// Handler for .ready() called.
 					});
 ```
+``` javascript
+       console.log($("p")); 
+      // e.fn.init {length: 0, prevObject: ce.fn.init}
+
+      $(document).ready(function () {
+        console.log("ready 안에서 호출");
+        console.log($("p")); 
+        // ce.fn.init {0: p, 1: p, length: 2, prevObject: ce.fn.init}
+      });
+```
