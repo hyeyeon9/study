@@ -150,7 +150,7 @@ https://api.jquery.com/category/selectors/basic-css-selectors/
 
 https://api.jquery.com/category/selectors/attribute-selectors/
 
-- [**Has Attribute Selector [name]**](https://api.jquery.com/has-attribute-selector/)
+- [**Has Attribute Selector [name]](https://api.jquery.com/has-attribute-selector/)**
     
     ```jsx
     $(document).ready(function () {
@@ -159,7 +159,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Equals Selector [name=”value”]**](https://api.jquery.com/attribute-equals-selector/)
+- [**Attribute Equals Selector [name=”value”]](https://api.jquery.com/attribute-equals-selector/)**
     
     ```jsx
     $(document).ready(function () {
@@ -168,7 +168,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Not Equal Selector [name!=”value”]**](https://api.jquery.com/attribute-not-equal-selector/)
+- [**Attribute Not Equal Selector [name!=”value”]](https://api.jquery.com/attribute-not-equal-selector/)**
     
     : value 값을 가지지 않는 요소 체크
     
