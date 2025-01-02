@@ -465,9 +465,9 @@ https://api.jquery.com/category/selectors/form-selectors/
     ```
     
 
-- [**:checkbox Selecto](https://api.jquery.com/checkbox-selector/)r**
+- [**:checkbox Selector**](https://api.jquery.com/checkbox-selector/)
 
-- [**:checked Selector](https://api.jquery.com/checked-selector/)**
+- [**:checked Selector**](https://api.jquery.com/checked-selector/)
     - **checked 속성  /  val() 메서드**
     
     ```jsx
@@ -495,7 +495,7 @@ https://api.jquery.com/category/selectors/form-selectors/
     ```
     
 
-- [**:disabled Selector](https://api.jquery.com/disabled-selector/)**
+- [**:disabled Selector**](https://api.jquery.com/disabled-selector/)
 - [**:enabled Selector**](https://api.jquery.com/enabled-selector/)
 - [**:file Selector**](https://api.jquery.com/file-selector/)
 - [**:focus Selector**](https://api.jquery.com/focus-selector/)
