@@ -150,7 +150,7 @@ https://api.jquery.com/category/selectors/basic-css-selectors/
 
 https://api.jquery.com/category/selectors/attribute-selectors/
 
-- [**Has Attribute Selector [name]](https://api.jquery.com/has-attribute-selector/)**
+- [**Has Attribute Selector [name]**](https://api.jquery.com/has-attribute-selector/)
     
     ```jsx
     $(document).ready(function () {
