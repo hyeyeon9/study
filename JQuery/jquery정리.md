@@ -130,9 +130,9 @@ $( document ).ready(function() {
 
 https://api.jquery.com/category/selectors/basic-css-selectors/
 
-- [**All Selector (“*”)](https://api.jquery.com/all-selector/)**
-- [**Class Selector (“.class”)](https://api.jquery.com/class-selector/)**
-- [**Element Selector (“element”)](https://api.jquery.com/element-selector/)**
+- [**All Selector (“*”)**](https://api.jquery.com/all-selector/)
+- [**Class Selector (“.class”)**](https://api.jquery.com/class-selector/)
+- [**Element Selector (“element”)**](https://api.jquery.com/element-selector/)
 - [**ID Selector (“#id”)**](https://api.jquery.com/id-selector/)
 - [**Multiple Selector (“selector1, selector2, selectorN”)**](https://api.jquery.com/multiple-selector/)
 
@@ -184,7 +184,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Ends With Selector [name$=”value”]**](https://api.jquery.com/attribute-ends-with-selector/)
+- [**Attribute Ends With Selector [name$=”value”]](https://api.jquery.com/attribute-ends-with-selector/)**
     
     : 마지막이 value로 끝나는지 확인
     
@@ -433,7 +433,7 @@ https://api.jquery.com/category/selectors/content-filter-selector/
 
 https://api.jquery.com/category/selectors/form-selectors/
 
-- [**:button Selector](https://api.jquery.com/button-selector/)**
+- [**:button Selector**](https://api.jquery.com/button-selector/)
     - **버튼  /  text(), html() 메서드**
     
     ```jsx
