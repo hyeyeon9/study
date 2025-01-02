@@ -159,7 +159,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Equals Selector [name=”value”]](https://api.jquery.com/attribute-equals-selector/)**
+- [**Attribute Equals Selector [name=”value”]**](https://api.jquery.com/attribute-equals-selector/)
     
     ```jsx
     $(document).ready(function () {
@@ -168,12 +168,12 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Not Equal Selector [name!=”value”]](https://api.jquery.com/attribute-not-equal-selector/)**
+- [**Attribute Not Equal Selector [name!=”value”]**](https://api.jquery.com/attribute-not-equal-selector/)
     
     : value 값을 가지지 않는 요소 체크
     
 
-- [**Attribute Starts With Selector [name^=”value”]](https://api.jquery.com/attribute-starts-with-selector/)**
+- [**Attribute Starts With Selector [name^=”value”]**](https://api.jquery.com/attribute-starts-with-selector/)
     
      **:**  value로 시작되는지 확인
     
@@ -184,7 +184,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Ends With Selector [name$=”value”]](https://api.jquery.com/attribute-ends-with-selector/)**
+- [**Attribute Ends With Selector [name$=”value”]**](https://api.jquery.com/attribute-ends-with-selector/)
     
     : 마지막이 value로 끝나는지 확인
     
@@ -195,7 +195,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
     ```
     
 
-- [**Attribute Contains Selector [name*=”value”]](https://api.jquery.com/attribute-contains-selector/)**
+- [**Attribute Contains Selector [name*=”value”]**](https://api.jquery.com/attribute-contains-selector/)
     
     : value가 포함된 문자열이 있는지 확인
     
@@ -205,7 +205,7 @@ https://api.jquery.com/category/selectors/attribute-selectors/
           });
     ```
     
-- [**Attribute Contains Word Selector [name~=”value”]](https://api.jquery.com/attribute-contains-word-selector/)**
+- [**Attribute Contains Word Selector [name~=”value”]**](https://api.jquery.com/attribute-contains-word-selector/)
     
     : 공백으로 구분된 단어에  value가 있는지 확인
     
