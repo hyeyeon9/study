@@ -692,4 +692,94 @@ https://api.jquery.com/category/traversing/tree-traversal/
     : 1차 필터링 이후의 바로 앞/뒤 형제들을 찾는다.
     
      `$("li.xxx").siblings().css("color", "red");`
-  
+
+---
+# 8. **Attributes**
+
+### [**.html()**](https://api.jquery.com/html/)
+
+: JS의 innerHTML 과 동일한 기능 ( 값 조회, 값 설정 )
+
+- 값 조회 : **.html()**
+
+```jsx
+        // on() 메서드로 이벤트 설정하기
+        $("#get").on("click", function () {
+          console.log($("#aaa").html()); //  <span>Hello</span>
+        });
+
+```
+
+- 값 설정 : **.html( htmlString )**
+
+```jsx
+        $("#set").on("click", () => {
+          $("#aaa").html("<h1> world </h1>");
+        });
+```
+
+### text()
+
+: JS의 innerText 과 동일한 기능 ( 값 조회, 값 설정 )
+
+- 값조회 : **.text( )**
+    
+     `console.log($("#result").text());`
+    
+- 값 설정 :  **.text( value )**
+    
+    `$("#result").text("안녕하세요");`
+    
+
+### [**.val()**](https://api.jquery.com/val/)
+
+: JS의 value와 동일한 기능 ( 값 조회, 값 설정 )
+
+- 값조회 : **.val()**
+    
+    `console.log($("#username").val());`
+    
+- 갑설정 : **.val( value )**
+    
+     `$("#username").val("홍길동");`
+    
+
+### [**.attr( )**](https://api.jquery.com/attr/)
+
+: JS의 .속성명 과 동일한 기능 ( 값 조회, 값 설정 )
+
+- 값조회 : **.attr( attributeName )**
+    
+     `console.log($("#link").attr("href")); *// http://www.daum.net*`
+    
+- 값설정 : **.attr( attributeName, value )**
+    
+      `$("#link").attr("href", "https://www.naver.com/");`
+    
+
+### [**.removeAttr( attributeName )**](https://api.jquery.com/removeAttr/)
+
+: 해당되는 속성을 삭제
+
+ `$("#result").removeAttr("style"); // style 속성 삭제`
+
+### [**.addClass()](https://api.jquery.com/addClass/), [.removeClass()](https://api.jquery.com/removeClass/), [.toggleClass()](https://api.jquery.com/toggleClass/)**
+
+### [**.prop( propertyName )**](https://api.jquery.com/prop/)
+
+: 속성에 해당하는 요소를 찾고, 그 속성값을 반환
+
+- **attr()와 prop()의 차이**
+
+```java
+<input id="checkbox" type="checkbox" checked>
+```
+
+```jsx
+console.log($("#checkbox").attr("checked")); // "checked" (HTML 초기값)
+console.log($("#checkbox").prop("checked")); // true (DOM 현재 상태)
+
+```
+
+- attr()는 HTML의 속성값을 다룬다. 즉, 정적인 id나 class처럼 사용자가 직접 설정한 값에 접근할 때 적합하다.
+- prop()은 DOM의 프로퍼티로, 현재 브라우저의 동적인 값을 다룬다. 즉, 체크박스의 상태나 disabled와 같은 동적으로 변하는 값에 사용하기 적합하다.
