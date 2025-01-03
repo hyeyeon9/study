@@ -836,3 +836,120 @@ $("#toggle").on("click", () => {
           $("p").toggleClass("large highlight selected");
         });
 ```
+
+---
+# 10. **Manipulation**
+
+https://api.jquery.com/category/manipulation/
+
+: **삽입, 삭제 등과 같은 조작 메서드**
+
+### [**.prepend()**](https://api.jquery.com/prepend/)
+
+: **첫번째 자식으로 요소를 삽입**
+
+```jsx
+        $($("#x1")).on("click", () => {
+          $("#xxx").prepend("<h1>안녕</h1>");
+        });
+```
+
+### [**.append()**](https://api.jquery.com/append/)
+
+: **마지막 자식으로 요소를 삽입**
+
+```jsx
+        $($("#x2")).on("click", () => {
+          $("#xxx").append("<h3>안녕</h3>");
+        });
+```
+
+### [**.before()**](https://api.jquery.com/before/)
+
+: **형제요소로 앞쪽으로 삽입**
+
+```jsx
+        $($("#x3")).on("click", () => {
+          $("#xxx").before("<h3>before</h3>");
+        });
+```
+
+### [**.after()**](https://api.jquery.com/after/)
+
+: **형제요소로 뒤쪽으로 삽입**
+
+```jsx
+        $($("#x4")).on("click", () => {
+          $("#xxx").after("<h3>after</h3>");
+        });
+```
+
+### [**.remove()**](https://api.jquery.com/remove/)
+
+: **지정한 셀렉터 자체가 삭제**
+
+```jsx
+        $($("#x5")).on("click", () => {
+          $("#xxx").remove("");
+        });
+```
+
+### [**.empty()**](https://api.jquery.com/empty/)
+
+: **지정한 셀렉터안의 자식요소가 삭제**
+
+```jsx
+        $($("#x6")).on("click", () => {
+          $("#xxx").empty();
+        });
+```
+
+### [**.replaceWith( newContent )**](https://api.jquery.com/replaceWith/)
+
+: **지정한 셀렉터를 새로운 요소로 전체 치환**
+
+```jsx
+        $($("#x7")).on("click", () => {
+          $("#xxx").replaceWith("<h1>치환 !!!!</h1>");
+        });
+```
+
+### 기존에 존재하는 태그를 이용한 조작
+
+: **기존 태그가 이동함**
+
+```jsx
+//HTML
+    **<h1>홍길동</h1>**
+    <div id="xxx">
+      <p>Hello</p>
+    </div>
+    
+// JavaScript
+$($("#x1")).on("click", () => {
+         **$("#xxx").prepend($("h1"));**
+      });
+
+/*  **div의 자식 요소로 이동**
+    <div id="xxx">
+      **<h1>홍길동</h1>**
+      <p>Hello</p>
+    </div>
+*/
+```
+
+위 코드에서 div 형제요소로 있던 h1태그가 버튼 클릭시 **div의 자식 요소로 이동되는 것**을 확인할 수 있다.
+
+### 정리
+
+- **자식으로 삽입**
+    - **`prepend()`**
+    - **`append()`**
+- **형제로 삽입**
+    - **`before()`**
+    - **`after()`**
+- **삭제**
+    - **자신이 삭제 : `remove()`**
+    - **자식이 삭제 : `empty()`**
+- **치환**
+    - **replaceWith()**
