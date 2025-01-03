@@ -783,3 +783,56 @@ console.log($("#checkbox").prop("checked")); // true (DOM 현재 상태)
 
 - attr()는 HTML의 속성값을 다룬다. 즉, 정적인 id나 class처럼 사용자가 직접 설정한 값에 접근할 때 적합하다.
 - prop()은 DOM의 프로퍼티로, 현재 브라우저의 동적인 값을 다룬다. 즉, 체크박스의 상태나 disabled와 같은 동적으로 변하는 값에 사용하기 적합하다.
+
+---
+# 9. CSS
+
+https://api.jquery.com/category/css/
+
+### [**.css()**](https://api.jquery.com/css/)
+
+: css를 추가하는  기능
+
+`$("p").css({ color: "red", "font-size": "30px" });`
+
+### [**.addClass( className )**](https://api.jquery.com/addClass/)
+
+: 지정한 클래스 추가
+
+```jsx
+<style>
+      .large {
+        font-size: xx-large;
+        font-weight: bold;
+      }
+      .highlight {
+        background: yellow;
+      }
+    </style>
+<script>
+      $(document).ready(function () {
+        $("#large").on("click", function () {
+          **$("p").addClass("large highlight");**
+        });
+      });
+    </script>
+```
+
+### [**.removeClass( className )**](https://api.jquery.com/removeClass/)
+
+: 지정한 클래스 삭제
+
+```jsx
+$("#normal").on("click", function () {
+          **$("p").removeClass("large highlight selected");**
+        });
+```
+
+## [**.toggleClass( className )**](https://api.jquery.com/toggleClass/)
+
+: 지정된 클래스를 add/remove 를 번갈아서 적용
+```jsx
+$("#toggle").on("click", () => {
+          $("p").toggleClass("large highlight selected");
+        });
+```
