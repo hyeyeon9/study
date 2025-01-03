@@ -953,3 +953,85 @@ $($("#x1")).on("click", () => {
     - **자식이 삭제 : `empty()`**
 - **치환**
     - **replaceWith()**
+
+---
+# 11. 유틸리티
+
+https://api.jquery.com/category/utilities/
+
+: **배열 관련 처리하는 메서드**
+
+## 1) 실제값으로의 배열
+
+예 > `var arr = [10,20,30];`
+
+### [**jQuery.each( array, callback )**](https://api.jquery.com/jQuery.each/)
+
+: *일반적인 배열 반복 처리*
+
+```jsx
+		  	var arr = [10, 21, 30, 41, 50];
+		  	
+				// 1. 일반적인 배열 반복
+				$.each(arr, function (idx, ele) {
+			        console.log(ele); // 10 20 30 40 50
+			    });
+```
+
+### [**jQuery.grep( array, function [, invert ] )**](https://api.jquery.com/jQuery.grep/)
+
+: *배열 순회하며 **조건에 일치하는 값만 반환** 처리*
+
+```jsx
+        var arr = [10, 21, 30, 41, 50];
+        
+        // 2. 조건에 일치하는 값만 반환처리
+        var result = $.grep(arr, function (v, idx) {
+          console.log(v, idx); // 10 0
+          return v % 2 == 0;
+        });
+        console.log("짝수 : ", result); // 짝수 :  (3) [10, 30, 50]
+```
+
+### [**jQuery.map( array, callback )**](https://api.jquery.com/jQuery.map/)
+
+: *배열을 순회하며 **가공 처리후 반환***
+
+```jsx
+        var arr = [10, 21, 30, 41, 50];
+        var result = $.map(arr, (v, idx) => {
+          return 2 * v;
+        });
+        console.log(result); //  [20, 42, 60, 82, 100]
+```
+
+## 2) jquery 선택자를 이용해 리턴된 배열
+
+예 > `var li = $(”li”)`
+
+### [**.each( function )**](https://api.jquery.com/each/#each-function)
+
+: 선택자로 얻은 배열을 반복처리
+
+```html
+<ul>
+      <li>100</li>
+      <li>200</li>
+      <li>300</li>
+      <li>400</li>
+</ul>
+```
+
+```jsx
+        var sum = 0;
+        $("li").each((idx, v) => {
+          sum += Number.parseInt($(v).text());
+        });
+        console.log(sum); // 1000
+        
+        // DOM 반복
+        $("li").each((idx, v) => {
+          console.log(idx, v); // v는 js객체
+          console.log($(v).text()); // 100 200 300 400 
+        });
+```
