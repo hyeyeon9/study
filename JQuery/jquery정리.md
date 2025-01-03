@@ -763,7 +763,7 @@ https://api.jquery.com/category/traversing/tree-traversal/
 
  `$("#result").removeAttr("style"); // style 속성 삭제`
 
-### [**.addClass()](https://api.jquery.com/addClass/), [.removeClass()](https://api.jquery.com/removeClass/), [.toggleClass()](https://api.jquery.com/toggleClass/)**
+### [**.addClass()**](https://api.jquery.com/addClass/), [**.removeClass()**](https://api.jquery.com/removeClass/), [**.toggleClass()**](https://api.jquery.com/toggleClass/)
 
 ### [**.prop( propertyName )**](https://api.jquery.com/prop/)
 
