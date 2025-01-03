@@ -507,3 +507,189 @@ https://api.jquery.com/category/selectors/form-selectors/
 - [**:selected Selector**](https://api.jquery.com/selected-selector/)
 - [**:submit Selector**](https://api.jquery.com/submit-selector/)
 - [**:text Selector**](https://api.jquery.com/text-selector/)
+
+---
+# **7. Traversing**
+
+https://api.jquery.com/category/traversing/
+
+: 앞에서 배운 selectors는 DOM에서 1차로 필터링하는 방법이고,  **Traversing은 2차 필터링하는 방법**이다.
+
+### **1) Filtering**
+
+https://api.jquery.com/category/traversing/filtering/
+
+- [**.eq(idx)](https://api.jquery.com/eq/)**
+    
+    : *명시된 인덱스의 요소를 찾아줌*
+    
+    `$("li").eq(1).css("color", "red");`
+    
+- [**.even()**](https://api.jquery.com/even/)
+    
+    : *인덱스 0부터 시작해서 짝수번째 요소 반환*
+    
+    `$("li").even().css("color", "yellow");`
+    
+- [**.filter(selector|function)](https://api.jquery.com/filter/)**
+    
+    : *1차 필러팅 이후 셀렉터 조건에 맞는 요소 반환*
+    
+    ```jsx
+          $(document).ready(function () {
+            // 2. .filter(selector|function) : selector에 해당되는 요소를 찾아줌
+            $("li").filter(".xxx").css("font-size", "30px");
+    
+            // 2-1. .filter
+            $("li")
+              .filter(function (idx, ele) {
+                // ele는 js객체
+                console.log(idx, ele); // li태그 하나씩 출력됨
+                return idx % 2 === 0; // 0부터 시작하여 짝수번째
+              })
+              .css("background-color", "tomato")
+          });
+    ```
+    
+- [**.not(selector|function)**](https://api.jquery.com/not/)
+    
+    : *1차 필터링 이후 셀렉터 조건에 맞지 않는 요소 반환*
+    
+    `$("li").not(".xxx").css("font-size", "10px");`
+    
+- [**.first()**](https://api.jquery.com/first/)
+    
+    : *1차 필터링 이후 첫번째 요소 반환*
+    
+     `$("li").first().css("color", "pink");`
+    
+- [**.last()**](https://api.jquery.com/last/)
+    
+    : *1차 필터랑 이후 마지막 요소 반환*
+    
+- [**.has(selector)**](https://api.jquery.com/has/)
+    
+    : *지정된 셀렉터를 포함하는 요소 반환*
+    
+    `$("li").has("span").css("color", "red");`
+    
+- [**.is(selector|function)**](https://api.jquery.com/is/)
+    
+    : 지정된 셀렉터를 포함하는 요소가 있으면 true, 없으면 false
+    
+    ```jsx
+            $("ul").on("click", function (e) {
+              var target = $(event.target);
+              if (target.is("li")) {
+                target.css("background-color", "red");
+              }
+            });
+    
+            var result = $("li").is("[class]");
+            console.log(result); // true
+    ```
+    
+- [**.slice( start [, end ] )**](https://api.jquery.com/slice/)
+    
+    : *start부터 end-1까지의 요소를 반환*
+    
+    `$("li").slice(2,5).css("font-size", "30px");`
+    
+- [**.map( callback )**](https://api.jquery.com/map/)
+    
+    : *1차 필터링 이후의 요소들을 가공해서  반환*
+    
+    ```jsx
+            var a = $(":checkbox")
+              .map(function () {
+                return this.id; // this는 1차 필터링 객체이다.
+              })
+              .get() // 베열안의 값을 get()메서드를 통해서 가져온다. => 배열로 나옴
+              .join(" ");
+            console.log(a); // two four six eight
+    
+            var result = $("li")
+              .map(function (idx, ele) {
+                return ele.innerText.toLowerCase();
+              })
+              .get();
+            console.log(result); // ['aaa', 'aa', 'bb', 'cc', 'dd', 'ee', 'aaa', 'a', 'b', 'c', 'd', 'e', 'f']
+    
+            var result2 = $("li")
+              .map(function (idx, ele) {
+                console.log($(ele)); // jquery 객체
+                console.log($(this)); // console.log($(ele));와 똑같은 결과
+                return $(ele).text().toLowerCase();
+              })
+              .get()
+              .join(" ");
+            console.log(result2); // aaa aa bb cc dd ee aaa a b c d e f
+    ```
+    
+
+### **2) Tree Traversal**
+
+https://api.jquery.com/category/traversing/tree-traversal/
+
+- [**.children( [ selector ] )**](https://api.jquery.com/children/)
+    
+    : selector가 있을 수도 없을 수도 있다. 없는 경우 모든 자식요소를 찾고, 있는 경우 셀렉터에 일치하는 자식요소를 찾는다.
+    
+     `$("div").children().css("color", "red");`
+    
+     `$("div").children("p").css("font-size", "30px");`
+    
+- [**.find( selector )**](https://api.jquery.com/find/)
+    
+    : selector가 필수이다. 셀렉터에 일치하는 자식, 자손 요소를 찾는다.
+    
+     `$("div").find("span").css("font-size", "30px");`
+    
+- [**.parent( [ selector ] )**](https://api.jquery.com/parent/)
+    
+    : 셀럭터에 일치하는 부모 요소를 찾는다. 셀렉터가 없는 경우에는 모든 부모요소를 찾는다.
+    
+     `$("span").parent().attr("class", "yyy"); *// attr(속성명, 속성값)*`
+    
+    `$("span").parent("p").attr("class", "yyy"); *// 부모 중 p태그 요소만 찾음*`
+    
+- [**.parents( [selector ] )**](https://api.jquery.com/parents/)
+    
+    : 조상요소까지 찾는다.
+    
+    `$("span").parents().attr("class", "yyy"); *// body, html까지*`
+    
+    `$("span").parents("body").attr("class", "classs"); *// body에만*`
+    
+- [**.next( [selector ] )**](https://api.jquery.com/next/)
+    
+    : 형제요소를 찾는다.
+    
+     `$("li:first").next().css("color", "blue"); ;// li중 첫번째 요소의 바로 다음 형제요소 하나를 반환`
+    
+- [**.nextAll( [selector ] )**](https://api.jquery.com/nextAll/)
+    
+    : 모든 형제들을 찾는다.
+    
+    `$("li:first").nextAll().css("color", "red"); //  li중 첫번째 요소 뒤의 모든 형제들을 반환`
+    
+- [**.prev( [selector ] )**](https://api.jquery.com/prev/)
+    
+    : 바로 앞 형제를 찾는다.
+    
+    `$("li").prev().css("color", "blue");`
+    
+    `$("li").prev(".xxx").css("font-size", "30px");`
+    
+- [**.prevAll( [selector ] )**](https://api.jquery.com/prevAll/)
+    
+    : 앞 형제들 모두 찾는다.
+    
+    `$("li:last").prevAll().css("color", "red"); *// li 마지막 요소 앞의 모든 형제들 반환*`
+    
+- [**.siblings( [selector ] )**](https://api.jquery.com/siblings/)
+    
+    : 1차 필터링 이후의 바로 앞/뒤 형제들을 찾는다.
+    
+     `$("li.xxx").siblings().css("color", "red");`
+  
