@@ -1035,3 +1035,73 @@ https://api.jquery.com/category/utilities/
           console.log($(v).text()); // 100 200 300 400 
         });
 ```
+---
+# 12. 이벤트
+
+https://api.jquery.com/category/events/
+
+### [**.on()**](https://api.jquery.com/on/)
+
+: *이벤트 적용*
+
+```jsx
+        $("#myform").on("submit", () => {
+          // 자동 submit 방지
+          event.preventDefault();
+        });
+```
+
+### [**.off()**](https://api.jquery.com/off/)
+
+: *이벤트 제거*
+
+```jsx
+        $("#xxx2").on("click mouseover", () => {
+          $("#xxx").off("click");
+        });
+```
+
+### [**.one()**](https://api.jquery.com/one/)
+
+: *이벤트가 적용되는데 **단 한번만 반응***
+
+```html
+        $("#xxx3").one("click", () => {
+          console.log("한번만");
+        });
+```
+
+### [**.trigger()**](https://api.jquery.com/trigger/)
+
+: 
+
+### 동적 요소 이벤트 처리
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>jquery - attribute(pop)</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#xxx").on("click", function () {
+          $("#result").html("<button id='yyy'> new </button>");
+        });
+
+        // 동적 요소 이벤트 처리
+        // 위에서 이벤트로 만든 요소에 접근해서 이벤트 적용하는 방법
+        **$("body").on("click", "#yyy", function () {
+          console.log("yyy");
+        });**
+      });
+    </script>
+  </head>
+  <body>
+    <button id="xxx">new 버튼생성</button>
+    <hr />
+    <div id="result"></div>
+  </body>
+</html>
+```
