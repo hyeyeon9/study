@@ -1192,26 +1192,19 @@ https://api.jquery.com/category/events/
 ### 2. async 키워드 이용
 
 - 문법
+``` java
+async function fun(){
+		// 성공한 경우 
+		return 값 ;                      // Promise의 resolve(값)
 
-**async** function fun(){
-
-// 성공한 경우 
-
-**return 값 ;**                        // Promise의 resolve(값)
-
-// 실패한 경우
-
-**return new Error(error);** // Promise의 reject(new Error(error))
-
+		// 실패한 경우
+		return new Error(error);*// Promise의 reject(new Error(error))
 }
-
 var promise = fun();                     // Promise 객체가 저장
-
 promise.then( function() {} );       // resolve() 호출시 동작됨
-
 promise.catch( function() {} );     // reject()  호출시 동작됨
-
 promise.finally( function() {} );     //  반드시 수행해야 되는 동작
+```
 
 ```jsx
 <!DOCTYPE html>
