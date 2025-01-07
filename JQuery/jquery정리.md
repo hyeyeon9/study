@@ -1239,21 +1239,17 @@ promise.finally( function() {} );     //  반드시 수행해야 되는 동작
 
 ### await 키워드
 
-문법 :
+- 문법
 
+``` java
 async function fun(){
-
 // 오랜시간이 걸리는 작업코드
-
 var result = await 서버연동코드()  // 1시간 걸림
-
 // awiat가 지정된 코드가 끝날때까지 
-
 // 그 이후 코드는 진행되지 않고 기다림
-
 return result; 
-
 }
+```
 
 ```jsx
 <!DOCTYPE html>
