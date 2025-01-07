@@ -1191,7 +1191,7 @@ https://api.jquery.com/category/events/
 
 ### 2. async 키워드 이용
 
-문법 :
+- 문법
 
 **async** function fun(){
 
