@@ -1107,3 +1107,192 @@ https://api.jquery.com/category/events/
   </body>
 </html>
 ```
+
+---
+# 13. 동기와 비동기
+
+## 1) 동기
+
+: ***순서대로 실행***
+
+- 하나의 요청에 대한 응답이 끝나면 그 다음 응답이 처리되는 순으로**, 차례대로 진행되는 방식**이다. 뒷차례의 응답은 앞의 응답이 처리완료 될 때까지 기다렸다가 끝난 이후 진행되는 것이다. ( 결제시스템 )
+- 따라서 응답에 대한 **안전성이 높다**는 장점이 있지만 대기시간이 길다(성능이 낮다)는 단점이 발생한다.
+
+## 2) 비동기
+
+: ***병행해서 실행***
+
+- 하나의 요청만 처리하는 것이 아니라 *여러개의 요청작업을 병행해서 처리하는 방법*이다.
+- 따라서 **대기시간이 짧아 성능이 높아질** 수 있지만, **안전성을 보장할 수 없다**는 단점이 발생한다.
+- 비동기는 주로 시간이 많은 걸리는 작업에 사용한다. ( 서버요청 )
+
+## 3) 비동기 만드는 방법
+
+### 1. Promise 객체 이용
+
+- 일반함수(동기함수)
+    
+    function fun(){}
+    
+- 비동기함수
+    
+    function fun(){
+    
+    return new **Promise**( function(resolve, reject){
+    
+    // 성공한 경우 
+    
+    **reslove();**
+    
+    // 실패한 경우 
+    
+    **reject();**
+    
+    });
+    
+    }
+    
+    var promise = fun();
+    
+    promise.then( function() {} );       // resolve() 호출시 동작됨
+    
+    promise.catch( function() {} );     // reject()  호출시 동작됨
+    
+    promise.finally( function() {} );     //  반드시 수행해야 되는 동작
+    
+- 코드
+
+```jsx
+   <script>
+      function fun() {
+        return new Promise(function (resolve, reject) {
+          // 성공시
+          resolve('{"age": 20}');
+
+          //'{"age": 20}' ==> {"age": 20} ==> 20
+        
+          // 살패시
+          //r eject(new Error("error"));
+        });
+      }
+      
+      // 호출
+      var promise = fun()
+
+      promise
+        .then((param) => JSON.parse(param)) // 문자열을 JSON형태로 변환  '{"age": 20}' ==> {"age": 20}
+        .then((param2) => param2.age)
+        .catch((error) => console.log("catch", error))
+        .finally(() => console.log("finally"));
+
+      console.log("END");
+    </script>
+```
+
+### 2. async 키워드 이용
+
+문법 :
+
+**async** function fun(){
+
+// 성공한 경우 
+
+**return 값 ;**                        // Promise의 resolve(값)
+
+// 실패한 경우
+
+**return new Error(error);** // Promise의 reject(new Error(error))
+
+}
+
+var promise = fun();                     // Promise 객체가 저장
+
+promise.then( function() {} );       // resolve() 호출시 동작됨
+
+promise.catch( function() {} );     // reject()  호출시 동작됨
+
+promise.finally( function() {} );     //  반드시 수행해야 되는 동작
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Promise</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      async function fun(params) {
+        // 성공시
+        return { age: 20 };
+
+        // 실패시
+        // throw new Error("error");
+      }
+
+      // 호출
+      var promise = fun();
+      console.log(promise);
+      promise
+        .then((param) => console.log(param.age))
+        .catch(() => console.log("catch"))
+        .finally(() => console.log("finally"));
+
+      console.log("END");
+    </script>
+  </head>
+  <body></body>
+</html>
+```
+
+### await 키워드
+
+문법 :
+
+async function fun(){
+
+// 오랜시간이 걸리는 작업코드
+
+var result = await 서버연동코드()  // 1시간 걸림
+
+// awiat가 지정된 코드가 끝날때까지 
+
+// 그 이후 코드는 진행되지 않고 기다림
+
+return result; 
+
+}
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Promise</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      async function fun(params) {
+        // 성공시
+        var result = await (function () {
+          return { age: 100 };
+        })();
+
+        // await 함수가 끝날때까지 wait됨
+        console.log("result >>> ", result); // result >>>  {age: 100}
+        return result;
+      }
+
+      // 호출
+      var promise = fun();
+      console.log(promise);
+      promise
+        .then((param) => {
+          console.log("param", param.age); // param 100
+        })
+        .catch(() => console.log("catch"))
+        .finally(() => console.log("finally"));
+
+      console.log("END");
+    </script>
+  </head>
+  <body></body>
+```
