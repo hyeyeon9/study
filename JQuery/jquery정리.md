@@ -1285,3 +1285,431 @@ return result;
   </head>
   <body></body>
 ```
+
+---
+# 14. Ajax ( Asynchronous Javascript and Xml )
+
+## 1) 개념
+
+: *비동기 + JavaScript + Data( xml | json ) 이용해서 서버와 통신하는 방법*
+
+- **웹 페이지에서 새로고침 없이** 서버와 통신하여 데이터를 주고 받을 수 있는 기술로, **필요한 부분의 데이터만 업데이트할 수 있다.**
+
+## 2) 아키텍처
+
+### Ajax 사용하지 않았을 때
+
+- 요청의 응답 결과는 전체 html이 응답되고, 화면 깜빡임이 있다. (새로고침O)
+- 단점은 첫페이지와 다음페이지간의 변경사항이 적어도 매번 모든 페이지로 된 html을 다운로드 하게 된다. ( 성능 낮아짐 )
+
+### Ajax 사용할 때
+
+- 요청의 응답 결과는 현재 페이지에서 **필요한 데이터 포맷의 JSON**이다. **화면 깜빰익이 없다. (새로고침X)**
+- 장점은 첫페이지와 다음 페이지간의 변경사항이 작으면 **변경된 일부분의 JSON만 다운로드** 되기에 성능이 좋아진다.
+- 단점은 도메인이 다를경우 요청되지 않는다는 것 ( 해결가능 )
+
+## 3) 구현방법
+
+- XMLHttpRequest 객체
+    
+    : OLD 방법 ( 사용안함 ) 
+    
+
+### **fetch(url)  +  async / await    ( fetch는 JS 메서드 )**
+
+https://developer.mozilla.org/ko/docs/Web/API/Window/fetch
+
+- 실습에 사용하는 데이터는 아래의 reqres 사이트에서 받아와 사용한다.
+    
+    https://reqres.in/
+    
+
+**예 >** 
+
+**`aysnc function fun(){`**
+
+**`var result = awiat fetch(”https://reqres.in/api/users/2”);`**
+
+**`return result;`**
+
+**`}`**
+
+- **GET 실습1**
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ajax</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      async function req() {
+        // function fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
+        var response = await fetch("https://reqres.in/api/users/2");
+        console.log(response); // promise 객체가 반환됨
+        console.log(response.ok, response.status, response.url); // true 200 'https://reqres.in/api/users/2'
+
+        var responseJSON = await response.json(); // 데이터를 받아옴
+        console.log(responseJSON);
+
+        var responseData = responseJSON.data;
+        var id = responseData.id;
+        var email = responseData.email;
+        var first_name = responseData.first_name;
+        var last_name = responseData.last_name;
+        var avatar = responseData.avatar;
+        var table = `
+        <table border="1">
+              <tr>
+                <th>id</th>
+                <th>email</th>
+                <th>first_name</th>
+                <th>last_name</th>
+                <th>avatar</th>
+              </tr>
+              <tr>
+                <td>${id}</td>
+                <td>${email}</td>
+                <td>${first_name}</td>
+                <td>${last_name}</td>
+                <td>${avatar}</td>  
+              </tr>
+          </table>
+          `;
+
+        document.querySelector("#result").innerHTML = table;
+        // 성공한 경우 // status : 200, ok : ture
+        // if (response.ok) {
+        // }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Ajax 실습1 - fetch와 async, await</h1>
+    <button onclick="req()">요청</button>
+    <div id="result"></div>
+  </body>
+</html>
+
+```
+
+- **GET 실습2**
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ajax</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+      async function req() {
+        // function fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
+        // fetch 함수의 리턴타입은 Promise 객체다.
+        // 하지만 이를 변수로 받으면 변수에는 Promise객체에 저장된 resonse 객체로 받게된다.
+        var responseData = await fetch("https://reqres.in/api/users/2")
+          .then(function (response) {
+            return response.json();
+          })
+          .then((responseJSON) => {
+            return responseJSON.data;
+          })
+          .catch(function () {})
+          .finally(function () {});
+
+        console.log(responseData);
+        var id = responseData.id;
+        var email = responseData.email;
+        var first_name = responseData.first_name;
+        var last_name = responseData.last_name;
+        var avatar = responseData.avatar;
+
+        var table = `
+						<table border="1">
+              <tr>
+                <th>id</th>
+                <th>email</th>
+                <th>first_name</th>
+                <th>last_name</th>
+                <th>avatar</th>
+              </tr>
+              <tr>
+                <td>${id}</td>
+                <td>${email}</td>
+                <td>${first_name}</td>
+                <td>${last_name}</td>
+                <td>${avatar}</td>  
+              </tr>
+          </table>
+          `;
+        document.querySelector("#result").innerHTML = table;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Ajax 실습1 - fetch와 async, await</h1>
+    <button onclick="req()">요청</button>
+    <div id="result"></div>
+  </body>
+</html>
+
+```
+
+- **POST 요청**
+    
+    **method : ‘post’**
+    
+    **headers : {**
+    
+    **“Content-Type” : “application/json”**
+    
+    **}**
+    
+    **// 전달할 데이터 포맷은 반드시 문자열로 전달**
+    
+    **body : JSON.stringfy( { “name” : “morpheus”, “job” : “leader” } )**
+    
+    ```jsx
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>fetch-POST</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+        <script>
+          async function req() {
+            var responseData = await fetch("https://reqres.in/api/users", {
+              method: "post",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ name: "morpheus", job: "leader" }),
+            })
+              .then(function (response) {
+                return response.json();
+              })
+              .then((responseJSON) => {
+                return responseJSON;
+              })
+              .catch(function () {})
+              .finally(function () {});
+    
+            console.log(responseData);
+            var id = responseData.id;
+            var name = responseData.name;
+    
+            var job = responseData.job;
+            var createdAt = responseData.createdAt;
+            var table = `
+            <table border="1">
+            <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>job</th>
+            <th>createdAt</th>
+            </tr>
+            <tr>
+            <td>${id}</td>
+            <td>${name}</td>
+            <td>${job}</td>
+            <td>${createdAt}</td>
+            </tr>
+            </table>
+            `;
+            document.querySelector("#result").innerHTML = table;
+          }
+        </script>
+      </head>
+      <body>
+        <h1>fetch-POST</h1>
+        <button onclick="req()">요청</button>
+        <div id="result"></div>
+      </body>
+    </html>
+    
+    ```
+    
+
+### **jQuery 이용**
+
+https://api.jquery.com/jQuery.ajax/#jQuery-ajax-url-settings
+
+**:  $.ajax(옵션);**
+
+- **GET 방식**
+    
+    **$.ajax({**
+    
+    **url : “https://reqres.in/api/users/2”**
+    
+    **method : “get”,**
+    
+    **dataType : “json” ,     //  응답받은 데이터 타입**
+    
+    **success : function( ( responseJson, status, xhr ) ){ }  // fetch의 then 역할**
+    
+    **error : function( xhr, status, error ){ }**
+    
+    **})**
+    
+    ```jsx
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>fetch-jquery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+        <script>
+          $(document).ready(function () {
+            // Get 요청
+            $("button").on("click", function () {
+              // ajax 통신
+              $.ajax({
+                url: "https://reqres.in/api/users/2",
+                method: "get",
+                dataType: "json", //  응답받은 데이터 타입
+                success: function (responseJson, status, xhr) {
+                  console.log(responseJson, status);
+                  console.log(responseJson.data);
+                }, // fetch의 then 역할
+                error: function (xhr, status, error) {
+                  console.log(error);
+                },
+              });
+            });
+          });
+        </script>
+      </head>
+      <body>
+        <h1>fetch-jquery</h1>
+        <button>요청</button>
+        <div id="result"></div>
+      </body>
+    </html>
+    
+    ```
+    
+
+- **POST 방식**
+    
+    **$.ajax({**
+    
+    **url : "https://reqres.in/api/users",**
+    
+    **method : “post”,**
+    
+    **dataType :  ”json”,**
+    
+    **contentType : “application/json”,**
+    
+    **data : JSON.stringfy({ name: "morpheus", job: "leader" }),**
+    
+    **success : function(responseJson, status, xhr){},**
+    
+    **error : function(xhr, status, error){}**
+    
+    **})**
+    
+    ```jsx
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>fetch-jquery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+        <script>
+          $(document).ready(function () {
+            // Get 요청
+            $("button").on("click", function () {
+              // ajax 통신
+              $.ajax({
+                url: "https://reqres.in/api/users",
+                method: "post",
+                dataType: "json", //  응답받은 데이터 타입
+                contentType: "application/json",
+                data: JSON.stringify({ name: "morpheus", job: "leader" }),
+                success: function (responseJson, status, xhr) {
+                  console.log(responseJson, status);
+                }, // fetch의 then 역할
+                error: function (xhr, status, error) {
+                  console.log(error);
+                },
+              });
+            });
+          });
+        </script>
+      </head>
+      <body>
+        <h1>fetch-jquery</h1>
+        <button>요청</button>
+        <div id="result"></div>
+      </body>
+    </html>
+    
+    ```
+    
+
+### 실습해보기
+
+1. 여러 사람을 data를 받아서 출력해보기
+    - **fetch(url)  +  async / await 사용 ( GET 방식)**
+    - **데이터는 https://reqres.in/ URL 사용**
+    ![image (7)](https://github.com/user-attachments/assets/203ae00d-fb73-42b2-9690-4af637557e70)
+
+    ```jsx
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title>fetch-jquery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <!-- https://reqres.in/api/users?page=2 -->
+        <script>
+          async function res() {
+            var data = await fetch(" https://reqres.in/api/users?page=2")
+              .then((response) => {
+                return response.json();
+              })
+              .then((responseJson) => {
+                return responseJson.data;
+              })
+              .catch()
+              .finally();
+            console.log(data);
+            var table = `<table border="1">
+          <tr>
+          <th>id</th>
+          <th>email</th>
+          <th>first_name</th>
+          <th>last_name</th>
+          <th>avatar</th>
+          </tr>`;
+            for (let i = 0; i < data.length; i++) {
+              var id = data[i].id;
+              var email = data[i].email;
+              var first_name = data[i].first_name;
+              var last_name = data[i].last_name;
+              var avatar = data[i].avatar;
+    
+              table += `
+          <tr>
+          <td>${id}</td>
+          <td>${email}</td>
+          <td>${first_name}</td>
+          <td>${last_name}</td>
+          <td><img src="${avatar}" alt="avatar"></td>
+          </tr>
+          `;
+            }
+            document.querySelector("#result").innerHTML = table + `</table>`;
+          }
+        </script>
+      </head>
+      <body>
+        <h1>fetch 실습</h1>
+        <button onclick="res()">요청</button>
+        <div id="result"></div>
+      </body>
+    </html>
+    
+    ```
