@@ -696,7 +696,8 @@ console.log()의 결과는 콘솔창에서 확인가능
 - < iframe src=”외부 html 파일”></iframe>
 - `<iframe src="sample04_body11_image.html" frameborder="1" width="500" height="300">`
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/39c7eff8-5df4-49e1-a4cd-7d119009ddfe/b073d9a4-8c7f-4547-95ba-64072d3c0332.png)
+![Uploading image (8).png…]()
+
 
 ### 15. 특수문자
 
