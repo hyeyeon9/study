@@ -307,7 +307,7 @@ sample01_head_title.html : 타겟
   </body>
 ```
 
-![console.log()의 결과는 콘솔창에서 확인가능](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/a98ff784-8d9f-4357-839f-84c159fa1d6e/32e4b633-f104-4abd-a22f-484e318d9b94.png)
+![Uploading image (10).png…]()
 
 console.log()의 결과는 콘솔창에서 확인가능
 
