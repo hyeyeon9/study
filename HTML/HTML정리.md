@@ -347,10 +347,10 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 ### 1. header 태그
 
-: /<h1>  ~  /<h6> 
+: &lt;h1&gt;  ~  &lt;h6&gt;
 
 - 숫자가 작을수록 글자가 크다는 특징
-- /<h1> : 32px , /<h4> : 16px
+- &lt;h1&gt; : 32px , &lt;h4&gt;: 16px
 - 기본 폰트 : 16px ( 1rem과 동일 )
 
 ### 2. p 태그
@@ -515,7 +515,7 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 - **병합**
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/4395b27f-e310-4a02-a4e1-d4506a040e8f/1ac9bb30-6326-4055-b7de-d161a10c1c5c.png)
+![image (12)](https://github.com/user-attachments/assets/a00caf53-5ba5-49e8-909f-4d2d5e2978dd)
 
 - 열병합 :  colspan="갯수"
     
