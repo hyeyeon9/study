@@ -308,8 +308,7 @@ sample01_head_title.html : 타겟
   </body>
 ```
 
-![Uploading image (10).png…]()
-
+![image (10)](https://github.com/user-attachments/assets/c4c73f7b-e3b2-400e-9763-80ef05196643)
 console.log()의 결과는 콘솔창에서 확인가능
 
 - JS 2가지 방법
