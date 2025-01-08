@@ -227,7 +227,8 @@ sample01_head_title.html : 타겟
 
 ## 2) <title> 태그
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/71838c47-0c11-4bdf-b46e-9b0dcc1af025/62f070f7-23a9-45e7-957e-c414999e2684.png)
+![image (11)](https://github.com/user-attachments/assets/e4c3f962-0f9f-4496-9db0-31b1d7323923)
+
 
 - html 문서의 타이틀 지정용도
 - 웹 브라우저 탭에 보이며, 즐겨찾기 할 때 저장되는 값
