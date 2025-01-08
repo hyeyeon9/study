@@ -455,7 +455,8 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 ### 8. table 태그
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/622378d2-d95d-4c43-8169-7133f16a82ae/50cf4f64-7400-4774-bc6c-a94c3598e5cd.png)
+![Uploading image (9).png…]()
+
 
 ```html
     <table border="1">
