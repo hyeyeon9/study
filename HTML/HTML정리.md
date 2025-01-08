@@ -371,13 +371,13 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 ### 5. 텍스트 포맷 태그
 
-- <b> hello </b>  : 굵은 글자
-- <i> : 이태릭 글자
-- <small> : 작은 글자
-- <del> : 취소선 글자
-- <ins> : 밑줄 글자
-- <sub> : 아래 글자
-- <sup> : 위 글자
+- &lt;b&gt; hello &lt;/b&gt;  : 굵은 글자
+- &lt;i&gt; : 이태릭 글자
+- &lt;small&gt; : 작은 글자
+- &lt;del&gt; : 취소선 글자
+- &lt;ins&gt; : 밑줄 글자
+- &lt;sub&gt; : 아래 글자
+- &lt;sup&gt; : 위 글자
 
 ### 6. 리스트
 
