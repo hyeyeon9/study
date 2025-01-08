@@ -347,10 +347,10 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 ### 1. header 태그
 
-: <h1>  ~  <h6>
+: /<h1>  ~  /<h6> 
 
 - 숫자가 작을수록 글자가 크다는 특징
-- <h1> : 32px , <h4> : 16px
+- /<h1> : 32px , /<h4> : 16px
 - 기본 폰트 : 16px ( 1rem과 동일 )
 
 ### 2. p 태그
@@ -455,7 +455,8 @@ console.log()의 결과는 콘솔창에서 확인가능
 
 ### 8. table 태그
 
-![Uploading image (9).png…]()
+![image (9)](https://github.com/user-attachments/assets/31186e42-fef0-42be-8912-b4aee6830125)
+
 
 
 ```html
@@ -697,7 +698,8 @@ console.log()의 결과는 콘솔창에서 확인가능
 - < iframe src=”외부 html 파일”></iframe>
 - `<iframe src="sample04_body11_image.html" frameborder="1" width="500" height="300">`
 
-![Uploading image (8).png…]()
+![image (8)](https://github.com/user-attachments/assets/50bbbfab-aad7-483b-b8fa-459e0d27680d)
+
 
 
 ### 15. 특수문자
