@@ -91,14 +91,14 @@
 
 1. eclipse 와 Tomcat 연동
     
-    
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/a39bb9cd-db64-4b56-a94b-b863c89d2507/63e56ced-274c-4096-a986-393056b3c27d.png)
-    
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/6f090c04-345f-441c-9ec9-429e730fe2ea/8dfd29e2-8072-4ffe-b6ff-3a3e88d3a8f3.png)
-    
+    ![image (16)](https://github.com/user-attachments/assets/5e71603f-4acf-4933-8c41-d7e86eca7c38)
+
+    ![image (15)](https://github.com/user-attachments/assets/70ba3a29-4d42-4d2f-add5-570b47202950)
+
 - 서버생성 확인
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/caa30382-9c06-4e92-be26-be6198d5198e/e3ab45ff-0694-41cc-b815-3190d7fc6c20.png)
+![image (14)](https://github.com/user-attachments/assets/7088f4ea-a414-4624-8ce8-76f4f2da042f)
+
 
 - 이후 서버 설정하기
 
@@ -215,7 +215,8 @@ js
 
 images
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/2f7294fd-e299-4ce0-a6b7-9fb562bc4aa9/9d36635f-0693-4d50-9cbd-400cba749fc8.png)
+![image (13)](https://github.com/user-attachments/assets/2035056e-5e96-47c0-b308-71c2f62d6ef1)
+
 
 http://localhost:8090/HelloTest/main.jsp
 
