@@ -548,3 +548,79 @@ http://localhost:8090/a/main.jsp
                 	}
                 }
                 ```
+---
+# 서블릿의 LifeCycle
+
+# 10. 서블릿의 LifeCycle
+
+: **Tomcat 컨테이너가 서블릿(JSP)을 생성부터 삭제까지 관리**한다. 이때 생성 또는 삭제할 때 콜백되는 메서드가 제공된다.
+
+1. **init() 메서드**
+    
+    : 서블릿이 생성될 떄 호출
+    
+    - **서블릿이 생성될 때 단 한번만 실행된다.**
+
+1. **서비스 메서드**
+    
+    : 서블릿에 요청할 때 호출
+    
+    - **doGet() 또는 doPost()**
+    - **클라이언트가 요청할 때마다 매번 실행된다.**
+    
+2. **destroy() 메서드**
+    
+    : **서블릿이 삭제될 때 호출**
+    
+    - 서블릿을 수정한 후 기다리면 tomcat 컨테이너가 재실행되면서 destroy를 확인할 수 있다.
+
+---
+
+# 11. thread-safe 와 thread-unsafe
+
+1. **인스턴스 변수**
+    
+    : 서블릿은 단 한번만 생성되기 때문에 인스턴스 변수는 **여러 사용자들간에 공유가 가능**하다.
+    
+    - **thread-unsafe**
+
+1. **doGet 메서드의 로컬변수**
+    
+    : 로컬변수이기 때문에 사용자들간에 **공유 불가능**
+    
+    - **thread-safe**
+    
+
+⇒ 따라서 ***여러 사용자가 공유할 목적이 아니라면 로컬 변수로 사용해야 한다.*** 만약 인스턴스 변수 및 static 변수로 만들면 여러 사용자가 공유할 수 있게 된다.
+
+```java
+package com.servlet;
+
+@WebServlet("/test")
+public class TestServlet extends HttpServlet {
+	// 인스턴스 변수
+	// 여러 사용자들간에 공유가 됨 => thread-unsafe
+	int num = 10;
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		num++;
+		System.out.println("TestServlet 인스턴스변수 : "+ num);
+		
+		// 로컬변수는 thread-safe 
+		int size = 10;
+		size++;
+		System.out.println("TestServlet 로컬 변수 : "+size);
+	
+	
+// 인스턴스 변수는 공유가 되기에 계속 ++ 되고, 로컬변수는 한번만 ++ 된다.
+//		TestServlet 인스턴스변수 : 11
+//		TestServlet 로컬 변수 : 11
+//		TestServlet 인스턴스변수 : 12
+//		TestServlet 로컬 변수 : 11
+//		TestServlet 인스턴스변수 : 13
+//		TestServlet 로컬 변수 : 11
+
+	}
+}
+```
+
+
