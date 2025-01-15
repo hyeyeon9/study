@@ -623,4 +623,286 @@ public class TestServlet extends HttpServlet {
 }
 ```
 
+---
+# 12. 서블릿의 응답처리
 
+## 1) 개념
+
+: **서블릿에서 html을 작성해서 웹 브라우저에게 html 응답하는 작업**을 의미
+
+- httpServletResponse API 이용
+
+## 2) 순서
+
+1. **MIME 타입 지정**
+    
+    : ***웹브라우저에게 전달하는 데이터 타입***을 알려주는 작업 
+    
+    **`response.setContentType(”text/html”);`**
+    
+    - Tomcat 10은 한글 응답이 자동으로 처리되지만 Tomcat 9는 한글 응답이 처리되어 있지 않는다.
+    - 이런 경우 **`response.setContentType(”text/html;charset=utf-8”);`**  사용
+2. **I/O 객체 얻기**
+    
+    **`PrintWriter out = response.getWriter();`**
+    
+3. **print(값) 이용해서 값 출**력 ( 웹 브라우저에서 렌더링 됨 )
+    
+    **`out.print(”<html>”);`**
+    
+    `…`
+    
+    **`out.print(”</html>”);`**
+    
+
+```java
+package com.servlet;
+
+@WebServlet("/test")
+public class TestServlet extends HttpServlet {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// 콘솔에 출력
+		System.out.println("TestServlet");
+		
+		// 웹 브라우저에 출력 (응답처리) 
+		response.setContentType("text/html");
+		
+		PrintWriter out = response.getWriter();
+		
+		out.print("<html>");
+		out.print("<body>");
+		out.print("hello, 안녕하세요");
+		out.print("</body>");
+		out.print("</html>");
+	}
+}
+```
+
+---
+
+# 13. 서블릿 요청처리
+
+## 1) 개념
+
+: **웹 브라우저에서 사용자 입력폼에 값을 입력하고 서블릿으로 전달하는 방법**처리
+
+- HttpServletRequest API 이용
+
+## 2) 메서드
+
+- **request.getParameter(String name)**
+- **request.getParameterValues(String name)**
+- **request.getParameterNames()**
+
+## 3) 아키텍처
+
+### 실습 (GET)
+
+1. **request.getParameter(String name)**
+    
+    : name(key)에 해당하는 value를 출력
+    
+    - memberFrom.html
+        
+        ```html
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <title>Insert title here</title>
+        </head>
+        <body>
+        http://localhost:8090/app05/memberForm.html 
+        http://localhost:8090/app05/mem?userid=aaa&passwd=1234
+        
+        <h1>1. request.getParameter(name) 실습 - GET방식</h1>
+        	**<form action="mem" method="get">**
+        		아이디: <input type="text" name="**userid**"> <br>
+        		비번: <input type="text" name="**passwd**"> <br>
+        		<input type="submit" value="로그인">
+        	</form>
+        
+        </body>
+        </html>
+        ```
+        
+    - MemberServlet.java
+        
+        ```java
+        package com.servlet;
+        
+        import jakarta.servlet.ServletException;
+        import jakarta.servlet.annotation.WebServlet;
+        import jakarta.servlet.http.HttpServlet;
+        import jakarta.servlet.http.HttpServletRequest;
+        import jakarta.servlet.http.HttpServletResponse;
+        import java.io.IOException;
+        
+        **@WebServlet("/mem")**
+        public class MemberServlet extends HttpServlet {
+        
+        	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        	
+        		**String userid = request.getParameter("userid");
+        		String passwd = request.getParameter("passwd");**
+        		
+        		System.out.println(userid + " " +passwd);
+        	}
+        
+        }
+        
+        ```
+        
+
+1. **request.getParameterValues(String name)**
+    
+    : name(key)로 접근하고, key의 value가 여러개일때 사용해 배열로 값을 출력
+    
+    - memberFrom.html
+        
+        ```html
+        	<h1>3. request.getParameterValues(name) 실습 - GET방식</h1>
+        	<form action="mem3" method="get">
+        		아이디: <input type="text" name="userid"> <br>
+        		비번: <input type="text" name="passwd"> <br>
+        		취미:
+        		야구 <input type="checkbox" name="hobby" value="야구"> <br>
+        		농구 <input type="checkbox" name="hobby" value="농구"> <br>
+        		축구 <input type="checkbox" name="hobby" value="축구"> <br>
+        		
+        		<input type="submit" value="로그인">
+        	</form>
+        ```
+        
+    - MemberServlet3.java
+        
+        ```java
+        @WebServlet("/mem3")
+        public class MemberServlet3 extends HttpServlet {
+        
+        	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        		String userid = request.getParameter("userid");
+        		String passwd = request.getParameter("passwd");
+        		
+        		// 체크박스에서 체크된 값만 넘어간다. 
+        		String [] hobbies = request.getParameterValues("hobby");
+        		
+        		System.out.println(userid + " "+passwd);
+        		
+        		System.out.println(Arrays.toString(hobbies));
+        	}
+        }
+        ```
+        
+
+1. **request.getParameterNames()**
+    
+    : 파라미터의 name(key)를 얻어와서, 키를 통해 value를 출력
+    
+    - memberFrom.html
+        
+        ```html
+        	<h1>4. request.getParameterNames() 실습 - GET방식</h1>
+        	<form action="mem4" method="get">
+        		아이디: <input type="text" name="userid"> <br>
+        		비번: <input type="text" name="passwd"> <br>
+        		이메일: <input type="text" name="email"> <br>
+        		주소: <input type="text" name="address"> <br>
+        		<input type="submit" value="로그인">
+        	</form>
+        ```
+        
+    - MemberServlet4.java
+        
+        ```java
+        @WebServlet("/mem4")
+        public class MemberServlet4 extends HttpServlet {
+        
+        	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        		**Enumeration<String> enu = request.getParameterNames();**
+        		while(enu.hasMoreElements()) {
+        			String key = enu.nextElement();
+        			String value = request.getParameter(key);
+        			System.out.println(key + "  " +value);
+        		}
+        	}
+        }
+        ```
+        
+
+⇒ GET 방식으로 요청했을 경우
+
+- 한글처리가 자동으로 설정됨 (tomcat10)
+- 일치하지 않는 name을 지정하면 null 값이 반환됨
+- post(get) 요청햇는데 doGet(doPost)로 받으면 **405 에러**가 발생됨
+- 상대경로 / 절대경로
+    - <form action =”상대경로/절대경로”>
+        
+        : 절대경로는 action = ”/컨텍스트명/서블릿맵핑” 형식이고,
+        
+          상대결로는 action=”/서블릿맵핑” 이다.
+        
+
+### 실습 (POST)
+
+: post 방식이기에 url에 전달되는 데이터 정보가 보이지 않는다. 나머지 데이터를 받아오고 출력하는 방법은 get방식과 동일하다.
+
+1. **request.getParameter(String name)**
+    - memberFrom.html
+        
+        ```html
+        	<h1>2. request.getParameter(name) 실습 - POST방식</h1>
+        	<form action="**mem2**" method="**post**">
+        		아이디: <input type="text" name="**userid**"> <br>
+        		비번: <input type="text" name="**passwd**"> <br>
+        		<input type="submit" value="로그인">
+        	</form>
+        ```
+        
+    - MemberServlet2.java
+        
+        ```java
+        @WebServlet("/**mem2**")
+        public class MemberServlet2 extends HttpServlet {
+        
+        	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        	
+        		**String userid = request.getParameter("userid");
+        		String passwd = request.getParameter("passwd");**
+        		
+        		System.out.println(userid + " " +passwd);
+        	}
+        }
+        ```
+        
+
+⇒ POST 방식으로 요청했을 경우
+
+- 한글처리가 자동으로 설정됨
+- tomcat 9 한글이 깨지는경우, 한글처리를 명시적으로 해야한다.
+    
+    `request.setCharacterEncoding(”utf-8”);`
+    
+
+### doGet과 doPost
+
+: HttpServlet 클래스에서 제공하는 메서드로, HTTP 요청을 처리하는 서블릿의 핵심 메서드이다.
+
+- doGet 메서드
+    - 클라이언트가 서버에 데이터를 요청할 때 사용
+    - URL의 쿼리 파라미터를 통해 데이터를 전달
+        - URL에 데이터를 포함해 데이터 크기가 제한됨
+        - 또한 전달되는 데이터가 URL상으로 노출됨
+    - 브라우저나 프록시 서버에서 요청이 캐싱될 수 있다.
+        - 동일한 요청은 서버가 아닌 캐시에서 응답받을 수 있음
+    - 검색 요청 및 데이터 조회의 용도
+
+- doPost 메서드
+    - 클라이언트가 서버에 데이터를 제출하거나 업데이트를 요청할 때 사용
+    - 요청 데이터는 HTTP 요청 본문(body)에 포함되어 전달
+        - 데이터가 본문에 포함되기에 대용량 데이터 전송에 적합
+        - 데이터 노출이 없기에 보안성이 높음
+    - 기본적으로 캐싱되지 않는다.
+    - 사용자 로그인/회원가입, 파일 업로드, 데이터 생성 및 수정의 용도
