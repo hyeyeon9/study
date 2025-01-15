@@ -307,3 +307,244 @@ http://localhost:8090/a/main.jsp
          <———— c.  html 다운로드  —————
 
     d.  html렌더링
+
+---
+# 9. 서블릿 ( servlet )
+
+: 서블릿은 ***자바 기반의 동적 웹 어플리케이션 개발을 위한 서버 측 기술***로, **클라이언트의 요청을 처리하고 응답을 생성하는 역할**을 한다. 
+
+- Java EE 스펙의 일부로, **Tomcat 서버에서 주로 실행된다.**
+
+## 1) 서블릿 특징
+
+- ***.java** 로 작성됨
+- 저장위치는 이클립스의 **src/main/java 에 저장되고 반드시 패키지를 사용**해야 한다.
+- **main 메서드가 없다**. 즉, 시작점이 없다.
+    
+    이유는 사용자가 요청하는 컴포넌트가 시작점 역할을 한다. 
+    
+- 사용자가 직접 new 하지 않아도 **tomcat 컨테이너가 필요한 시점에 new 하고 소멸까지 담당**한다.
+- 실행결과는 html로 나온다.
+- Servlet 6.0 버전은 Tomcat 10 이상 필요로 하고 패키지명은 javax가 아닌 jakarta 패키지로 시작된다.
+- Tomcat 10의 servlet-api.jar에 포함된 패키지를 사용해서 서블릿을 구현할 수 있다.
+    - 참조할 API 문서는 https://tomcat.apache.org/tomcat-10.1-doc/servletapi/index.html 이다.
+
+## 2) 구현방법
+
+1. **패키지로 작성**
+2. extends HttpServlet   (  jakarta.servlet.http 패키지, 추상클래스 )
+    
+    ```
+    * 계층구조 ( 중요 *** )
+    
+     Servlet (인터페이스)  , ServletConfig (인터페이스)
+            |
+            |
+       GenericServlet (추상) 
+            |
+        HttpServlet (추상) 
+            |
+      사용자 정의 서블릿
+    ```
+    
+    - **Servlet** (인터페이스)   ⇒   jakarta.servlet 패키지
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html
+        
+        - [**init**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html#init(jakarta.servlet.ServletConfig))([**ServletConfig**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html) config)  :  서블릿 생성시 자동으로 호출 콜백
+        - [**destroy**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html#destroy())()  :   서블릿이 삭제시 자동으로 호출 콜백
+        - [**service**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html#service(jakarta.servlet.ServletRequest,jakarta.servlet.ServletResponse))([**ServletRequest**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html) req, [**ServletResponse**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletResponse.html) res)  :  서블릿이 해야하는 실제 작업을 정의하는 메서드
+        - [**getServletConfig**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html#getServletConfig())()  :  ServletConfig 를 리턴해주는 메서드
+    
+    - **ServletConfig** (인터페이스)    ⇒   jakarta.servlet 패키지
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html
+        
+        - [**getInitParameter**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html#getInitParameter(java.lang.String))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) key)  :  문자열로 값을 반환
+        - [**getInitParameterNames**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html#getInitParameterNames())()  :  key 값만 반환 , [**Enumeration](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Enumeration.html)** 타입으로 반환 ( Iterator 비슷한 기능 )
+        - [**getServletContext**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html#getServletContext())()  :  [**ServletContext**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html) 타입을 반환
+            - 최종적으로 사용자가 만든 서블릿에서 [**ServletContext**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html)을 얻는 방법은  **`ServletContext sc = getServletContext**();` 이다.
+    
+    - **ServletContext** (인터페이스)   ⇒   jakarta.servlet 패키지
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html
+        
+        - [**addFilter**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#addFilter(java.lang.String,jakarta.servlet.Filter))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) filterName, [**Filter**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Filter.html) filter)
+        - [**createFilter**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#createFilter(java.lang.Class))([**Class**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html)<T> c)
+        - [**addServlet**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#addServlet(java.lang.String,jakarta.servlet.Servlet))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) servletName, [**Servlet**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/Servlet.html) servlet)
+        - [**createServlet**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#createServlet(java.lang.Class))([**Class**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html)<T> c)
+        - [**setAttribute**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#setAttribute(java.lang.String,java.lang.Object))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name, [**Object**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) object) , [**getAttribute**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getAttribute(java.lang.String))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name). [**removeAttribute**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#removeAttribute(java.lang.String))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)
+        - [**getContextPath**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getContextPath())()
+        - [**getInitParameter**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getInitParameter(java.lang.String))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)
+        - [**getInitParameterNames**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getInitParameterNames())()
+    
+    - **GenericServlet** (추상)    ⇒   jakarta.servlet 패키지
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/GenericServlet.html
+        
+        - [**init**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/GenericServlet.html#init())()
+        - [**log**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/GenericServlet.html#log(java.lang.String))([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) message)
+        - 나머지는 위 인터페이스 메서드 재정의
+
+- **HttpServlet** (추상)   ⇒   jakarta.servlet.http 패키지
+    
+    https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServlet.html
+    
+    - [**doGet](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServlet.html#doGet(jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse))([HttpServletRequest](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html) req, [HttpServletResponse](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletResponse.html) resp)**
+        
+        **: 클라이언트에서 get 방식으로 요청시 처리하는 메서드**
+        
+    - [**doPost](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServlet.html#doPost(jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse))([HttpServletRequest](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html) req, [HttpServletResponse](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletResponse.html) resp)**
+        
+        **: 클라이언트에서 post 방식으로 요청시 처리하는 메서드**
+        
+    - [**doDelete](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServlet.html#doDelete(jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse))( … )**
+    - [**doPut](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServlet.html#doPut(jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse)) ( … )**
+    
+    ⇒ method 불일치 : get 요청  —> doPost 처리하고자 하면 405 에러 발생함
+    
+
+- 사용자 정의 서블릿
+    
+    : 위에서 살펴본 메서드를 바로 사용하거나 재정의 할 수 있다.
+    
+1. **doGet(기본)** 또는 **doPos**t 를 반드시 재정의해야 한다.
+    
+    ```
+    package com.servlet;
+            public void MyServlet ectends HttpServlet{
+    public void doDet(**HttpServletRequest req, HttpServletResponse resp**) {
+    			// 실제 코드 작업
+    		}
+    	}
+    ```
+    
+
+- **HttpServletRequest**   ⇒  요청관련 작업 담당
+    
+    https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html
+    
+    - [**String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) [getParameter](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html#getParameter(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+        
+        :  키값(name)을 넣어서 value를 얻어올 수 있다.
+        
+    - [**String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html)[] [getParameterValues](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html#getParameterValues(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+    : name은 하나인데 value가 여러개일떼, 배열로 반환
+    - [**Enumeration](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Enumeration.html)<[String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html)> [getParameterNames](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html#getParameterNames())()**
+    : name을 알아와야 할 때
+    - **void [setAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html#setAttribute(java.lang.String,java.lang.Object)) ([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name, [Object](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) o)**
+        
+        : 키-벨류를 쌍으로 저장할 수 있는 메서드
+        
+    - [**RequestDispatcher](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/RequestDispatcher.html) [getRequestDispatcher](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletRequest.html#getRequestDispatcher(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) path)**
+        
+        : **지정된 path로 요청**이 들어감. JS의 location.href와 비슷한 기능
+        
+    - [**Cookie**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/Cookie.html)[] [**getCookies**](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html#getCookies())()
+        
+        : **쿠키 정보**를 얻어오는 매서드
+        
+        - **쿠키과 세션**
+            
+            <aside>
+            💡
+            
+            세션 
+            
+            - 로그인 시 유지, 웹사이트 이용시간
+            
+            쿠키
+            
+            - 광고용 상품정보, 로그인 정보 저장
+            </aside>
+            
+    - [**HttpSession](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpSession.html) [getSession](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html#getSession())**()
+        
+        : **세션 정보**를 얻어오는 메서드
+        
+    - [**String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) [getHeader](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html#getHeader(java.lang.String))**([**String**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)
+        
+        : header 값 조회
+        
+- **HttpServletResponse**   ⇒   응답관련 작업 담당
+    
+    https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletResponse.html
+    
+    - **void [addCookie](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletResponse.html#addCookie(jakarta.servlet.http.Cookie))([Cookie](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/Cookie.html) cookie)**
+        
+        : **쿠키정보를 웹브라우저에 추가**하는 메서드
+        
+    - **void [sendRedirect](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletResponse.html#sendRedirect(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) location)**
+    : **지정된 location 경로로 요청**을 보내는 메서드, redirect 방법으로 부른다.
+    - **void [setContentType](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletResponse.html#setContentType(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) type)**
+        
+        : **서버가 클라이언트에게 전달한 데이터의 터입(MIME 타입)을 설정하는** 메서드 
+        
+    - [**PrintWriter](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html) [getWriter()](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletResponse.html#getWriter())**
+        
+        : [PrintWriter](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/PrintWriter.html) 타입 반환, **PrintWriter의 print(값)을 이용해서 클라이언트에게 응답을 전달**하는 메서드
+        
+1. **서블릿 맵핑 ( servlet mapping )**
+    
+    : **서블릿 요청시 *별칭을 사용해서* 요청하는 방법**
+    
+    1. 별칭 사용하지 않는 경우 ( OLD  버전, 현재 사용불가 )
+        
+        문법 : **`http://서버ip:port번호/컨텍스트명/servlet/패키지명을 포함한 서블릿명`**
+        
+        - http://localhost:8090/app01/servlet/com.servlet.MyServlet
+    2. 별칭 사용하는 경우 ( 현재는 반드시 별칭을 사용해야 함 )   ⇒  **매핑**
+        
+        문법 : **`http://서버ip:port번호/컨텍스트명/별칭`**  
+        
+        - http://localhost:8090/app01/test
+    
+    - **서블릿 메핑 정보를 저장하는 방법** 2가지
+        1. **web.xml**  ( 기본 )
+            - Spring framework 에서도 xml을 사용
+            - TestServlet.java
+                
+                ```java
+                package com.servlet;
+                
+                public class TestServlet extends HttpServlet {
+                	
+                	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                	    //  console에 출력됨
+                		System.out.println("TestServlet"); 
+                	}
+                }
+                
+                ```
+                
+            - web.xml
+                
+                ```xml
+                <?xml version="1.0" encoding="UTF-8"?>
+                <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" id="WebApp_ID" version="6.0">
+                  **<servlet>**
+                    <servlet-name>TestServlet</servlet-name>
+                    <servlet-class>com.servlet.TestServlet</servlet-class>
+                  </servlet>
+                  **<servlet-mapping>**
+                    <servlet-name>TestServlet</servlet-name>
+                    <url-pattern>**/test**</url-pattern>
+                  </servlet-mapping>
+                </web-app>
+                ```
+                
+        2. **어노테이션 (@)**
+            - @WebServlet(”/test3”)
+                
+                ```java
+                package com.servlet
+                
+                **@WebServlet("/test3")**
+                public class TestServlet3 extends HttpServlet {
+                
+                	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+                	    //  console에 출력됨
+                		System.out.println("TestServlet3"); 
+                	}
+                }
+                ```
