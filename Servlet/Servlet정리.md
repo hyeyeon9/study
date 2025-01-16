@@ -1066,8 +1066,7 @@ public class GetServlet extends HttpServlet {
                set과 같은 브라우저를 사용하고, 브라우저가 open된 상태이기에 값이 출력된다. 
         
         - http://localhost:8090/app06/get : Chrome에서 열었을 때
-            
-       ![image (20)](https://github.com/user-attachments/assets/9c273903-d039-4449-bd5b-5ff8c424420b)
+            ![image (20)](https://github.com/user-attachments/assets/9c273903-d039-4449-bd5b-5ff8c424420b)
 
             
         
@@ -1076,9 +1075,7 @@ public class GetServlet extends HttpServlet {
     - **브라우저가 닫힌 경우**
         
         위에서 확인한 브라우저 창을 닫은 후, 다시 Edge에서 [localhost:8090/app06/get](http://localhost:8090/app06/get) 로 접속하면 null로 출력된 것을 확인할 수 있다.
-        
-
-	![image (21)](https://github.com/user-attachments/assets/31d4ed45-22ff-475c-9442-8b3bde7c42ef)
+		![image (21)](https://github.com/user-attachments/assets/31d4ed45-22ff-475c-9442-8b3bde7c42ef)
 
         
 
