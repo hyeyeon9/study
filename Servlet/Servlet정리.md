@@ -1047,8 +1047,7 @@ public class GetServlet extends HttpServlet {
     응답이 나온 직후(set 실행후) 사라진다. 따라서 request scope는 null 로 출력된다.
     
     - [localhost:8090/app06/set](http://localhost:8090/app06/set)
-        
-	![image (17)](https://github.com/user-attachments/assets/ca705ac8-761f-4162-9311-2a0cd41d5362)
+      	![image (17)](https://github.com/user-attachments/assets/ca705ac8-761f-4162-9311-2a0cd41d5362)
 
         
     - [localhost:8090/app06/get](http://localhost:8090/app06/get)
