@@ -1048,11 +1048,13 @@ public class GetServlet extends HttpServlet {
     
     - [localhost:8090/app06/set](http://localhost:8090/app06/set)
         
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/3561b94c-fea3-4d74-a5c3-a37cfb027430/c0008c46-089b-4b53-a5de-598b4cdb4e6a.png)
+	![image (17)](https://github.com/user-attachments/assets/ca705ac8-761f-4162-9311-2a0cd41d5362)
+
         
     - [localhost:8090/app06/get](http://localhost:8090/app06/get)
-        
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7ab98e37-9c22-434c-8f77-7ffb76d3edf4/dafa1a5a-31c9-460a-9098-35607aacec45.png)
+
+       ![image (18)](https://github.com/user-attachments/assets/91d248d0-a2b7-4699-8965-fa469d83bfd8)
+
         
 2. **session scope**
     - session scope는 **같은 브라우저에 한해서 웹브라우저가 open되어 있으면 계속 생존**한다.
