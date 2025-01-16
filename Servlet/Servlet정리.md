@@ -1060,14 +1060,15 @@ public class GetServlet extends HttpServlet {
     - session scope는 **같은 브라우저에 한해서 웹브라우저가 open되어 있으면 계속 생존**한다.
         - [localhost:8090/app06/get](http://localhost:8090/app06/get)  : Edge에서 열었을 때
             
-            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7ab98e37-9c22-434c-8f77-7ffb76d3edf4/dafa1a5a-31c9-460a-9098-35607aacec45.png)
-            
+	![image (19)](https://github.com/user-attachments/assets/6229fb5b-a3f0-486f-a52b-1ced76d7261e)
+	         
         
                set과 같은 브라우저를 사용하고, 브라우저가 open된 상태이기에 값이 출력된다. 
         
         - http://localhost:8090/app06/get : Chrome에서 열었을 때
             
-            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/1600615c-7962-482f-bf95-552704733590/f86fa7ba-9dd8-4dd5-8376-1bc7a20d1ed1.png)
+       ![image (20)](https://github.com/user-attachments/assets/9c273903-d039-4449-bd5b-5ff8c424420b)
+
             
         
               브라우저는 open된 상태이지만, set과 다른 브라우저이기에 null로 출력된다.
@@ -1076,7 +1077,9 @@ public class GetServlet extends HttpServlet {
         
         위에서 확인한 브라우저 창을 닫은 후, 다시 Edge에서 [localhost:8090/app06/get](http://localhost:8090/app06/get) 로 접속하면 null로 출력된 것을 확인할 수 있다.
         
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7b0d40e4-5173-49cd-b1b9-70550a1da333/1d4404ba-3072-4add-a289-0bf36fdb38c0.png)
+
+	![image (21)](https://github.com/user-attachments/assets/31d4ed45-22ff-475c-9442-8b3bde7c42ef)
+
         
 
 3.  **application scope**
