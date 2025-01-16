@@ -1059,11 +1059,8 @@ public class GetServlet extends HttpServlet {
 2. **session scope**
     - session scope는 **같은 브라우저에 한해서 웹브라우저가 open되어 있으면 계속 생존**한다.
         - [localhost:8090/app06/get](http://localhost:8090/app06/get)  : Edge에서 열었을 때
-            
-	![image (19)](https://github.com/user-attachments/assets/6229fb5b-a3f0-486f-a52b-1ced76d7261e)
-	         
-        
-               set과 같은 브라우저를 사용하고, 브라우저가 open된 상태이기에 값이 출력된다. 
+          	![image (19)](https://github.com/user-attachments/assets/6229fb5b-a3f0-486f-a52b-1ced76d7261e)
+		set과 같은 브라우저를 사용하고, 브라우저가 open된 상태이기에 값이 출력된다. 
         
         - http://localhost:8090/app06/get : Chrome에서 열었을 때
             ![image (20)](https://github.com/user-attachments/assets/9c273903-d039-4449-bd5b-5ff8c424420b)
