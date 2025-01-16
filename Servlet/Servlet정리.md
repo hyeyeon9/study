@@ -906,3 +906,177 @@ public class TestServlet extends HttpServlet {
         - 데이터 노출이 없기에 보안성이 높음
     - 기본적으로 캐싱되지 않는다.
     - 사용자 로그인/회원가입, 파일 업로드, 데이터 생성 및 수정의 용도
+
+---
+# 14. scope
+
+## 1) 개념
+
+: 자바의 변수(로컬변수, 인스턴스변수, static변수)처럼 **tomcat 컨테이너가 자동으로 생성해주는 3가지 객체의 scope**를 의미한다.
+
+## 2) 3가지 scope
+
+: **변수처럼 데이터를 저장할 수 있는 능력**을 가진다는 공통점이 있다.
+
+1. **request scope**
+    - **`*httpServletRequest API*`**
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html
+        
+    - 데이터 처리
+        - **저장방법 : request.[setAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#setAttribute(java.lang.String,java.lang.Object))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name, [Object](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) object)**
+        - **조회방법 : request.[getAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+        - **삭제방법 : request.[removeAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#removeAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+    - 저장된 데이터의 범위 ( lifecycle )
+        - **doGet 메서드안에서만** 유지되어 사용가능하다. 즉, 사용자가 요청을 해서 응답을 받을때 까지 살아있다.
+2. **session scope**
+    - **`*httpSession API*`**
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpSession.html
+        
+        - **session 받아오는 방법**
+            
+            **`HttpSession session = request.[getSession](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpServletRequest.html#getSession())**()**;**`
+            
+    - 데이터 처리
+        - **저장방법 : session.[setAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpSession.html#setAttribute(java.lang.String,java.lang.Object))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name, [Object](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) value)**
+        - **조회방법 : session.[getAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpSession.html#getAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+        - **삭제방법 : session.[removeAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/http/HttpSession.html#removeAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+    - 저장된 데이터의 범위
+        - 요청한 **웹브라우저와 scope가 동일**하다.
+        - 사용자가 요청시 사용한 웹브라우저를 **계속 open하고 있으면 사용 가능**하고, close하면 데이터가 제거된다. ( 크롬으로 열면 크롬에서만, ***브라우저가 동일해야 적용된다**.* )
+        - 보안이슈로 일정시간 이상 브라우저를 open해두면 세션이 끊기도록 ***타임아웃 기능***을 주로 사용한다.
+            - tomcat의 타임 아웃은 30분이다. (수정가능)
+    - 용도 : **로그인**
+    
+3. **application scope**
+    - **`*ServletContext API*`**
+        
+        https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html
+        
+        - **context 받아오는 방법**
+            
+            **`ServletContext application = [getServletContext()](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletConfig.html#getServletContext())**;`
+            
+    - 데이터처리
+        - **저장방법 : application.[setAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#setAttribute(java.lang.String,java.lang.Object))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name, [Object](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html) object)**
+        - **조회방법 : application.[getAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#getAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+        - **삭제방법 : application.[removeAttribute](https://tomcat.apache.org/tomcat-10.1-doc/servletapi/jakarta/servlet/ServletContext.html#removeAttribute(java.lang.String))([String](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html) name)**
+    - 저장된 데이터의 범위
+        - **tomcat 컨테이너와 scope가 동일**하다. ( scope가 제일 길다. )
+        - tomcat 컨테이너를 종료하지 않으면 계속 사용 가능하다. 종료하면 데이터가 제거된다.
+    - 용도 : 블로그 접속자수
+
+### 실습(set)
+
+```java
+@WebServlet("/set")
+public class SetServlet extends HttpServlet {
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// scope 저장
+		// 1. request scope에 저장 (요청 ~응답)
+		**request.setAttribute("request", "request scope");**
+		
+		// 2. session scope (요청한 웹브라우저와 스코프 동일)
+		**HttpSession session = request.getSession();**
+		**session.setAttribute("session", "session scope");**
+		
+		// 3. application scope (tomcat 컨테이너)
+		**ServletContext application = getServletContext();
+		application.setAttribute("application", "application scope");**
+		
+		// 응답처리
+		**response.setContentType("text/html");**
+		
+		**PrintWriter out = response.getWriter();**
+		
+		**out.print("<html>");**
+		out.print("<body>");
+		out.print("request scope 값 : "+ request.getAttribute("request") +"<br>"); 
+		out.print("session scope 값 : "+ session.getAttribute("session") +"<br>");
+		out.print("application scope 값 : "+ application.getAttribute("application") );
+		out.print("</body>");
+		out.print("</html>");
+	}
+}
+```
+
+### 실습(get)
+
+```java
+@WebServlet("/get")
+public class GetServlet extends HttpServlet {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		// scope 조회
+		// 1. request scope
+		**String s =  (String)request.getAttribute("request");**
+		
+		// 2. session scope
+		**HttpSession session = request.getSession();
+		String s2 =  (String)session.getAttribute("session");**
+		
+		// 3. application scope (tomcat 컨테이너)
+		**ServletContext application = getServletContext();
+		String s3 =  (String)application.getAttribute("application");**
+		
+		// 응답처리
+		**response.setContentType("text/html");**
+		
+		**PrintWriter out = response.getWriter();**
+		
+		**out.print("<html>");**
+		out.print("<body>");
+		out.print("request scope 값 : "+ s +"<br>"); 
+		out.print("session scope 값 : "+ s2 +"<br>");
+		out.print("application scope 값 : "+ s3 );
+		out.print("</body>");
+		out.print("</html>");
+		
+	}
+}
+```
+
+1. **request scope**
+    
+    request scope의 생존 범위는 사용자의 요청 ~ 응답까지
+    
+    응답이 나온 직후(set 실행후) 사라진다. 따라서 request scope는 null 로 출력된다.
+    
+    - [localhost:8090/app06/set](http://localhost:8090/app06/set)
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/3561b94c-fea3-4d74-a5c3-a37cfb027430/c0008c46-089b-4b53-a5de-598b4cdb4e6a.png)
+        
+    - [localhost:8090/app06/get](http://localhost:8090/app06/get)
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7ab98e37-9c22-434c-8f77-7ffb76d3edf4/dafa1a5a-31c9-460a-9098-35607aacec45.png)
+        
+2. **session scope**
+    - session scope는 **같은 브라우저에 한해서 웹브라우저가 open되어 있으면 계속 생존**한다.
+        - [localhost:8090/app06/get](http://localhost:8090/app06/get)  : Edge에서 열었을 때
+            
+            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7ab98e37-9c22-434c-8f77-7ffb76d3edf4/dafa1a5a-31c9-460a-9098-35607aacec45.png)
+            
+        
+               set과 같은 브라우저를 사용하고, 브라우저가 open된 상태이기에 값이 출력된다. 
+        
+        - http://localhost:8090/app06/get : Chrome에서 열었을 때
+            
+            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/1600615c-7962-482f-bf95-552704733590/f86fa7ba-9dd8-4dd5-8376-1bc7a20d1ed1.png)
+            
+        
+              브라우저는 open된 상태이지만, set과 다른 브라우저이기에 null로 출력된다.
+        
+    - **브라우저가 닫힌 경우**
+        
+        위에서 확인한 브라우저 창을 닫은 후, 다시 Edge에서 [localhost:8090/app06/get](http://localhost:8090/app06/get) 로 접속하면 null로 출력된 것을 확인할 수 있다.
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/7b0d40e4-5173-49cd-b1b9-70550a1da333/1d4404ba-3072-4add-a289-0bf36fdb38c0.png)
+        
+
+3.  **application scope**
+    
+    tomcat 컨테이너가 종료되기전까지 계속 생존한다. 위 실습에서 항상 값이 출력되는 것을 확인할 수 있었다.
