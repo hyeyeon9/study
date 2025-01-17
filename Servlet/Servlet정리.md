@@ -1300,3 +1300,197 @@ String app = (String)application.getAttribute("application");
 ```
 
 ---
+# 18. 세션관리
+
+## 1) 개요
+
+: HTTP 프로토콜이 connectionLESS, stateLESS 인 특징으로 인해서 **이전 페이지에서 작업했던 상태 및 데이터**를 현재 페이지에서 사용할 수 없게 된다. 
+
+따라서 이전 상태를 알 수 있도록 하기 위해서 **세션관리 기능을 사용**한다.
+
+## 2) 구현방법
+
+### 1. 세션이용
+
+: **tomcat 서버에** 여러 서블릿(jsp)이 사용할 수 있는 **공유데이터를 저장하는 방법**
+
+- **HttpSession API** 이용
+    
+    https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession
+    
+- 작업순서
+    1. **공유데이터 저장하는 서블릿**
+        - **저장소(세션) 얻기**  ⇒  HttpSession을 얻기
+            
+            // 저장소(세션)이 있으면 반환하고 없으면 생성해서 반환
+            
+            **`HttpSession session = request.getSession();`**
+            
+            `HttpSession session = request.getSession(true);`
+            
+            // 저장소(세션)이 있으면 반환하고 없으면 null 반환
+            
+            `HttpSession session = request.getSession(false);`
+            
+        - 공유데이터 저장 : key - value 형식
+            
+            **`session.setAttribute( “key”, “value” );`**
+            
+        
+    2. **저장된 공유데이터를 사용하는 JSP(서블릿)**
+        - 저장소(세션)을 얻기
+            
+            **`HttpSession session = request.getSession();`**
+            
+        - 공유데이터 참조
+            
+            **`String str = (String)session.getAttribute(”key”);`**
+            
+        - str 값 체크하기
+            
+            **`if(str != null)** {` 
+            
+            `// a작업(예> 로그인) 거친 후`
+            
+            `// 필요한 작업 수행` 
+            
+            `}else{` 
+            
+            `// a작업 거치지 않음`
+            
+            `// **a작업을 수행하도록 redirectforward 해줌 => response.sendRedirect(”a작업”)** }` 
+            
+    3. 삭제
+        - 전체 세션 삭제
+            
+            **`session.[invalidate](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#invalidate--)();`**
+            
+            예 > 로그아웃
+            
+        - 엔트리 삭제
+            
+            **`session.[removeAttribute](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#removeAttribute-java.lang.String-)**([**String**](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true) key);`
+            
+        - time-out 이용한 삭제
+            
+            **`session.[setMaxInactiveInterval](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#setMaxInactiveInterval-int-)(초단위); //지정한 초가 지난 후 삭제`**
+            
+- 특징 :
+    - **요청한 브라우저와 같은 스코프**를 가진다.
+    - **요청한 웹브라우저의 id 값이 자동으로 서버에 전달**된다.
+        
+        크롬웹브라우저(AAA)    ⇒    jsessionid=AAA    ⇒   세션(AAA)
+        
+    - 세션에 저장하는 데이터는 Object 이기에 **모든 데이터를 저장**할 수 있다.
+- **세션관련 메서드**
+    - **HttpSession session = request.getSession();**
+        
+        : 세션 생성
+        
+    - session.[**setAttribute](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#setAttribute-java.lang.String-java.lang.Object-)(key, value);**
+        
+        : 세션에 값을 저장, value는 Object 타입
+        
+    - session.[**getAttribute](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#getAttribute-java.lang.String-)(key);**
+        
+        : 세션에 저장된 값을 조회, 형변환 필요
+        
+    - session.[**removeAttribute**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#removeAttribute-java.lang.String-)([**String**](https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true) name);
+        
+        : 세션에 저장된 엔트리 삭제
+        
+    - session.[**invalidate**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#invalidate--)()
+        
+        : 세션 즉시 삭제 ( 저장소 삭제 )
+        
+    - session.[**setMaxInactiveInterval**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#setMaxInactiveInterval-int-)(int interval)
+        
+        : 지정된 초 이후에 세션 삭제
+        
+    - session.[**getId**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#getId--)()
+        
+        : jseesionid 얻기
+        
+    - session.[**isNew**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#isNew--)()
+        
+        : 조회된 session이 처음 만든 세션인지?
+        
+    - session.[**getCreationTime**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpsession#getCreationTime--)()
+        
+        : 세션이 생성된 시간을 long 타입으로 리턴
+        
+
+### 2. 쿠키이용
+
+: **웹브라우저(클라이언트)에** 여러 서블릿(jsp)이 사용할 수 있는 **공유데이터를 저장하는 방법**
+
+- **Cookie API** 이용
+    
+    https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/cookie
+    
+- 특징
+    - **클라이언트에 저장된다.**
+    - **String 값만 저장** 가능
+    - 도메인당 50개 저장 가능, 각 4kb로 제한
+    - 세션보다 보안에 취약하고 가장 큰 단점은 사용자가 쿠키를 사용하지 않도록 설정이 가능하다.
+- **쿠키 아키텍처**
+    
+    브라우저 ————  **a. 요청** ———————>  서블릿 (A)
+    
+                                                                                **b. 쿠키생성** 
+    
+                                                                                  Cookie c = new Cookie(key, value)
+    
+                                                                                  // 웹브라우저 메모리 / PC 파일
+    
+                                                                                **c. [setMaxAge](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/cookie#setMaxAge-int-)(int expiry)**
+    
+                                                                                 값 : 양수, 지정된 값만큼 pc파일에 저장
+    
+                                                                                 값 : 음수, 웹브라우저 메모리에저 저장(기본)
+    
+                                                                                 값 : 0, 쿠키 즉시 삭제 ( 세션의 invaildate() )
+    
+                                                                                **d. 쿠키를 클라이언트에 전송**
+    
+                                                                                 response.[**addCookie**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/httpservletresponse#addCookie-jakarta.servlet.http.Cookie-)([**Cookie**](https://jakarta.ee/specifications/platform/9/apidocs/jakarta/servlet/http/cookie) cookie);
+    
+
+                 <——————  **e. 응답(쿠키**) ——————
+
+**f. 클라이언트에 쿠키 저장**
+
+- 웹브라우저 메모리
+- PC 파일
+
+                  ——————  **g. 요청(쿠키)** —————>   서블릿(B), 서블릿(C), JSP
+
+                                                                                          **h. 쿠키 얻기**
+
+                                                                                           Cookie [] cookies = **request.getCookie();**
+
+                                                                                           for(Cookie c : cookies){
+
+                                                                                           String key = c.getName();
+
+                                                                                           String vlaue = d.getValue();
+
+                                                                                           }
+
+                 ————  **i. 쿠키 삭제 요청(쿠키)** —————>  서블릿(D)
+
+                                                                                           Cookie [] cookies = request.getCookie();
+
+                                                                                           for(Cookie c : cookies){
+
+                                                                                           String key = c.getName();
+
+                                                                                           if(”aaa”.equals(key){
+
+                                                                                           **c.setMaxAge(0);**
+
+                                                                                           response.addCookie(c);
+
+                                                                                           }
+
+                                                                                           }
