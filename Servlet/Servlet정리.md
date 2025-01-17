@@ -1078,3 +1078,59 @@ public class GetServlet extends HttpServlet {
 3.  **application scope**
     
     tomcat 컨테이너가 종료되기전까지 계속 생존한다. 위 실습에서 항상 값이 출력되는 것을 확인할 수 있었다.
+
+---
+# filter
+
+# 15. 필터 (filter)
+
+## 1) 용도
+
+: 서블릿에 요청하기 전이나 응답한 후에 특별한 작업을 수행
+
+- HTTP 요청 및 응답에 전처리와 후처리를 수행할 수 있는 컴포넌트
+
+## 2) 구현
+
+: 서블릿과 마찬가지로 필터 클래스를 작성하고 등록해야 한다. 
+
+1. 패키지
+2. implements filter
+3. 메서드 재정의
+    
+    `doFilter( request, response, FilterChain chaih ) {`
+    
+     `// 요청을 다음 필터 또는 서블릿으로 전달`        
+    
+    `chain.doFilter( request, response );`          
+    
+    `}`
+    
+4. web.xml 등록 ( 필터 맵핑 )
+    
+    ```html
+      <filter>
+        <filter-name>MyFilter</filter-name>
+        <filter-class>com.filter.MyFilter</filter-class>
+      </filter>
+      <filter-mapping>
+        <filter-name>MyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+      </filter-mapping>
+    ```
+    
+
+### 특징
+
+- 요청 및 응답 처리
+- 체인 형태의 동작
+    - 여러 필터를 설정해 순차적으로 진행 가능
+- 공통 작업 처리
+    - 보안 체크(인증), 로깅, ..
+- 동작 흐름 :
+    1. 클라이언트 요청
+    2. 필터에서 전쳐리 작업
+    3. 요청이 다음 필터로 전달 또는 최종 리소스(서블릿/JSP)로 전달 
+    4. 응답 생성 
+    5. 필터에서 후처리 작업 
+    6. 응답이 클라이언트에 전달
