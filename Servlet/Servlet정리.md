@@ -1275,3 +1275,28 @@ b. 요청 위임한 경우
     ```
     
 - target.jsp
+```html
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<%
+String req = (String)request.getAttribute("request");
+String sess = (String)session.getAttribute("session");
+String app = (String)application.getAttribute("application");
+%>
+<body>
+	<h1>target.jsp</h1>
+	request : <%= req %> <br>
+	session : <%= sess %> <br>
+	application : <%= app %> <br>
+</body>
+</html>
+```
+
+---
