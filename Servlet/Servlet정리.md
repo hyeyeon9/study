@@ -1134,3 +1134,144 @@ public class GetServlet extends HttpServlet {
     4. 응답 생성 
     5. 필터에서 후처리 작업 
     6. 응답이 클라이언트에 전달
+
+---
+# 16. DB 연동 ( MyBatis 이용 )
+
+## 1) 2개의 jar
+
+- mybatis-3.5.14.jar
+- mysql-connector-j-8.0.33.jar
+
+: JavaSE 환경에서는 프로젝트 > Build Path > Configure Build Path > libraries > class path 선택 후 add external에서 2개의 jar 파일을 선택
+
+- JavaEE 환경에서는 EB-INF/lib 안에 2개의 jar 파일을 복사
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/67ccaa5f-4ca2-41c8-af1d-be188cba6659/208c57b7-0ff0-46df-8a97-a5cb9f93c4cf.png)
+    
+
+## 2) DB 연동을 위한 4가지 정보 설정
+
+- jdbc.properties
+- com.confing 패키지 이용
+
+## 3) DTO 작성
+
+- com.dto.EmpDTO.java 작성
+
+## 4) 2개의 xml
+
+- Configuration.xml
+- DeptMapper.xml
+- com.confiig 패키지 이용
+
+## 5) MySqlSessionFactory.java
+
+- com.confiig 패키지 이용
+
+## 6) DAO, Service 작성
+
+- com.dao.EmpDAO.java
+- com.service.EmpService.java, com.service.EmpServiceImpl.java
+
+## 7) 서블릿 작성
+
+- com.servlet.EmpListServlet
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/78768f52-c82d-45d0-a497-0d0df94f8370/6644aec5-2180-4355-a970-69884620ce53.png)
+
+![구조](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/b3fc82e4-4c8a-47f1-a7f4-792e037655c2/bb5e615b-386b-45df-b61a-4a5f7d85dde9.png)
+
+구조
+
+---
+
+# 17. 요청 위임
+
+## 1) 개념
+
+1. 일반적인 경우
+    
+    웹브라우저 <====== 요청/응답 ======⇒ 서블릿
+    
+
+b. 요청 위임한 경우
+
+웹 브라우저 ======= 요쳥 =========⇒ 서블릿
+
+              <==================== ( 서블릿, JSP, html )
+
+## 2) 요청위임 방법 2가지
+
+### 1. forward 방식
+
+- **HttpServletRequest API** 이용
+- 문법 :
+    
+    `request.getRequestDispatcher(”타겟.jsp”).forward(request, response);`
+    
+- 특징 :
+    - **URL 변경이 되지 않는다**. 서블릿으로 그대로 남는다.
+    - 하나의 request로 서블릿 및 JSP까지 사용한다.
+    - 서블릿에서 3가지 스코프(request, session, application)에 데이터를 저장하고 JSP에서 가져올 때 **모든 스코프의 데이터를 참조할 수 있다.**
+
+### 2. redirect 방식
+
+- **HttpServletResponse API** 이용
+- 문법 :
+    
+    `response.sendRedirect(”타겟.jsp”);`
+    
+- 특징
+    - **URL이 변경된다**. ***서블릿에서 타겟 URL(jsp)로 변경된다.***
+    - 두개의 request로 서블릿하고 JSP 각각을 사용한다.
+    - 서블릿에서 3개의 스코프(request, session, application) 중 **request 스코프에 저장된 데이터는 참조할 수 없다.**
+
+### 실습
+
+- ForwardServlet.java
+    
+    ```java
+    public class ForwardServlet extends HttpServlet {
+    	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    		System.out.println("MyServlet");
+    		// **forward**를 사용하면 **같은 번지에서 작업 가능**하다.
+    		// redirect를 하면 요청 위임시 다른 번지에서 작업이 이루어진
+    		
+    		// 같은 번지에서 set, get이 이루어지기에 **request 스코프 값을 가지고 올 수 있다.**
+    		request.setAttribute("request", "request");
+    		
+    		HttpSession session = request.getSession();
+    		session.setAttribute("session", "session");
+    		
+    		ServletContext application = getServletContext();
+    		application.setAttribute("application", "application");
+    	
+    		request.getRequestDispatcher("target.jsp").forward(request, response);
+    	}
+    }
+    ```
+    
+- RedirectServlet.java
+    
+    ```java
+    public class RedirectServlet extends HttpServlet {
+    	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    		System.out.println("RedirectServlet");
+    
+    		// redirect를 하면 request는 찾을 수 없다. set을 한 번지와
+    		// get을 허는 번지가 달라지기 때문이다.
+    		request.setAttribute("request", "request"); // null
+    		
+    		HttpSession session = request.getSession();
+    		session.setAttribute("session", "session");
+    		
+    		ServletContext application = getServletContext();
+    		application.setAttribute("application", "application");
+    		
+    		response.sendRedirect("target.jsp");
+    	}
+    }
+    ```
+    
+- target.jsp
