@@ -1080,7 +1080,6 @@ public class GetServlet extends HttpServlet {
     tomcat 컨테이너가 종료되기전까지 계속 생존한다. 위 실습에서 항상 값이 출력되는 것을 확인할 수 있었다.
 
 ---
-# filter
 
 # 15. 필터 (filter)
 
@@ -1147,8 +1146,8 @@ public class GetServlet extends HttpServlet {
 
 - JavaEE 환경에서는 EB-INF/lib 안에 2개의 jar 파일을 복사
     
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/67ccaa5f-4ca2-41c8-af1d-be188cba6659/208c57b7-0ff0-46df-8a97-a5cb9f93c4cf.png)
-    
+![image (22)](https://github.com/user-attachments/assets/ca6ba59e-2d05-4573-ab22-44492a396fae)
+
 
 ## 2) DB 연동을 위한 4가지 정보 설정
 
@@ -1177,12 +1176,11 @@ public class GetServlet extends HttpServlet {
 ## 7) 서블릿 작성
 
 - com.servlet.EmpListServlet
+![image (23)](https://github.com/user-attachments/assets/a578056c-cc4f-4c16-aba3-28a55103f868)
 
-![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/78768f52-c82d-45d0-a497-0d0df94f8370/6644aec5-2180-4355-a970-69884620ce53.png)
 
-![구조](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/b3fc82e4-4c8a-47f1-a7f4-792e037655c2/bb5e615b-386b-45df-b61a-4a5f7d85dde9.png)
+![image (24)](https://github.com/user-attachments/assets/24ea7dc1-7a5c-44f6-b039-a06830fc496b)
 
-구조
 
 ---
 
