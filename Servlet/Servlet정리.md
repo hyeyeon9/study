@@ -1494,3 +1494,217 @@ String app = (String)application.getAttribute("application");
                                                                                            }
 
                                                                                            }
+
+---
+# 19. JSP
+
+: **사용자 요청이 서버로 들어오면 서블릿은 비지니스 로직을 처리하고, 처리된 데이터 기반으로 JSP는 사용자에게 보여줄 html을 생성한다.**
+
+- 서버에서 실행되는 자바 기반의 *동적 웹 페이지 기술*
+- HTML 내에 자바 코드를 삽입할 수 있으며, 데이터베이스와 연동하거나 사용자 입력/조건에 따라 동적으로 내용을 생성할 수 있다.
+
+## 1) 특징
+
+- **동적 컴포넌트** : 서버에서 실행되어 동적으로 결과를 만든다. 실행결과로 html을 만드는 것
+- ***.jsp** 이고 저장 경로는 html과 동일한 src/main/webapp 이다.
+- 서블릿은 요청하면 doGet/doPost 가 실행
+    
+    JSP를 요청하면 아래 3단계를 거쳐서 실행된다.
+    
+    - 변환 단계      ( *.jsp         —>   *_jsp.java )
+    - 컴파일 단계  ( *_jsp.java  —>  *_jsp.class )
+    - 실행 단계      ( *_jsp.class —>   html 반환 )
+- 서블릿은 대부분이 자바코드이고, JSP는 대부분이 html 처리이다. 즉, 서블릿은 비지니스 로직 처리를 담당하고 JSP는 화면 처리를 담당한다.
+
+## 2) 웹 어플리케이션 개발 방법
+
+1. Model 1 Architecture
+    - 과거에는 사용되었으나 현재는 사용 안 함
+    - JSP만 이용해사 웹 어플리케이션 개발하는 방식
+2. Model 2 Architecture
+    - 현재 사용중
+    - 서블릿 + JSP
+
+```c
+TomCat
+웹브라우저 ——> Servlet < —- > Service < — > DAO < — > MySQL
+
+                                   |  (요청위임)
+
+                   < ——    JSP
+```
+
+## 3) JSP 구성요소
+
+1. html 태그
+
+### 2. JSP 태그
+
+- directive 태그
+    - **page directive 태그**
+        
+        **`<%@ page 속성명=”속성값”  속성명=”속성값” %>`**
+        
+    - **include directive 태그**
+        
+        **`<%@ include file = ”jsp파일” %>`**
+        
+    - taglib directive 태그
+        
+        **`<%@** taglib prefix**= ”속성값” url="속성값" %>**`
+        
+- declaration 태그
+    
+    **`<%! 자바코드 %>`** 
+    
+    : 서블릿은 doGet 메서드 밖의 코드 표현 ( 인스턴스 변수, 인스턴스 메서드 )
+    
+- scriptlet 태그
+    
+    **`<% 자바코드 %>`** 
+    
+    : 서블릿은 doGet 메서드 안의 코드 표현
+    
+- expression 태그
+    
+    **`<%= 변수 %>`** 
+    
+- JSP 액션태그
+    
+    **`<jsp: 식별자 속성명=”속성값” />`**
+    
+    - **`<jsp: include  page=”jsp파일”  />`**
+
+c. EL 태그
+
+d. JSTL (taglib) 태그
+
+## 4) directive 태그
+
+1. **page directive 태그 <%@ page ~ %>**
+    
+    **`<%@ page 속성명=”속성값”  속성명=”속성값” %>`**
+    
+    - 기능
+        
+        : J*SP에게 특정 설정정보를 알려주는 용도’*
+        
+        - **MIME 타입 지정**
+            - 서블릿 :  response.setContentType("text/html");
+            - JSP    : **`<%@ page contentType=*"text/html; charset=UTF-8" "*%>`**
+        - **import 정보**
+            - 서블릿 :  import java.util.Date
+            - JSP       :  **`<%@ page import=”java.util.Date”  %>`**
+2. **include directive 태그 <%@ include ~ %>**
+    
+    **`<%@ include file=”jsp파일” %>`**    : 정적 include 
+    
+    **`<jsp: include  page=”jsp파일”/>`** : 동적 include
+    
+    - 기능
+        
+        : *화면 재사용 ( 사용한 위치에 jsp 파일이 치환 )*
+        
+        - 정적 vs 동적
+        
+        ```html
+        <body>
+        <h1>include directive</h1>
+        <h2>정적 directive</h2>
+        <%@ include file="common/top.jsp" %>  <!-- 이 위치에 top.jsp 내용이 들어가게 됨 -->
+        <!-- 정적 : top.jsp를 치환한 다음에 변환 및 실행이 일어나 
+        따로 top.jsp는 java로 변환하지 않는다. -->
+        <hr>
+        
+        <h2>동적 directive</h2>
+        <jsp:include page="common/top.jsp" flush="true" />
+        <!-- 동적 : 먼저 변환 및 실행을 진행하다 top.jsp를 만나 요청하면
+        top.jsp도 java -> class로 변환이 된 후에 응답하게 된다. 
+        즉 따로 top.java /class로 변환된다. -->
+        </body>
+        ```
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/a587aa75-e510-41f1-9b59-20dde86ed3a8/2bed81d4-6d83-4825-91df-6cba9ca11935.png)
+        
+3. tablib directive
+    
+    **`<%@** taglib prefix**= ”속성값” url="속성값" %>**`
+    
+    - 기능
+        
+        : JSTL 사용시 사용됨
+        
+
+## 5) declaration 태그
+
+- 문법 : **`<%! 자바코드 %>`**
+- 기능 : 서블릿에서 인스턴스 변수, 인스턴스 메서드 구현
+
+## 6) scriptlet 태그
+
+- 문법 : **`<% 자바코드 %>`**
+- 기능 : 서블릿에서 doGet 메서드 내의 코드 구현
+    
+    ```html
+    <%
+    	String userid = request.getParameter("userid");
+    	ArrayList<String> list = new ArrayList<String>();
+    	
+    	int [] num = {10,20,30};
+    	for(int i : num){
+    		System.out.println(i);
+    	 }
+    	%>
+    ```
+    
+
+## 7) expression 태그
+
+- 문법 : **`<%= 변수 %>`**
+- 기능 : *웹 브라우저에 **변수값을 출력***
+    
+    ```html
+    <body>
+    	<h1>expression tag</h1>
+    	<% String mesg = "안녕하세요."; %>
+        <%=  mesg %> <br>
+        <% 
+        	int []num = {10,20,30}; 
+        	for(int i : num){ %>
+        	<%= i %>
+        <% 		
+        		}
+        %>
+    </body>
+    ```
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/397c0830-16ea-4f37-806c-af32c71c2954/14217d3c-c05f-4100-adc7-91a11f41b982.png)
+    
+
+## 8) 내장객체 ( 내장변수 )
+
+- 개념 : scriptlet 태그 안에 선언되지 않고 사용 가능한 변수이다.
+    - 내부적으로 미리 선언이 된 변수
+        
+        ```html
+        <body>
+        	<h1>내장객체</h1>
+        	<% 
+        	System.out.println("HttpRequest 타입변수 :" + request);
+        	System.out.println("HttpResponse 타입변수 :"+ response);
+        	System.out.println("HttpSession 타입변수 :" + session);
+        	System.out.println("ServletContext 타입변수 :" + application);
+        	System.out.println("JspWriter 타입변수 :" + out);
+        	String mesg="홍길동";
+        	out.print(mesg);
+        	%>
+        </body>
+        ```
+        
+
+## 9) JSP 주석
+
+- `<% --  -- %>`
+
+---
+
