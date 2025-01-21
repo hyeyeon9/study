@@ -1707,3 +1707,111 @@ d. JSTL (taglib) 태그
 
 ---
 
+# 20. Servlet + JSP ( MVC 모델 )
+
+```
+                  TomCat
+웹브라우저 -----> Servlet < —- > Service < — > DAO < — > MySQL
+
+                   | (요청위임)
+
+           <-----  JSP 
+```
+
+- M : Model ( Service + DAO 담당 )
+- V : View ( JSP 담당  )
+- C : controller ( 서블릿 담당  )
+
+## 게시판 구현
+
+### 1) 테이블 작성
+
+```sql
+create table board (
+num INT PRIMARY KEY AUTO_INCREMENT,
+title VARCHAR(100) NOT NULL,
+author VARCHAR(50) NOT NULL,
+content VARCHAR(2000) NOT NULL,
+writeday DATE DEFAULT (current_date),
+readcnt INT DEFAULT 0
+);
+
+insert into board (title,author, content)
+	values ('테스트', '홍길동','테스트입니다.');
+    commit;
+
+select * from board
+```
+
+## 2) Myatis 환경설정
+
+- 2개의 jar을 WEB-INF/lib에 복사
+- jdbc.properties
+- Configuration.xml
+- MySqlSessionFactory.java
+- BoardMapper.xml
+
+## 3) 게시판 목록보기
+
+```
+                                       BoardService
+웹브라우저 ---> BoardListServlet --> BoardServiceImpl --> BoardDAO --> MySQL
+                       |
+                   list.jsp
+```
+
+## 4) 게시판 글쓰기 ( 2단계로 진행 )
+
+1. 사용자에게 글쓰는 화면 보여주는 과정
+
+```
+웹브라우저 --- get --> BoardWriteUIServlet (doGet)
+                            |
+                        write.jsp
+```
+
+1. 사용자가 글을 다 쓰면 처리하는 과정
+
+```
+                                                  BoardService
+웹브라우저 -- post ---> BoardWriteServlet --> BoardServiceImpl --> BoardDAO --> MySQL
+                                |
+                        BoardListServlet 
+```
+
+## 5) 글 자세히 보기
+
+```
+웹브라우저 -----> BoardRetrieveServlet --> BoardServiceImpl --> BoardDAO --> MySQL
+                         |
+                    retrieve.jsp
+```
+
+## 6) 글 수정하기
+
+```
+                                           BoardService
+웹브라우저 -----> BoardUpdateServlet --> BoardServiceImpl --> BoardDAO --> MySQL
+                         |
+                    BoardListServlet
+```
+
+## 7) 글 삭제하기
+
+```
+                                           BoardService
+웹브라우저 -----> BoardDeleteServlet --> BoardServiceImpl --> BoardDAO --> MySQL
+                         |
+                   BoardListServlet
+
+```
+
+## 8) 페이지
+
+- 레코드는 정렬된 상태
+- 페이지 구성에 필요한 요소
+    - List<BoardDTO> :  레코드, 타입은 BoardDTO
+    - curPage : 현재 페이지
+    - perPage : 페이지당 보여줄 레코드 개수
+    - totalRecord  : 전체 레코드 개수
+        - 4가지 값을 가지는 PageDTO 생성
