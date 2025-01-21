@@ -1675,8 +1675,9 @@ d. JSTL (taglib) 태그
         %>
     </body>
     ```
+    ![image (25)](https://github.com/user-attachments/assets/223d925b-16b9-4f7b-9d62-2607504f80ce)
+
     
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/397c0830-16ea-4f37-806c-af32c71c2954/14217d3c-c05f-4100-adc7-91a11f41b982.png)
     
 
 ## 8) 내장객체 ( 내장변수 )
