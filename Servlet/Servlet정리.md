@@ -1815,3 +1815,161 @@ select * from board
     - perPage : 페이지당 보여줄 레코드 개수
     - totalRecord  : 전체 레코드 개수
         - 4가지 값을 가지는 PageDTO 생성
+
+---
+# 23. EL ( Expression Language )
+
+## 1) 기능
+
+: 특졍값을 웹 브라우저에 출력
+
+- **자바 객체에 더 간편하게 접근하고 데이터를 처리**할 수 있도록 도와주는 역할
+- <% %>을 대체해서 더 간결한 코드 작성이 가능
+
+## 2) 문법 :
+
+**${expression}**
+
+- expression에는 리터럴 또는 scope의 key
+
+## 3) 특징
+
+- **기본적인 연산 수행**
+    - **산출연산**
+        - **`${리터럴값 + 1}`**
+    - **비교연산**
+        - **`${리터럴값 > 1}`**
+    - **논리연산**
+        - **`${리터럴값 > 1 && 리터럴값 < 30}`**
+    
+    ```html
+    <body>
+    <h1>EL</h1>
+     ${100} <br> 
+     ${100+100} <br> 
+     ${100 > 90} <br>
+     ${100 > 90 && 100 >120} <br>
+    </body>
+    ```
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/b9655d10-c5d5-4688-a8eb-5f1b800fb0f5/6665274f-9d0e-4fe7-b614-aeabc20a8837.png)
+    
+
+- **null 값**
+    - 기본적으로 null은 **비어있는 값(공백)**으로 출력한다.
+    - **`empty 키워드`**를 사용해서 boolean 값으로 확인 가능하다.
+    
+- **scope 객체 지원**
+    - JSP의 ***내장 객체(request, session, applocation, page)의 데이터를 쉽게 접근***
+    
+    ```html
+    <body>
+    <h1>JSP 태그 사용한 경우</h1>
+    
+    <%
+    	String xxx= (String)request.getAttribute("xxx");
+    	String yyy= (String)session.getAttribute("yyy");
+    	String zzz= (String)application.getAttribute("zzz");
+    	
+    	String xxx2= (String)request.getAttribute("xxx2");
+    %>
+    
+    request : <%= xxx %> <br>
+    session : <%= yyy %> <br>
+    application : <%= zzz %> <br>
+    xxx2 : <%= xxx2 %> <br>
+    Null 비교 : <%= xxx2 == null %> <br>
+    
+    <h1>EL 태그 사용한 경우</h1>
+    
+    **request : ${xxx} <br>
+    session : ${yyy}  <br>
+    application : ${zzz} <br>
+    Null 비교 : ${empty xxx2} <br>   <!-- true -->**
+    
+    </body>
+    ```
+    
+
+- **scope 구분 가능**
+    - 동일한 키 값이라도 *scope를 명시해* 구분할 수 있다.
+        - **requestScope, sessionScope, applicationScope**
+            
+            ```html
+            <body>
+            <h1>JSP 태그 사용한 경우</h1>
+            
+            <%
+            	String xxx= (String)request.getAttribute("xxx");
+            	String yyy= (String)session.getAttribute("xxx");
+            	String zzz= (String)application.getAttribute("xxx");
+            	
+            	String xxx2= (String)request.getAttribute("xxx2");
+            %>
+            request : <%= xxx %> <br>
+            session : <%= yyy %> <br>
+            application : <%= zzz %> <br>
+            
+            <h1>EL 태그 사용한 경우</h1>
+            **request : ${requestScope.xxx} <br>
+            session : ${sessionScope.xxx}  <br>
+            application : ${applicationScope.xxx} <br>**
+            
+            </body>
+            ```
+            
+
+- **객체 참조 ( 예 > 클래스 )**
+    - EL태그를 사용해 `Person` 객체의 속성과 메서드에 참조하는 코드
+        
+        ```html
+        <body>
+        <h1>JSP 태그 사용한 경우</h1>
+        
+        <%
+        	Person p =(Person)request.getAttribute("**person**");
+        %>
+        	Person : <%= p  %> <br>
+        	이름 : <%= p.getUsername() %> <br>
+        	나이 : <%= p.getAge() %> <br>
+        
+        <h1>EL 태그 사용한 경우</h1>
+        	**Person : ${person} <br>
+        	이름 : ${person.username}  <br>
+        	나이 : ${person.age}  <br>
+        	내년 나이 : ${person.age + 1}  <br>**
+        </body>
+        ```
+        
+
+- **콜렉션과 배열 처리**
+    - **List, Map, 배열**의 요소에 쉽게 접근
+        
+        ```html
+        <body>
+        <h1>JSP 태그 사용한 경우</h1>
+        
+        <%
+        	**List<Person> list = (List<Person>)request.getAttribute("xx");**
+        	Person p1= list.get(0);
+        	Person p2= list.get(1);
+        %>
+        	이름1 : <%= p1.getUsername() %> <br>
+        	나이1 : <%= p1.getAge()%> <br>
+        	이름2 : <%= p2.getUsername() %> <br>
+        	나이2 : <%= p2.getAge()%> <br>
+        	
+        <h1>EL 태그 사용한 경우</h1>
+        
+        	**이름1 : ${xx[0].username} <br>
+        	나이1 : ${xx[0].age} <br>
+        	이름2 : ${xx[1].username} <br>
+        	나이2 : ${xx[1].age} <br>**
+        	
+        </body>
+        ```
+        
+    
+- **조건 및 반복처리는 불가**
+    - **해결방안 : JSTL**
+
