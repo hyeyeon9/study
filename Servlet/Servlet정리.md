@@ -1973,3 +1973,173 @@ select * from board
 - **조건 및 반복처리는 불가**
     - **해결방안 : JSTL**
 
+---
+# 23. JSTL ( Jsp Standard Tag Library )
+
+## 1) 개요
+
+: **JSP에서 사용하는 표준화된 커스텀 태그 라이브러리** 
+
+- 반복, 조건 처리, 데이터 포맷팅 등 다양한 기능을 제공
+
+예 > <for start=1 end=5>
+
+             hello
+
+         </for>
+
+- *.java /  *.tld ( tag library definition )
+- 개발자들이 JSP에서 유용하게 사용할 만한 커스텀 태그를 만들어 제공해주고 있다. 실습에서는 Apache에서 제공하는 JSTL을 사용할 것이다.
+
+### 주요특징
+
+- 표준화 : 모든 JSP 환5경에서 사용 가능하다.
+- 가독성 : 태그 기반으로 코드를 간결하고 가독성을 높여준다.
+- 스크립트릿(scriptlet) 대체 : <%%>를 제거하고 태그로 대체한다.
+- 조건문, 반복처리, 데이터출력, 포맷팅 등 다양한 기능을 재공한다.
+
+## 2) 구현방법
+
+1. **2개의 jar 파일을 build path**
+    - jakarta.servlet.jsp.jstl-3.0.1.jar
+    - jakarta.servlet.jsp.jstl-api-3.0.0.jar
+    - 위 2개의 jar 파일을 WEB_INF/lib 폴더에 복사
+
+1. **JSP에서 JSTL 라이브러리 추가**
+    - **Core Library**  :  조건문, 반복문, URL, 변수 설정 등 기본 기능 제공
+        - **`<%@ taglib prefix="c"     uri="jakarta.tags.core" %>`**
+    - **Function Library** : 문자열 조작을 위한 유틸리티 함수 제공
+        - **`<%@ taglib prefix="fn"   uri="jakarta.tags.functions" %>`**
+    - **Formatting Library** : 숫자, 날짜, 시간의 포맷팅
+        - **`<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>`**
+    - **SQL Library** : 데이터베이스 접근 및 쿼리 처리
+        - **`<%@ taglib prefix="sql"  uri="jakarta.tags.sql" %>`**
+    - **XML Library** : xml 처리 및 XPath 표현식 사용
+        - **`<%@ taglib prefix="x"     uri="jakarta.tags.xml" %>`**
+
+1. JSTL + EL  사용
+    - **값 출력**
+        - JSTL 사용전
+            
+            ```html
+            <%
+            		String name = (String)request.getAttribute("xxx");
+            %>
+            ```
+            
+        - JSTL 사용
+            
+            ```html
+            **<c:out value="${xxx}"></c:out>**
+            ```
+            
+    - **변수 사용**
+        
+        ```html
+        	**<c:set var="id" value="${xxx}"></c:set> <br>**
+        	**이름 : ${id}**
+        ```
+        
+    - **조건문 (단일 if문)     ⇒   <c:if  test=”” />**
+        
+        ```html
+        <body>
+        	<h1>조건 커스텀 태그 실습</h1>
+        	
+        	**<c:if test="${username == '홍길동'}">
+        	안녕하세요. 홍길동님
+        	</c:if>**
+        	
+        	<c:if test="${username != '홍길동'}">
+        	안녕하세요. 아무개님
+        	</c:if>
+        	
+        	<c:if test="${age>10 }">
+        	성인
+        	</c:if>
+        	
+        	<hr>
+        	<c:if test="${empty email}">
+        	email 항목은 없습니다.</c:if>
+        </body>
+        ```
+        
+        - 응용  : 조건에 따라 클래스 지정
+            
+            ```html
+            	<h1>조건 커스텀 태그 실습 응용</h1>
+            	**<p 
+            	<c:if test="${age < 13 }"> class="highlight"
+            	</c:if>
+            	>당신은 미성년자</p>**
+            ```
+            
+    - **조건문 (다중 if문)   ⇒  <c:choose> <c:when test=”” /> ..**
+        
+        ```html
+        	**<c:choose>**
+        		**<c:when test="${age > 50 }">**
+        			중년입니다.
+        		</c:when>
+        		<c:when test="${age > 40 }">
+        			장년입니다.
+        	    </c:when>
+        		**<c:otherwise>**
+        			청년입니다.
+        		</c:otherwise>
+        	</c:choose>
+        ```
+        
+    - **반복문**
+        - **range 반복**
+            - **단순 반복**
+                
+                ```html
+                **<c:forEach var="변수명" begin="시작값" end="종료값">
+                  반복할문장;
+                </c:forEach>**
+                ```
+                
+                ```html
+                	<c:forEach var="x" begin="1" end="5">
+                	hello ${x}<br>
+                	</c:forEach>
+                ```
+                
+        - **scope에 저장된 데이터 반복**
+            - **배열, 리스트 등 반복하면서 데이터에 접근**
+            
+            ```html
+            	<h1>2. 반복 - scope에 저장된 데이터</h1>
+            	**<c:forEach var="p" items="${p }">
+            	이름 : ${p.username }, 나이 : ${p.age } <br>
+            	</c:forEach>**
+            	
+            	<h1>3. 반복2 - 상태값 얻기</h1>
+            	<c:forEach var="p" items="${p }" varStatus="status">
+            	index:${status.index } <br>
+            	count:${status.count } <br>
+            	first:${status.first } <br>
+            	last:${status.last } <br>
+            	</c:forEach>
+            ```
+            
+    - URL
+        
+        ```html
+        <body>
+        	<h1>1. 이전 방식의 경로 설정</h1>
+        
+        	상대경로 : <a href="target.jsp">이전방식: 상대경로</a>
+        	절대경로 : <a href="/app14/target.jsp">이전방식: 절대경로</a>
+        	
+        	<h1>1. 이전 방식의 경로 설정</h1>
+        	상대경로 : <a href="<c:url value='target.jsp' />"> JSTL : 상대경로 </a> <br>
+        	절대경로 : <a href="<c:url value='/target.jsp' />">JSTL : 절대경로</a>
+        </body>
+        ```
+        
+
+### JSTL의 한계
+
+: 복잡한 비지니스 로직 처리를 JSTL로만 처리하기에는 어려움이 존재한다. 이를 대체하는 기술(Thymeleaf, React)의 등장으로 사용 빈도가 줄어드는 추세이다.
