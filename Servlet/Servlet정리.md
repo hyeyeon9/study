@@ -1852,7 +1852,8 @@ select * from board
     </body>
     ```
     
-    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/b9655d10-c5d5-4688-a8eb-5f1b800fb0f5/6665274f-9d0e-4fe7-b614-aeabc20a8837.png)
+   ![image (26)](https://github.com/user-attachments/assets/e617b778-35fe-4ec2-ba19-f3608ccd0d77)
+
     
 
 - **null 값**
