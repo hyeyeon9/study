@@ -1621,8 +1621,9 @@ d. JSTL (taglib) 태그
         즉 따로 top.java /class로 변환된다. -->
         </body>
         ```
-        
-        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/a587aa75-e510-41f1-9b59-20dde86ed3a8/2bed81d4-6d83-4825-91df-6cba9ca11935.png)
+        ![image (27)](https://github.com/user-attachments/assets/aee1da7b-8e59-4af6-9edc-fd16d04c5f75)
+
+  
         
 3. tablib directive
     
