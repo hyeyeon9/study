@@ -23,4 +23,4 @@
 ## Servlet
 [Servlet 정리][slink]
 
-[sqlink]:https://github.com/hyeyeon9/study/blob/main/JQuery/jquery%EC%A0%95%EB%A6%AC.md
+[sqlink]:https://github.com/hyeyeon9/study/blob/main/Servlet/Servlet%EC%A0%95%EB%A6%AC.md
