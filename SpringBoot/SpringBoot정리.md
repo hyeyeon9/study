@@ -274,14 +274,14 @@ https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplicati
         ```java
         package com.exam;
         
-        **import org.slf4j.Logger;
-        import org.slf4j.LoggerFactory;**
+        import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;
         
-        **@SpringBootApplication**
+        @SpringBootApplication
         public class Application implements CommandLineRunner{
         	
-         	 **// 1. Logger 얻기
-        	 Logger logger = LoggerFactory.getLogger(getClass());**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+         	 // 1. Logger 얻기
+        	 Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         
         	public static void main(String[] args) {
         		SpringApplication.run(Application.class, args);
@@ -357,8 +357,7 @@ https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html
 ```java
 @Repository
 public class DeptDAO {
-	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-
+	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                     
 	public DeptDAO() {
 		logger.info("Logger:{}", "DeptDAO 생성자");
 	}
