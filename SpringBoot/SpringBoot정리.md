@@ -319,3 +319,115 @@ https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplicati
         - **로그파일 저장 가능**
             - [**`logging.file.name](http://logging.file.name/) = C:\\Temp\\app.log`**
                 - 지정한 위치에 로그 파일이 저장된다.
+             
+---
+# 9. 빈 (Bean)
+
+## 1) 개념
+
+: **Spring IoC 컨테이너가 관리하는 객체**를 의미한다. **개발자가 직접 객체를 생성(new)하지 않고, 스프링이 객체를 생성하고 관리한다.**
+
+- **직접 new 하지 않는다.**
+
+## 2) 빈 생성 방법
+
+https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html
+
+- **자동 빈 생성 방법**
+    
+    : 권장하는 방법은 권장패키지 구조를 이용하는 것이다.
+    
+    - step 1 : **권장패키지 구조**를 이용하기
+        - **`@SpringBooApplication` 어노테이션이 있는 클래스의 패키지와 하위 패키지만 스프링이 스캔**하기 때문에, 빈으로 생성하고 싶은 클래스는 반드시 하위 패키지로 들어가야 한다.
+    - step 2 : **클래스에 어노테이션을 붙이면 자동으로 빈이 생성된다.**
+        - **@Component**  : 범용적으로 사용
+        - **@Service**          : ServiceImpl 역할
+        - **@Repository**    : DAO 역할
+        - **@Controller**     : 서블릿 역할
+        - **@Configuration** : 설정 정보를 추가할 때 ( application.properties 대신에 )
+        - **어노테이션에 이름 설정이 가능**하다.
+            - @Repository("dao")
+
+## 3) 빈 접근하는 방법
+
+: **`ApplicationContext` 를 사용해서 빈에 접근할 수 있다.**
+
+- **DeptDAO**
+
+```java
+**@Repository**
+public class DeptDAO {
+	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+	public DeptDAO() {
+		logger.info("Logger:{}", "DeptDAO 생성자");
+	}
+	
+	**// 데이터 리턴**하는 메서드
+	public List<St**ring> list(){
+		return Arrays.asList("홍길동", "이순신");
+	}**
+}
+```
+
+- **DeptServiceImpl.java**
+
+```java
+**@Service("xxx")**
+public class DeptServiceImpl implements DeptService {
+	 private Logger logger = LoggerFactory.getLogger(getClass());   
+	
+	 // Service에서 DAO 접근하고자 한다. 
+	 DeptDAO dao;
+	 
+	// 생성자 주입
+	 public DeptServiceImpl(DeptDAO dao) {
+		logger.info("Logger:{}", "DeptServiceImpl 생성자" + dao);
+		this.dao = dao;
+	}
+	 
+  **// 데이터 리턴하는 메서드
+	public List<String> list(){
+			return dao.list();
+	}**
+}
+```
+
+- **Application.java**
+
+```java
+**@SpringBootApplication**
+public class Application implements CommandLineRunner{
+	
+	**// 서비스에 접근하기 위해서 일단 컨텍스트에 먼저 접근해야한다.
+	@Autowired
+	ApplicationContext ctx;
+	// AnnotationConfigApplicationContext**
+	
+	// 1. Logger 얻기
+	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+	**@Override
+	public void run(String... args) throws Exception {
+		logger.info("Logger : {}","Application " + ctx);
+		
+		// 빈 참조
+		DeptServiceImpl service =  ctx.getBean("xxx", DeptServiceImpl.class);
+		
+		List<String> list = service.list();
+		logger.info("List : {}", list); // List : [홍길동, 이순신]
+	}**
+}
+```
+
+- **`@Autowired ApplicationContext ctx;`**
+    - `ctx`는 **Spring IoC 컨테이너**를 나타내며, ***빈을 검색하거나 가져오는 작업을 처리***
+    - **`@Autowired`** 를 사용하면 Spring이 `ApplicationContext` 을 자동으로 주입
+- **`DeptServiceImpl service =  ctx.getBean("xxx", DeptServiceImpl.class);`**
+    - Spring 컨테이너에서 이름이 `“xxx”`인 빈을 검색한다.
+    - 검색된 빈의 타입은 `DeptServiceImpl` 이어야 한다.
+    - 검색된 빈은 `service` 변수에 주입된다.
+    - 이후 service를 통해 빈의 메서드를 호출하거나 참조할 수 있다.
