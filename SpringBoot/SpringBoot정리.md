@@ -364,7 +364,7 @@ public class DeptDAO {
 	}
 	
 	// 데이터 리턴하는 메서드
-	public List<St**ring> list(){
+	public List<String> list(){
 		return Arrays.asList("홍길동", "이순신");
 	}
 }
