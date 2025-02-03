@@ -355,7 +355,7 @@ https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html
 - **DeptDAO**
 
 ```java
-**@Repository**
+@Repository
 public class DeptDAO {
 	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
@@ -363,17 +363,17 @@ public class DeptDAO {
 		logger.info("Logger:{}", "DeptDAO 생성자");
 	}
 	
-	**// 데이터 리턴**하는 메서드
+	// 데이터 리턴하는 메서드
 	public List<St**ring> list(){
 		return Arrays.asList("홍길동", "이순신");
-	}**
+	}
 }
 ```
 
 - **DeptServiceImpl.java**
 
 ```java
-**@Service("xxx")**
+@Service("xxx")
 public class DeptServiceImpl implements DeptService {
 	 private Logger logger = LoggerFactory.getLogger(getClass());   
 	
@@ -386,23 +386,23 @@ public class DeptServiceImpl implements DeptService {
 		this.dao = dao;
 	}
 	 
-  **// 데이터 리턴하는 메서드
+     // 데이터 리턴하는 메서드
 	public List<String> list(){
 			return dao.list();
-	}**
+	}
 }
 ```
 
 - **Application.java**
 
 ```java
-**@SpringBootApplication**
+@SpringBootApplication
 public class Application implements CommandLineRunner{
 	
-	**// 서비스에 접근하기 위해서 일단 컨텍스트에 먼저 접근해야한다.
+	// 서비스에 접근하기 위해서 일단 컨텍스트에 먼저 접근해야한다.
 	@Autowired
 	ApplicationContext ctx;
-	// AnnotationConfigApplicationContext**
+	// AnnotationConfigApplicationContext
 	
 	// 1. Logger 얻기
 	private Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
@@ -410,7 +410,7 @@ public class Application implements CommandLineRunner{
 		SpringApplication.run(Application.class, args);
 	}
 
-	**@Override
+	@Override
 	public void run(String... args) throws Exception {
 		logger.info("Logger : {}","Application " + ctx);
 		
@@ -419,7 +419,7 @@ public class Application implements CommandLineRunner{
 		
 		List<String> list = service.list();
 		logger.info("List : {}", list); // List : [홍길동, 이순신]
-	}**
+	}
 }
 ```
 
