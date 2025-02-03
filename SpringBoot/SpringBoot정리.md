@@ -231,3 +231,89 @@ https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplicati
    tomcat의 port 번호, …
 
    jsp 경로를 위한 prefix, suffix, .. 등등
+
+---
+
+# 8. 로깅 (logging) 처리
+
+## 1) 개념
+
+: 어플리케이션을 개발할 떄 문제가 발생되면 대부분 콘솔 정보를 보고 문제를 해결한다. 이때 **콘솔에 출력되는 정보를 로그**라고 부른다.
+
+- 필요시 로그 출력은 이전에는 `System.out.println` 으로 해결했으나 앞으로는 **전문적인 로그 관리 라이브러리를 사용**해야 한다.
+- **대표적인 로그 관리 라이브러리**
+    - log4j (구현체)
+    - logback (구현체, 스프링부트 기본 로그)
+- **`SLF4j`**
+    
+    : 인터페이스로서 `Log4j` 와 `Logback` 구현체들이 `SLF4j` 인터페이스를 상속해서 만들어진다. 따라서 실제로 `SLF4j` 사용하면 `Log4j` 에서 `logback` 으로 변경시 코드를 수정할 필요가 없다.
+    
+- **로그 레벨 5가지**
+    - `trace`
+    - `debug`
+    - `info ( 기본 )`
+    - `warn`
+    - `error`
+    
+    동작방식은 지정된 레벨 및 하위까지 포함해서 로그가 출력된다.
+    
+- **구현 방법**
+    1. **Logger 생성**
+        
+        **//  Logging의 인터페이스 기능인 slf4j 사용**
+        
+        **`import org.slf4j.Logger;`**
+        
+        **`import org.slf4j.LoggerFactory;`**
+        
+        **`Logger logger = LoggerFactory.getLoger( 클래스명.class );`**
+        
+    2. **로그레벨에 해당되는 메서드 호출**
+        - **`logger.trace | debug | info | warn | error(값);`**
+        
+        ```java
+        package com.exam;
+        
+        **import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;**
+        
+        **@SpringBootApplication**
+        public class Application implements CommandLineRunner{
+        	
+         	 **// 1. Logger 얻기
+        	 Logger logger = LoggerFactory.getLogger(getClass());**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        	public static void main(String[] args) {
+        		SpringApplication.run(Application.class, args);
+        	}
+        
+        	@Override
+        	public void run(String... args) throws Exception {
+        		System.out.println("Application");
+        		// 2. log 레벨 메서드 호출
+        		**logger.trace("trace 입니다.");
+        		logger.trace("trace {} ","입니다."); // {}에 "입니다"갸 치환돼서 들어감
+        		logger.debug("debug {} ","입니다.");
+        		logger.info("info {} ","입니다."); // info가 기본이라 info부터 하위까지(warn, error) 실행됨
+        		logger.warn("warn {} ","입니다.");
+        		logger.error("error {} ","입니다.");**
+        		}
+        }
+        ```
+        
+    3. **application.properties 에셔 로그레벨 변경**
+        - **문법** : **`logging.level.클래스명 =`**
+        - **`logging.level.root = warn`**  :  **`warn | error`**
+            
+            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/ebd8199f-62f9-4bd4-b8c2-66bb13023c44/b32a45f3-4e2d-473c-b993-cfe457279907.png)
+            
+        - **`logging.level.root = debug`**  : **`debug | info | warn | error`**
+            
+            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/ccbffd2a-8f36-429a-881c-eee4ae4faad8/6e9b82ae-4076-46a5-920a-e64e96fff2bf.png)
+            
+        - **특정 패키지에서의 로그레벨 지정 가능**
+            - **`logging.level.com.exam = warn`**
+                - `com.exam` 패키지는 `warn` 레벨부터 로그가 찍힌다.
+        - **로그파일 저장 가능**
+            - [**`logging.file.name](http://logging.file.name/) = C:\\Temp\\app.log`**
+                - 지정한 위치에 로그 파일이 저장된다.
