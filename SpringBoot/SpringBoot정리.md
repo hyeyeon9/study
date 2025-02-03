@@ -305,11 +305,13 @@ https://docs.spring.io/spring-boot/reference/using/using-the-springbootapplicati
         - **문법** : **`logging.level.클래스명 =`**
         - **`logging.level.root = warn`**  :  **`warn | error`**
             
-            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/ebd8199f-62f9-4bd4-b8c2-66bb13023c44/b32a45f3-4e2d-473c-b993-cfe457279907.png)
+            ![image (28)](https://github.com/user-attachments/assets/14a40e85-9689-4588-8fa8-e8a889c5b2ca)
+
             
         - **`logging.level.root = debug`**  : **`debug | info | warn | error`**
             
-            ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/ccbffd2a-8f36-429a-881c-eee4ae4faad8/6e9b82ae-4076-46a5-920a-e64e96fff2bf.png)
+           ![image (29)](https://github.com/user-attachments/assets/6a4372db-3265-47d0-997f-46ddcbc0a1f0)
+
             
         - **특정 패키지에서의 로그레벨 지정 가능**
             - **`logging.level.com.exam = warn`**
