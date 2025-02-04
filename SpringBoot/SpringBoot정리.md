@@ -507,8 +507,8 @@ Spring 컨테이너와 ApplicationContext의 관계
     
     ```java
     @Service("xxx")
-    **@Scope(value =  ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    // @Scope("prototype") 도 가능**
+    @Scope(value =  ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    // @Scope("prototype") 도 가능
     public class DeptServiceImpl implements DeptService {
     	 private Logger logger = LoggerFactory.getLogger(getClass());   
     	
@@ -555,13 +555,13 @@ Spring 컨테이너와 ApplicationContext의 관계
     	}
     	
     	// 초기화 작업
-    	**@PostConstruct**
+    	@PostConstruct
     	public void init() {
     		logger.info("logger : {}", "init 메서드");
     	}
     
     	// cleanup 작업
-    	**@PreDestroy**
+    	@PreDestroy
     	public void clenup() {
     		logger.info("logger : {}", "clenup 메서드");
     	}
