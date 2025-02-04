@@ -430,3 +430,145 @@ public class Application implements CommandLineRunner{
     - 검색된 빈의 타입은 `DeptServiceImpl` 이어야 한다.
     - 검색된 빈은 `service` 변수에 주입된다.
     - 이후 service를 통해 빈의 메서드를 호출하거나 참조할 수 있다.
+
+ ---
+ # 13. 빈 스코프 (Bean Scope)
+
+https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html#page-title
+
+## 1) 개념
+
+: Spring에서 빈은 기본적으로 **싱글톤**으로 관리된다. 
+
+**싱글톤은 ApplicationContext(스프링 컨테이너)에서 단 한번만 생성되는 것으로,** 여러번 빈을 요청해도 항상 동일한 인스턴스(100번지)를 반환해준다.
+
+- 필요에 따라서 다른 스코프로 빈을 설정할 수 있다.
+
+<aside>
+💡
+
+Spring 컨테이너와 ApplicationContext의 관계
+
+- **Spring 컨테이너**
+    
+    : 스프링 애플리케이션의 생명주기를 관리하는 중앙 역할을 수행
+    
+    - 빈(Bean)을 관리하며, 의존성 주입과 같은 기능을 제공
+- **ApplicationContext**
+    - Spring 컨테이너의 구현체 중 하나
+    - 가장 많이 사용되는 컨테이너로, BeanFactory를 확장한 인터페이스
+        - 빈의 생성 및 관리
+        - 빈 검색 (getBean)
+        - 빈 생명주기 관리
+</aside>
+
+## 2) Scope의 종류
+
+### **1. Singleton Scope**
+
+: 기본 스코프로, 빈이 **단 한번만 생성**되어 빈을 여러번 요청해도 **항상 동일한 인스턴스를 반환한다.**
+
+- 여러 사용자가 공유 가능
+- **`스레드-언세이프`** : 동시에 여러 사용자가 사용하는 문제 발생 가능
+
+### **2. Prototype Scope**
+
+: 빈 요청 시마다 **매번 새로운 인스턴스를 생성해서 반환한다.**
+
+- 여러 사용자 공유 불가능 (
+- **`스레드-세이프`**
+
+### **3. Request scope (웹 환경)**
+
+: HTTP 요청마다 새로운 빈이 생성되고, 요청이 끝나면 소멸된다.
+
+- HttpServletRequest scope와 동일한 라이프사이클
+
+### **4. Session Scope (웹 환경)**
+
+: Http 세션동안 하나의 빈이 유지된다. ( 하나의 브라우저 )
+
+- HttpSession  scope와 동일한 라이프사이클
+
+### **5. Application Scope** (웹 환경)
+
+: 애플리케이션 전체에서 동일한 빈이 유지된다. ( 서버 다운동안 )
+
+- ServletContext scope와 동일한 라이프사이클
+
+## 3) scope 값 변경
+
+: **`@Scope` 어노테이션**을 ****이용해서 scope를 설정할 수 있다. 
+
+- **문법**
+    - `@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)` == `@Scope("singleton")`
+    - `@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)` == `@Scope("prototype")`
+- **예제**
+    
+    ```java
+    @Service("xxx")
+    **@Scope(value =  ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    // @Scope("prototype") 도 가능**
+    public class DeptServiceImpl implements DeptService {
+    	 private Logger logger = LoggerFactory.getLogger(getClass());   
+    	
+    	 // Service에서 DAO 접근하고자 한다. 
+    	 DeptDAO dao;
+    	 
+    	// 생성자 주입
+    	 public DeptServiceImpl(DeptDAO dao) {
+    		logger.info("Logger:{}", "DeptServiceImpl 생성자" + dao);
+    		this.dao = dao;
+    	}
+    }
+    ```
+    
+
+# 14. 빈의 초기화 작업 및 소멸 작업 (cleanup)
+
+: 서블릿의 lifecycle과 비슷한 개념으로, 애플리케이션의 시작 및 종료 시에 특정 작업을 수행한다. 
+
+- **구현방법**
+    
+    : **`@PostConstruct`**
+    
+    - public void start()
+    - **초기화 작업 메서드**에 사용
+    - Spring 컨테이너가 빈을 생성한 후에 호출
+    
+      **`@PreDestroy`**
+    
+    - public void shutdown()
+    - **소멸 작업 메서드**( cleanup )에 사용
+    - Spring 컨테이너가 빈을 소멸하기 직전에 호출
+    
+- **예제**
+    
+    ```java
+    @Controller(value = "TodoController") // value로 이름 지정 가능
+    public class TodoController {
+    	private  Logger logger = LoggerFactory.getLogger(getClass());
+    	
+    	// 생성자
+    	public TodoController() {
+    		logger.info("logger : {}", "TodoController 생성자");
+    	}
+    	
+    	// 초기화 작업
+    	**@PostConstruct**
+    	public void init() {
+    		logger.info("logger : {}", "init 메서드");
+    	}
+    
+    	// cleanup 작업
+    	**@PreDestroy**
+    	public void clenup() {
+    		logger.info("logger : {}", "clenup 메서드");
+    	}
+    }
+    ```
+    
+    - **실행순서**
+        - **빈 생성자가 가장 먼저 호출**
+        - **@PostConstruct 호출로** init() 메서드 실행
+        - **@PreDestroy** **호출** clenup() 메서드 실행
