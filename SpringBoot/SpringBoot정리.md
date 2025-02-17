@@ -572,3 +572,142 @@ Spring 컨테이너와 ApplicationContext의 관계
         - **빈 생성자가 가장 먼저 호출**
         - **@PostConstruct 호출로** init() 메서드 실행
         - **@PreDestroy** **호출** clenup() 메서드 실행
+     
+---
+# 10. 의존성 주입 ( Dependency Injection : DI )
+
+## 1) 개념
+
+: 특정 A클래스가 다른 B클래스를 참조할 때 A클래스에서는 B의 참조변수가 필요하다. 이때, **외부에서 생성된 객체(B)를 A에게 전달하는 설계 패턴**이다
+
+- **외부에서 필요한 객체를 넣어주는 개념**으로 **의존성 주입**이라고 한다.
+- **클래스 간의 결합도를 낮추고, 유연성과 재사용성을 높일 수 있다.**
+
+## 2) 의존성 주입 방법
+
+### 1. 생성자 이용 (권장)
+
+: 필요한 객체를 생성자를 통해 전달받아 의존성을 주입하는 방식이다.
+
+- **생성자의 매개변수로 필요한 객체를 전달해, 생성자가 실행되면서 의존성이 주입된다.**
+
+- **예제**
+
+```
+                              DeptService 
+  Application.java    ←—→   DeptServiceImpl  ←—→  DeptDAO/UserDAO
+```
+
+```java
+@Service
+public class DeptServiceImpl implements DeptService {
+	 private Logger logger = LoggerFactory.getLogger(getClass());   
+	
+	 // Service에서 DAO 접근하고자 한다. 
+	 **DeptDAO deptDAO;
+	 UserDAO userDAO;**
+	 
+	// 생성자 주입  ( 생성자를 통해서 deptDAO와 userDAO 각각의 번지가 서비스가 생성될떄 주입돼서 인스턴스 변수에 할당된다. )
+	 **public DeptServiceImpl(DeptDAO deptDAO, UserDAO userDAO)** {
+		logger.info("Logger:{}", "DeptServiceImpl 생성자" + deptDAO +" " +userDAO);
+		// com.exam.dao.DeptDAO@e044b4a   com.exam.dao.UserDAO@11a82d0f
+		this.deptDAO = deptDAO;
+		this.userDAO = userDAO;
+	}
+
+}
+```
+
+- **`DeptServiceImpl`** 생성자에서 **`DeptDAO`**와 **`UserDAO`** 객체를 전달받아 인스턴스 변수에 저장한다.
+- **생성자에 주입받고 싶은 객체를 매개변수로** 넣어주면 된다.
+- **어떤 객체를 필요로 하는지 명시적으로 나타내기에 의존성을 분명**하게 확인 가능하다.
+
+### 2. `@Autowired` 어노테이션 이용 ( 필드 주입 )
+
+: `@Autowired` 을 사용해서 필드에 직접 의존성을 주입하는 방식
+
+- 코드가 간결하지만 의존성이 숨겨져 있어 테스트나 유지보수가 어려울 수 있다.
+
+- **예제**
+
+```
+                              DeptService 
+  Application.java    ←—→   DeptServiceImpl  ←—→  DeptDAO/UserDAO
+```
+
+```java
+@Service
+public class DeptServiceImpl implements DeptService {	
+
+	 **@Autowired
+	 DeptDAO deptDAO;
+	 @Autowired
+	 UserDAO userDAO;**	
+}
+```
+
+- Spring이 컨테이너에서 자동으로 두 객체를 주입한다.
+- 권장되지 않는 방식으로, 생성자 주입을 사용하도록 하자.
+
+# 12. @Qualifier
+
+## 1) 개념
+
+: 기본적으로 생성자 주입 또는 @Autowired는 **동일한 타입을 주입**시킨다. 따라서 동일한 타입이 하나인 경우에는 그것이 주입된다.
+
+- **문제점** :
+    
+    **동일한 타입이 여러개인 경우에는 어떤 클래스를 주입할 지 모르기 때문에 명시적으로 주입할 클래스를 알려줘야 한다**. 
+    
+- **해결** :
+    
+    이때 **`@Qualifier(”빈이름”)`** 을 사용한다.
+    
+
+- **예제**
+    
+    ```
+                                     DeptService           CommonDAO (인터페이스)
+         Application.java    ←—→   DeptServiceImpl  ←—→  DeptDAO/UserDAO
+    ```
+    
+    - **CommonDAO (인터페이스)**
+        
+        ```java
+        public DeptServiceImpl(CommonDAO dao) {
+        		this.dao = dao;
+        	}
+        ```
+        
+        - `CommonDAO` 인터페이스를 구현하는 `DeptDAO` 와 `UserDAO`가 존재
+            
+             ⇒ 동일한 타입의 2가지 빈이 존재
+            
+    - **ServiceImpl ( 생성자 주입 )**
+        
+        ```java
+         public DeptServiceImpl(**@Qualifier("dept")** CommonDAO dao) {
+        		logger.info("Logger:{}", "DeptServiceImpl 생성자" + " " + dao);
+        		this.dao = dao;
+        	}
+        ```
+        
+        - **`@Qualifier(”dept”)`** 를 통해서 `CommonDAO` 의 여러 빈 중 **`dept`** 라는 이름의 빈이 주입된다.
+            - 주입할 빈의 이름을 지정한 경우 이름을 사용하고, 이름이 없는 경우에는 클래스의 이름을 소문자로 시작하는 형태로 사용한다.
+            
+            ```java
+            @Repository("**dept**")
+            public class DeptDAO implements CommonDAO{
+            ```
+            
+            - 여기서는 **`dept`** 사용
+    - **ServiceImpl**  **( @AutoWired )**
+        
+        ```java
+        	 // Service에서 DAO 접근하고자 한다. 
+        	 **@Autowired
+        	 @Qualifier("dept")**
+        	 CommonDAO dao;
+        ```
+        
+        - `@Autowired` 아래에  **`@Qualifier("dept")`**를 명시적으로 사용하면 된다.
