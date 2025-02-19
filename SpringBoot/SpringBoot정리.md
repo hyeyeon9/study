@@ -1097,3 +1097,345 @@ public class LoggingAspect {
         ```
         
     - pointcut을 담아두는 클래스를 따로 생성해서 호출하기
+ 
+
+  ---
+  # Spring Boot + MyBatis + MySQL(데이터베이스) 연동
+
+# 1. MyBatis + MySQL 연동 ( 기본방식 )
+
+https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/
+
+## 1) 의존성 추가 : 2개의 jar 필요
+
+- `mybatis.jar`
+- `mysql-connector.jar`
+
+⇒  **스프링부트에서는 pom.xml 에 <dependecy> 태그에 설정**
+
+- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter/3.0.3
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+<dependency>
+		<groupId>org.mybatis.spring.boot</groupId>
+		<artifactId>**mybatis-spring-boot-starter**</artifactId>
+		<version>3.0.3</version>
+</dependency>
+```
+
+- https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.33
+
+```xml
+<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>**mysql-connector-java**</artifactId>
+    <version>8.0.33</version>
+</dependency>
+
+```
+
+## 2) DB 연동을 위한 4가지 정보
+
+: 이전에는 `jdbc.properties` 파일에 설정했었다. 스프링부트에서는 **`application.properties`** 파일에 설정한다. 
+
+- 기존에 사용하던 4가지 정보
+    
+    ```java
+    **jdbc.driver = com.mysql.cj.jdbc.Driver
+    jdbc.url = jdbc:mysql://localhost:3306/testdb
+    jdbc.userid = root
+    jdbc.passwd = 1234**
+    ```
+    
+- 스프링 부트
+    
+    ```java
+    **# application.properties
+    # DB 연동
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    spring.datasource.url=jdbc:mysql://localhost:3306/testdb
+    spring.datasource.username=root
+    spring.datasource.password=1234**
+    ```
+    
+
+## 3) DTO 작성 및 별칭
+
+- **`com.exam.dto.DeptDTO` 작성**
+- **`@Alias` 로 별칭등록**
+
+```java
+**@Alias("DeptDTO")**
+public class DeptDTO {
+	int deptno;
+	String dname;
+	String loc;
+	...
+	}
+```
+
+- DTO 클래스가 MyBatis에서 자동으로 매핑될 수 있도록 **`@Alias("DeptDTO")` 로 별칭을 등록해야 한다.**
+
+## 4) Configuration.xml 필요없음
+
+: 위 4가지 정보 등록, DTO 별칭, mapper 등록을 **Configuration.xml이 아니라 application.properties 가 담당**한다.
+
+## 5) Mapper XML 작성
+
+- com.exam.config.DeptMapper.xml 작성
+
+## 6) DTO 별칭 등록 및 Mapper 등록
+
+- DTO 별칭 등록
+    - **`mybatis.type-aliases-package`**
+- Mapper 등록
+    - **`mybatis.mapper-locations`**
+
+```java
+# MyBatis 설정
+mybatis.type-aliases-package=com.exam.dto
+mybatis.mapper-locations=classpath:mapper/*.xml
+```
+
+## 7) java 파일 작성
+
+```java
+                         DeptService
+Application.java <----> DeptServiceImpl <---->  DeptDAO <---> MySQL
+```
+
+## 8) MySqlSessionFactory.java 필요 X
+
+: 기존에 MySqlSessionFactory.java 를 통해서  Service 클래스에서 session을 얻고, DAO 클래스에 전달해서 사용되었다.
+
+- 스프링부트에서는 **`SqlSessionTemplate`** 를 사용한다.
+    - Service클래스가 아니라 **DAO에서 직접 얻어서 사용한다. 이유는 commit()/rollback()처럼 직접 호출하는 방법의 트랜잭션 처리가 아니기 때문이다.**
+    - **선언적 트랜잭션 방식**을 사용한다.
+        - **`@Transactional`** 이용
+        - **Service 클래스**에서 트랜잭션 처리를 담당한다.
+        - **auto commit**
+            - 성공하면 모두 자동으로 commit이 되고, 작업 중 하나라도 실패하면 모두 rollback이 된다.
+            
+            ```java
+            @Transactional 
+            public void tx(){
+            	int n = dao.insert();
+            	int n2 = dao.delete();
+            }
+            ```
+            
+
+## 9) DAO 구현
+
+- **DAO에서 직접 Sqlsession을 얻어와서 사용**한다.
+
+```java
+@Repository
+public class DeptDAO {
+	**SqlSessionTemplate session;**
+	// session 주입
+	public DeptDAO(SqlSessionTemplate session) {
+		this.session = session;
+	}
+	}
+```
+
+- mapper의 함수와 연결
+    
+    ```java
+    	// mapper로 연동할 함수
+    	public List<DeptDTO> findAll(){
+    		List<DeptDTO> list = session.selectList("com.exam.config.DeptMapper.findAll");
+    		return list;
+    	}
+    ```
+    
+
+## 10) Service 와 ServiceImpl
+
+- Service 인터페이스
+    
+    ```java
+    public interface DeptService {
+    	public List<DeptDTO> findAll();
+    }
+    ```
+    
+- ServiceImpl 클래스
+    
+    ```java
+    @Service("deptService")
+    public class DeptServiceImpl implements DeptService {
+    	DeptDAO dao;
+    
+    	// 생성자로 주입시키기
+    	public DeptServiceImpl(DeptDAO dao) {
+    		this.dao = dao;
+    	}
+    
+    	@Override
+    	public List<DeptDTO> findAll() {
+    		return dao.findAll();
+    	}
+    	...
+    }
+    ```
+    
+
+## 11) Application.java 실행
+
+```java
+@SpringBootApplication
+public class Application implements CommandLineRunner{
+	
+	// 1. Logger 얻기
+	Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+	
+	@Autowired
+	DeptService service;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		List<DeptDTO> list = service.findAll();
+		logger.info("Logger list : {}", list);
+		}
+}
+```
+
+---
+
+# 2. MyBatis + MySQL 연동 2 ( 권장방식 )
+
+https://mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/#quick-setup
+
+- **`DAO`** 대신에 **`@Mapper` 인터페이스를 사용하는 방법**
+
+## 1) DAO 삭제
+
+: **DAO 대신 `@Mapper` 어노테이션이 붙은 인터페이스를 사용할 것**이다. 
+
+## 2) **`DeptMapper.java` 작성**
+
+: **`DeptMapper.xml`** 과 자동으로 연동하는 **인터페이스 `DeptMapper.java` 를 사용한다.** 
+
+- **DeptMapper.xml의 namespace와 DeptMapper.java 의 패키지가 동일**해야 한다. ( 동일한 패키지 안 )
+- **`DeptMapper.java`**
+    - 구현 방법 :
+        1. **`DeptMapper.xml`**의 id값과 일치하는 메서드를 지정
+        2. **`parameterType`**과 일치하는 파라미터타입 지정 
+        3. **`returnType`**과 일치하는 리턴타입 지정
+        4. **`@Mapper` 어노테이션 지정해 매퍼로 등록**
+    
+- **DeptMapper.xml**
+    
+    ```java
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    **<mapper namespace="com.exam.config.DeptMapper">**
+    
+    	<select id="findAll" resultType="DeptDTO">
+    		<![CDATA[
+    				select deptno, dname, loc
+    				from dept
+    				order by deptno desc
+    		]]>
+    	</select>
+    
+    </mapper>
+    ```
+    
+- **DeptMapper.java**
+    
+    ```java
+    **package com.exam.config;**
+    
+    import org.apache.ibatis.annotations.Mapper;
+    
+    **@Mapper
+    public interface DeptMapper {
+    	public List<DeptDTO> findAll(**)**;
+    }**
+    
+    ```
+    
+    - 주요 확인 사항 :
+        - DeptMapper.xml의 namespace와 DeptMapper.java의 **패키지가 동일해야 한다.**
+        - **메서드 이름, 파라미터타입, 리턴타입이 일치**해야 한다.
+
+## 3) Service 작업
+
+: **`DeptDAO`**가 아니라 **`DeptMapper`**을 주입받기
+
+- **DeptServiceImpl.java**
+
+```java
+package com.exam.service;
+
+import com.exam.config.DeptMapper;
+import com.exam.dto.DeptDTO;
+
+@Service("deptService")
+public class DeptServiceImpl implements DeptService {
+	**DeptMapper mapper;**
+
+	**// 생성자로 Mapper 주입시키기
+	public DeptServiceImpl(DeptMapper mapper) {
+		this.mapper = mapper;
+	}**
+
+	**@Override
+	public List<DeptDTO> findAll() {
+		return mapper.findAll();
+	}**
+}
+
+```
+
+- DeptDAO 대신 **DeptMapper를 생성자 주입으로 받아 사용**한다.
+- **Mapper를 통해 데이터베이스와 직접 연동**한다.
+
+## 4) Application.java
+
+: 기존과 그대로 **`service`** 객체를 주입받아서 **`Service`**클래스 안의 메서드를 호출한다.
+
+- **Application.java**
+
+```java
+package com.exam;
+
+**@SpringBootApplication**
+public class Application implements CommandLineRunner{
+	
+	// 1. Logger 얻기
+	Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+	
+	**@Autowired
+	DeptService service;**
+	
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		**List<DeptDTO> list = service.findAll();**
+		logger.info("Logger list : {}", list);
+		}
+}
+```
+
+---
+
+# ✅정리
+
+- **스프링부트에서 데이터베이스 ( MyBatis + MySQL ) 연동하는 방법**
+- 기존 방식 (DAO 사용) 보다 **@Mapper 사용 방식을 권장**
+- **`@Mapper`** 릍 통해 더 간결하게 DB와 매핑 가능
