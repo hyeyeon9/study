@@ -711,3 +711,69 @@ public class DeptServiceImpl implements DeptService {
         ```
         
         - `@Autowired` 아래에  **`@Qualifier("dept")`**를 명시적으로 사용하면 된다.
+     
+---
+# 15. Profile
+
+## 1) 개념
+
+: 개발할 때 다양한 **환경**을 구축해서 개발한다. 
+
+- dev 환경 (개발환경), Q/A 환경, prod 환경 (배포환경)
+
+```
+**//개발환경
+Application <---------> DeptServiceImpl <---------> H2DAO <----> H2, Redis (경량 DB)
+
+//배포환경
+Application <---------> DeptServiceImpl <---------> MySQLDAO <----> MySQL, Oracle( enterprise DB)**
+```
+
+## 2) 구현방법
+
+### 1. 프로파일에 따른 properties 선택
+
+1. 각 환경에 맞는 application.properties 작성하기
+    - application.properties ( 기본 )
+        - **`spring.profiles.active=dev`** 로 설정하면  **application-dev.properties 와 연동**
+    - application-profile명.properties
+        
+        예 > application-dev.properties (개발환경)   : H2 연동설정 정보
+        
+          application-prod.properties (배포환경)  : MySQL 연동설정 정보
+        
+    
+- application.properties
+    
+    ```
+    # application.properties (기본)
+    spring.profiles.active=prod 
+    ```
+    
+- application-prod.properties
+    
+    ```
+    # application-prod.properties
+    logging.level.com.exam=warn
+    ```
+    
+
+위 프로파일에 따라서 `com.exam` 패키지 내의 로그 메세지는 `warn` 수준 이상 (warn, error)만  출력되는 것을 확인할 수 있다. 
+
+## 2. 프로파일에 따른 빈 선택하는 방법
+
+```java
+@Repository
+**@Profile("prod")**
+public class MySQLDAO {
+	private Logger logger = LoggerFactory.getLogger(getClass());                                
+	
+	public MySQLDAO() {
+		logger.info("Logger:{}", "MySQLDAO 생성자");
+	}
+	
+}
+```
+
+- `@Profile("**prod**")`를 지정해 `application-**prod**.properties` 와 연동하게 되고, 실행하면 `MySQLDAO` 의 생성자가 호출되어 로그가 찍히는 것을 확인할 수 있다.
+
