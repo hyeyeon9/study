@@ -777,3 +777,323 @@ public class MySQLDAO {
 
 - `@Profile("**prod**")`를 지정해 `application-**prod**.properties` 와 연동하게 되고, 실행하면 `MySQLDAO` 의 생성자가 호출되어 로그가 찍히는 것을 확인할 수 있다.
 
+---
+# 16. AOP ( Aspect Oriented Programming : 관점 지향 프로그래밍 )
+
+## 1) 개념
+
+: 핵심코드 ( 로그인, 회원가입, 장바구니, .. ), 부수코드 ( 예외처리, 로깅, 보안, 트랜잭션처리 , ..) 등의 코드들이 각 레이어마다 혼합(핵심 + 부수) 되어 사용되는 문제가 있다. 
+
+- **부수코드를 따로 분리해서 부수코드가 필요한 각 레이어에 주입해서 사용하자는 개념이 AOP (관점 지향 프로그래밍)이다.**
+- **핵심 코드를 수정하지 않고도 공통 기능을 추가할 수 있다.**
+- **공통적인 부가기능을 별도로 관리해서 코드 중복을 줄이고 유지보수성을 높인다.**
+
+---
+
+## 2) **Spring AOP** 기술
+
+### **1) AspectJ**
+
+: AOP **원천기술** ( 1995년 )
+
+- **다양한 주입시점을 가진다**. ( 특정 메서드를 호출할 때, 변수값이 변경될 때, .. )
+
+### **2) Spring AOP**
+
+: 원천기술인 `AspectJ`에서 **일부분만 빌려서 사용하는 기술**
+
+- pom.xml에 <dependency> 가 필요하다.
+- **단 하나의 주입시점**을 가진다.
+    - **핵심코드를 가진 Servlet의 특정 메서드를 호출할 때**
+
+---
+
+## 3) **AOP 핵심** 용어
+
+- **target object**  :  **핵심 클래스**
+- **aspect**      :  **부가기능 구현 클래스**
+- **joinpoint  :  핵심 코드(`target object`)와 부가기능(`aspect`)가 만나는 시점**  ⇒  메서드 호출시
+- **pointcut**   :  target object의 **어떤 메서드를 호출했을 떄 AOP를 적용할지** 지정하는 표현식
+- **advice**      : **부가기능이 실행되는 시점과 방식**
+    - `@Before` : 메서드 호출전
+    - `@After` : 메서드 호출후
+    - `@AfterReturning` : 메서드 호출해서 리턴값 성공시
+    - `@AfterThrowing` : 메서드 호출해서 에러발생시
+    - `@Around` : 메서드 호출전, 호출후, 성공시, 에러발생시 모두 포함하는 경우
+- **weaving**  :  **AOP를 핵심코드에 조인(주입**)하는 과정
+
+---
+
+## 4) AOP 실습
+
+### **1) AOP 의존성 주입**
+
+- **`pom.xml`**
+    
+    ```xml
+    <!-- AOP 설정-->
+    <dependency>
+    			<groupId>org.springframework.boot</groupId>
+    			<artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    ```
+    
+
+### **2) target object ( 핵심 클래스 )**
+
+- 로그인, 회원가입 등 **핵심 기능을 담당하는 클래스**를 의미한다.
+
+```java
+@Service("deptService")
+public class DeptServiceImpl implements DeptService {
+	@Override
+	public String sayEcho() {
+		logger.info("sayecho() : {}","안녕하세요!!");
+		return "안녕하세요.";
+	}
+
+	@Override
+	public List<String> list() {
+		return Arrays.asList("홍길동","이순신");
+	}
+}
+```
+
+### **3) aspect  ( 부가기능 클래스 )**
+
+- **로그처리와 같은 부가기능 구현 클래스**를 의미한다.
+
+```java
+@Component
+**@Aspect**
+public class LoggingAspect {
+	public void loggingPrint1() {
+		// 로그처리 담당
+	}	
+}
+```
+
+### **4) pointcut 지정**
+
+: **target object 의 어떤 메서드를 호출할 때 join할지 나타내는 표현식**
+
+- **포인트컷**은 **어떤 지점에서 AOP를 적용할지 지정하는 표현식**이다.
+
+```java
+**@Pointcut("execution(public String sayEcho())")**
+	public void businessService() {}
+```
+
+- **`sayEcho()` 메서드가 호출되는 시점에 `businessService()` 포인트컷이 트리거된다. 이 포인트컷을 참조하는 `advice` 에서 부가기능 로직이 실행되는 것이다.**
+
+**Pointcut 표현식**
+
+1. **`execution()`**
+    
+    : 특정 메서드를 지정할 때 사용
+    
+2. **`bean()`**
+    
+    : 특정 컴포넌트(빈)의 이름 지정  ⇒  메서드를 포함하는 빈
+    
+    예 > bean(”service”)
+    
+    @Service(”service”)
+    
+    public class BoardServiceImpl(){ … }
+    
+3. **`witihin()`**
+    
+    : 특정 패키지 내 클래스 지정 
+    
+    예 > witihin(”com.exam.*”)
+    
+4. **`combine (   &&  ,  ||   ,   !   )`**
+    
+    : 표현식을 결합해서 대상 지정 가능
+    
+    예 > Pointcut(”execution(publiv String sayEcho()  ||   bean(service) )”
+    
+
+### **5) advice 지정**
+
+- **@Before (메서드 실행 전)**
+    
+    : 메서드 실행 전에 로깅을 수행한다. 
+    
+    ```java
+    @Before("execution(public String sayEcho())")
+    public void beforeAdvice() {
+        logger.info("LOGGER: {}", "@Before advice 실행 - 메서드 호출 전");
+    }
+    ```
+    
+- **@After (메서드 실행 후)**
+    
+    : 메서드 실행 후에 로깅을 수행
+    
+    ```java
+    	// adive와 pointcut을 같이 표현
+    	@After("execution(public String sayEcho())")
+    	public void loggingPrint1() {
+    		// 로그처리 담당
+    		logger.info("Logger : {}", "@After advice1");
+    	}
+    	
+    		// adive와 pointcut을 분리
+    	@Pointcut("execution(public String sayEcho())")
+    	public void businessService() {}
+    	
+    	@After("businessService()")
+    	public void loggingPrint2() {
+    		// 로그처리 담당
+    		logger.info("Logger : {}", "@After advice2");
+    	}
+    ```
+    
+    - **`advice`** 와 **`pointcut`** 을 **같이 표현하거나 분리해서 표현 가능**하다. 위 코드에서는 **`@After`** 를 지정했기에  **`sayEcho()` 메서드를 호출한 후**에 **`포인트컷(businessService())`을 참조하는 어드바이스에서 로그 메서지가 출력**되는 것을 확인할 수 있다.
+
+- **@AfterReturning (정상 실행 후, 반환값을 사용)**
+    - 메서드가 정상적으로 실행되고 리턴값이 있는 경우 받아서 사용 가능
+        
+        ```java
+        	@AfterReturning(pointcut = "bean(deptService)", returning = "xxx")
+        	public void loggingPrint2(Object xxx) {
+        		//로그처리 담당
+        		logger.info("Logger : {}, {}", "@After 어드바이스2", xxx);
+        	}
+        ```
+        
+    - 분리해서 사용
+        
+        ```java
+        // 분리해서
+        	@Pointcut("been(*Service)")
+        	public void businessService() {}
+        	
+        	@AfterReturning(pointcut = "businessService()", returning = "xxx")
+        	public void loggingPrint4(Object xxx) {
+        		//로그처리 담당
+        		logger.info("Logger : {}, {}",  "@AfterReturning 어드바이스3", xxx);
+        	}
+        ```
+        
+    - JoinPoint 사용 가능
+        
+        ```java
+        	@AfterReturning(pointcut = "bean(deptService)", returning = "xxx")
+        	public void loggingPrint3(JoinPoint point,Object xxx) {
+        		//로그처리 담당
+        		logger.info("Logger : {}, {}, {}", 
+        				"@AfterReturning 어드바이스3", xxx, point.getSignature().getName());
+        		// Logger : @After 어드바이스3, 안녕하세요., sayEcho
+        	}
+        ```
+        
+
+- **@AfterThrowing (예외 발생 시)**
+    
+    : 에러가 발생할 때 
+    
+    - Service에서 에러를 발생하는 코드 작성
+        
+        ```java
+        package com.exam.service;
+        @Service("deptService")
+        public class DeptServiceImpl implements DeptService {
+        	Logger logger = LoggerFactory.getLogger(getClass());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        
+        	@Override
+        	public String sayEcho() {
+        		logger.info("sayecho() : {}","안녕하세요!!");
+        		int num =10;
+        		**int result = num/0;**
+        		return "안녕하세요.";
+        	}
+        }
+        ```
+        
+        - 기본 구조
+            
+            ```java
+            	@AfterThrowing("within(com.exam.service.*)")
+            	public void loggingPrint1() {
+            		//로그처리 담당
+            		logger.info("Logger : {}", "@AfterThrowing 어드바이스1");
+            	}
+            ```
+            
+        - 에러값 반환받기 가능
+            
+            ```java
+            	@AfterThrowing(pointcut = "within(com.exam.service.*)",
+            				   **throwing = "ex"**)
+            	public void loggingPrint2(Exception ex) {
+            		//로그처리 담당
+            		logger.info("Logger : {} , {}", 
+            					"@AfterThrowing 어드바이스2", ex.getMessage());
+            		// [0;39m Logger : @AfterThrowing 어드바이스2 , / by zero
+            	}
+            ```
+            
+        - 분리해서 작성 가능
+            
+            ```java
+            	// 분리해서
+            	@Pointcut("within(com.exam.service.*)")
+            	public void businessService() {}
+            	
+            	@AfterThrowing(pointcut = "businessService()", throwing = "xxx")
+            	public void loggingPrint4(Exception xxx) {
+            		//로그처리 담당
+            		logger.info("Logger : {}, {}",  "@AfterThrowing 어드바이스3", xxx.getMessage());
+            	}
+            ```
+            
+
+- **@Around (메서드 실행 전/후 모두 적용)**
+    - 기본구조
+        
+        ```java
+        	@Around("within(com.exam.service.*)")
+        	public Object loggingPrint1(ProceedingJoinPoint point) {
+        		Object retval = null;
+        		try {
+        		logger.info("LOGGER : {}", "@Before 처리");
+        		 **retval = point.proceed();**
+        		 logger.info("LOGGER : {}, {}", "@After 처리", retval);
+        		 // LOGGER : @After 처리, 안녕하세요.
+        		}
+        			catch (Throwable e) {
+        					logger.info("LOGGER : {}", "@AfterThrowing 처리");
+        		}
+        		return retval;
+        	}
+        ```
+        
+        - `point.proceed()`가 **실제 메서드를 실행하는 부분**
+        - 반환값을 조작하거나 실행 시간 측정 가능
+    - 분리해서
+        
+        ```java
+        // 분리해서
+        	@Pointcut("execution(public String say2()) || bean(*Service)")
+        	public void businessService() {}
+        	
+        	@Around("businessService()")
+        	public Object loggingPrint2(ProceedingJoinPoint point) {
+        		Object retval = null;
+        		try {
+        		logger.info("LOGGER : {}", "@Before 처리2");
+        		 **retval = point.proceed();**
+        		 logger.info("LOGGER : {}, {}", "@After 처리2", retval);
+        		 // LOGGER : @After 처리, 안녕하세요.
+        		}
+        			catch (Throwable e) {
+        					logger.info("LOGGER : {}", "@AfterThrowing 처리2");
+        		}
+        		return retval;
+        	}
+        ```
+        
+    - pointcut을 담아두는 클래스를 따로 생성해서 호출하기
