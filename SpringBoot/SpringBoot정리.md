@@ -1439,3 +1439,284 @@ public class Application implements CommandLineRunner{
 - **스프링부트에서 데이터베이스 ( MyBatis + MySQL ) 연동하는 방법**
 - 기존 방식 (DAO 사용) 보다 **@Mapper 사용 방식을 권장**
 - **`@Mapper`** 릍 통해 더 간결하게 DB와 매핑 가능
+
+---
+# 19. Spring MVC
+
+## 1) 서블릿/JSP의 MVC 아키텍처
+
+- 요청URL : http://localhost:8090/컨텍스트명/서블릿맵핑
+- JSP 기본적으로 지원됨
+- 서블릿에서 데이터 얻은 후 JSP로 요청 위임( forward, redirect)
+
+```java
+웹 브라우저 <----> **서블릿** <----> 서비스 <----> DAO <---> MYSQL
+	              - 개발자가 생성
+	              - 서블릿 맵핑 (예> /test)
+	              - 중요작업 2가지
+		              a. 로직처리후 서비스 연동
+			              : 사용자입력데이터 얻기 (request.getParameter)
+				              세션처리 (HttpSession session = request.getSession())
+				          b. jsp 선택
+					          : forward / redirect
+```
+
+## 2) Spring MVC 아키텍처
+
+- 요청URL : **`http://localhost:8090/컨텍스트명/서블릿맵핑/요청맵핑값`**
+    - 예 >  http://localhost:8090/app/list
+- 서블릿을 개발자가 만들지 않고 제공된다. ⇒ **`DispatcherServlet`**
+- **`Controller`** 에서 중요작업이 진행된다.
+- JSP가 기본적으로 지원되지 않음.
+    - 따라서 **JSP를 사용하기 위해서는 의존성 추가 및 웹 디렉터리도 명시적으로 생성해야 한다.**
+
+```java
+                                                 **@Controller**      @Service    @Repository                                     
+웹 브라우저 <----> DispatcherServlet서블릿 <----> **Controller** <----> 서비스 <---> DAO <---> MYSQL
+	              - 제공됨                        - 중요작업 2가지
+	              - 서블릿 맵핑(/)                  a. 로직처리후 서비스 연동 
+		                                              b. jsp 선택
+	                                              
+	                                                @RequestMapping("/list")
+	                                                public String aaa(){
+		                                                // 게시판 목록보기
+		                                               }
+		                                              @RequestMapping("/write")
+		                                              public String bbb(){
+		                                                // 게시판 글쓰기
+		                                               }
+		             
+```
+
+- 기존에는 각 기능을 위한 서블릿을 매번 생성했지만, **`Controller 패턴`을 통해서 하나의 Controller 클래스에서 여러 기능을 처리하도록 구성할 수 있다.**
+    - **각 기능은 컨트롤러 클래스 안의 개별 메서드로 구현**된다.
+
+### **`@RequestMapping("값")`**
+
+: 요청 URL과 컨트롤러 클래스 안의 특정 메서드를 매핑하기 위해 사용된다. 
+
+- **특정 메서드의** `@**RequestMapping` 값을 요청 URL에 포함하면, 매핑된 메서드를 호출할 수 있다.**
+    
+    ```java
+    @RestController
+    public class UserController {
+    
+        @RequestMapping("/hello")  
+        public String sayHello() {
+            return "Hello, World!";
+        }
+    }
+    ```
+    
+    - `/hello` 요청   ⇒   `sayHello()` 실행
+
+## 3) Spring MVC 구현 순서
+
+### **1. 웹 어플리케이션 개발을 위한 의존성 추가**
+
+- **`spring-boot-starter-web`**
+
+```java
+**<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+</dependency>**
+```
+
+- Tomcat initialized with port 8080 (http)
+    - 웹 개발을 위한 JAR 및 Tomcat 설치된다.
+    - **tomcat의 기본 port 번호는 8080이며, 변경 가능하다.**
+        - **`application.properties`**에서 변경 설정 가능
+            - **`server.port=8090`**
+    - 만약 404라면 **Whitelabel Error Page** 가 보여진다. 이것은 내부적으로 스프링부트가 404페이지를 만들어서 제공하는 것
+
+### **2. Controller 작성**
+
+- POJO 기반이고, **`@Controller`** 어노테이션 지정
+- **각 기능에 해당되는 메서드를 작성**하고, **`@RequestMapping("/요청매핑값")`**을 설정한다.
+
+```java
+package com.exam.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class TestController {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());   
+	
+	// 요청 URL : http://localhost:8090/컨텍스트명/서블릿맵핑명/요청맵핑명
+	
+	**// 요청 URL : http://localhost:8090/list
+	@RequestMapping("/list")
+	public String aaa() {
+		logger.info("LOGGER : {}", "aaa 호출" );
+		
+		return "";
+	}
+	
+	// 요청 URL : http://localhost:8090/write
+	@RequestMapping("/write")
+	public String bbb() {
+		logger.info("LOGGER : {}", "bbb 호출" );
+		
+		return "";
+	}**
+}
+```
+
+- **`http://localhost:8090/list` 요청 시 `aaa()` 메서드가 호출되어 아래와 같은 로그를 확인할 수 있다.**
+    - `LOGGER : aaa 호출`
+
+### 3. 컨텍스트명 변경 가능
+
+- **`application.properties`**에서 설정
+    
+    ```xml
+    # 컨텍스트명 변경 가능
+    **server.servlet.context-path=/app**
+    ```
+    
+- 위 코드의 경우, **`http://localhost:8090/app/list`** 로 호출해야 한다.
+
+### 4. JSP 설정
+
+1. JSP/CSS/HTML을 위한 **web 플러그인 추가**
+2. **JSP 의존성 추가**
+    
+    : 스프링부트는 JSP를 기본적으로 지원 안 됨.
+    
+    - **tomcat-embed-jasper**
+    - **jakarta.servlet.jsp.jstl-api**
+    - **jakarta.servlet.jsp.jstl**
+    
+    ```java
+    <dependency>
+    	  <groupId>org.apache.tomcat.embed</groupId>
+    	  <artifactId>**tomcat-embed-jasper**</artifactId>
+    	  <scope>provided</scope>
+    	</dependency>
+    	
+    <dependency>
+    	  <groupId>jakarta.servlet.jsp.jstl</groupId>
+    	  <artifactId>**jakarta.servlet.jsp.jstl-api**</artifactId>
+    	</dependency>
+    	
+    <dependency>
+    	  <groupId>org.glassfish.web</groupId>
+    	  <artifactId>**jakarta.servlet.jsp.jstl**</artifactId>
+    	</dependency>
+    ```
+    
+3. **웹 디렉터리 명시적으로 생성**
+    - **`src/main/resources/META-INF/resources/WEB-INF/views`  :***해당 폴더 안에 jsp를 만들어서 사용*
+    
+    ⇒  **jsp가 WEB-INF에 저장된다**. 따라서 웹 브라우저에서 직접 jsp를 접근할 수 없다. 
+    
+    - **jsp 접근은 `Controller`를 통해서 forward 또는 redirect로 접근이 가능하다.**
+    - TestController.java
+        
+        ```java
+        package com.exam.controller;
+        
+        @Controller
+        public class TestController {
+        	Logger logger = LoggerFactory.getLogger(getClass());   
+        
+        	**// 요청 URL : http://localhost:8090/app/list
+        	@RequestMapping("/list")
+        	public String aaa() {
+        		logger.info("LOGGER : {}", "aaa 호출" );
+        		return "/WEB-INF/views/sayHello.jsp";
+        	}**	
+        }
+        ```
+        
+    - sayHello.jsp
+        
+        ```java
+        <%@ page language="java" contentType="text/html; charset=UTF-8"
+            pageEncoding="UTF-8"%>
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <title>Insert title here</title>
+        </head>
+        <body>
+        	**<h1>sayHello.jsp</h1>**
+        </body>
+        </html>
+        ```
+        
+    - 서버 실행 후, 요청 URL : http://localhost:8090/app/list 로 접근
+        
+        ![jsp 접근한 것을 확인할 수 있다. ](https://prod-files-secure.s3.us-west-2.amazonaws.com/686c9583-1330-4ae4-99da-86732a9a0b13/08c6df15-ed6c-4781-80e9-a1628911a2f5/db36a9ee-0cb1-42f7-8818-ed4940ccdafc.png)
+        
+        jsp 접근한 것을 확인할 수 있다. 
+        
+    
+    - `src/main/webapps/WEB-INF/views` 파일에 만드는 방법도 가능하지만 위의 방법을 권장한다.
+4. **JSP 알려주기**
+    
+    : Controller 에서 구현된 메서드의 리턴값으로 알려준다. 
+    
+    ```java
+    	**@RequestMapping("/list")
+    	public String aaa() {
+    		return "/WEB-INF/views/sayHello.jsp";
+    	}**	
+    ```
+    
+    - 컨트롤러의 메서드에서 String 타입을 리턴하면 리턴값에는 JSP 정보를 담긴다.
+    - **문제점**
+        - **JSP의 경로가 길다.**
+    - **해결방법**
+        - **application.prperties에 prefix와 suffix를 설정한다.**
+            
+            ```xml
+            # JSP 용 prefix와 suffix
+            **spring.mvc.view.prefix=/WEB-INF/views/
+            spring.mvc.view.suffix=.jsp**
+            ```
+            
+        - **prefix : `spring.mvc.view.prefix=/WEB-INF/views/`  (경로)**
+        - **suffix : `spring.mvc.view.suffix=.jsp`  (확장자)**
+            
+            ```java
+            	**@RequestMapping("/list")
+            	public String aaa() {
+            	  return "sayHello";
+            	}**
+            ```
+            
+            - **JSP 경로를 간단하게 작성 가능**하다.
+5. **정적파일 (CSS, JS, Image)**
+    
+    `: src/main/resources`에 **`static`** 폴더를 생성하고, **그 안에 css, js, image 폴더를 각각 만들어 저장한다.**
+    
+    ![image.png](attachment:5c5ace0a-61ce-456f-a55f-7410e7eeb111:0b122db5-50fc-44b8-b3c7-d5a07a396b2b.png)
+    
+
+- **Controller에서의 JSP 요청은 `forward`로 처리**된다. 따라서 JSP로 이동하더라도 **URL 변경이 되지 않는다.**
+    - **request scope에 데이터를 저장하면 JSP에서 사용할 수 있다.**
+
+---
+
+✅ **VSC의 Live Server처럼 소스코드 변경시 바로 서버에 반영하는 방법**
+
+- **`devtools`** 의존성 추가
+
+```xml
+ <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>**spring-boot-devtools**</artifactId>
+		<scope>runtime</scope>
+		<optional>true</optional>
+</dependency>	
+```
+
+---
