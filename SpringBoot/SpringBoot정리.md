@@ -1810,3 +1810,308 @@ public class MemberController {
     - 같은 URL이지만, 요청 방식에 따라서 다른 메서드가 실행된다.
     - `GET` 요청 시 `writeForm()` 실행, `POST` 요청시 `write()` 실행
     - **보통 GET 요청은 폼을 제공하고, POST 요청은 데이터를 처리하는 방식으로 많이 사용된다.**
+  
+---
+# 1. Controller의 요청 처리 작업
+
+## 1) 사용자 입력 데이터 얻기
+
+1. 이전 서블릿에서의 처리
+    - **`HttpServletRequest`** **`HttpServletResponse`**  사용
+    
+    ```java
+    public void doGet(HttpServletRequest request, HttpServletResponse response){
+    
+    String userid = request.getParameter("userid");
+    String [] hobbies = request.getParameterValues("hobby");
+    ```
+    
+
+1. Spring에서의 처리
+    - **`HttpServletRequest`** 사용 가능
+    
+    ```java
+    	@PostMapping("/write")
+    	public String write(HttpServletRequest request) {
+    		String userid = request.getParameter("userid");
+    		String passwd = request.getParameter("passwd");
+    		logger.info("LOGGER : {}, {}", userid, passwd);
+    		return "main";
+    	}
+    ```
+    
+    - **`@RequestParam(” ”)`**
+        
+        ```java
+        	@PostMapping("/write")
+        	public String write(@RequestParam("userid") String id,@RequestParam("passwd") String pw) {
+        		logger.info("LOGGER : {}, {}", id, pw);
+        		return "main";
+        	}
+        ```
+        
+        - **`@RequestParam("userid") String id`**
+            
+            : URL의 **`userid`** 파라미터의 값을 받아와서 id 변수에 저장
+            
+        - **`@RequestParam("passwd") String pw`**
+            
+            : URL의 **`passwd`**파라미터의 값을 받아와서 pw 변수에 저장
+            
+        - **변수명이 같은 경우, 생략 가능**
+            
+            ```java
+            	// @RequestParam("userid") String userid 처럼 두 변수명이 같은 경우 생략 가능
+            	@PostMapping("/write")
+            	public String write(@RequestParam String userid,
+            						@RequestParam("passwd") String pw) {
+            		
+            		logger.info("LOGGER 2: {}, {}", userid, pw);
+            		return "main";
+            	}
+            ```
+            
+        - **`@RequestParam(”/태그이름”)`**
+            
+            : **태그이름에 해당하는 파라미터가 URL로 무조건 넘어와야 한다. 그렇지 않은 경우 에러가 발생된다.** 
+            
+            - **해결방법 1**
+                
+                : **`required = false`** **라는 속성을 추가하여 값이 없는 경우 `null`로 출력되도록 한다.**
+                
+                - **`required = false`**
+                
+                ```java
+                	@PostMapping("/write")
+                	public String write(@RequestParam(**name = "userid2", required = false**) String id,
+                						          @RequestParam("passwd") String pw) {
+                		logger.info("LOGGER : {}, {}", id, pw);
+                		return "main";
+                	}
+                ```
+                
+            - **해결방법 2**
+                
+                : null이 아니라 **default값이 출력**되도록 한다.
+                
+                - **`defaultValue = "xxx"`**
+                
+                ```java
+                	@PostMapping("/write")
+                	public String write(**@RequestParam( name = "userid2",
+                	 								   required = false,
+                	 								   defaultValue = "xxx") String id**,
+                						@RequestParam("passwd") String pw) {
+                		
+                		logger.info("LOGGER : {}, {}", id, pw);
+                		return "main";
+                	}
+                ```
+                
+    - **DTO에 담아서 사용 가능**
+        - URL로 넘어가는 값의 name과 DTO로 받을 변수의 이름이 동일하면 아래와 같이 사용 가능하다.
+        - LoginDTO
+            
+            ```java
+            
+            public class LoginDTO {
+            	String userid;
+            	String passwd;
+            	...
+            }
+            ```
+            
+        - main.jsp
+            
+            ```java
+            <form action="write" method="post">
+            	아이디: <input type="text" name="userid"> <br>
+            	비번: <input type="text" name="passwd"> <br>
+            	<button>요청</button>
+            </form>
+            ```
+            
+        - Controller.java
+            
+            ```java
+            	@PostMapping("/write")
+            	public String write4(LoginDTO dto) {
+            		
+            		logger.info("LOGGER dto: {}, {}", dto.getUserid(), dto.getPasswd());
+            		return "main";
+            	}
+            ```
+            
+            : **`form`에서 전송하는 `input`의 `name` 속성이 DTO의 필드명과 동일하면 자동으로 매핑**된다.
+            
+            - 내부적으로 `@ModelAttribute` 를 사용하여 **DTO 객체에 값을 자동으로 바인딩**하여 저장한다.
+        
+    - **Map 사용 가능**
+        
+        ```java
+        	@PostMapping("/write")
+        	public String write(@RequestParam Map<String, String> map) {
+        		
+        		logger.info("LOGGER map: {}", map); 
+        		return "main";
+        	}
+        ```
+        
+    
+    - URL로 전달되는 값이 **정수**이면 컨트롤러에서 직접 **Long 타입의 정수로 저장 가능**하다.
+        
+        ```java
+        	@PostMapping("/write")
+        	public String write(@RequestParam("userid") String id,
+        						@RequestParam("passwd") String pw,
+        						@RequestParam("age") Long age) {
+        		
+        		logger.info("LOGGER : {}, {}, {}", id, pw, age); //  hyeyeon, 1234, 20
+        		return "main";
+        	}
+        ```
+        
+    
+    - **체크박스와 같이 여러개의 값이 URL로 넘어오는 경우**
+        - **main.jsp**
+            
+            ```html
+            <h1>2. POST </h1>
+            <form action="write" method="post">
+            	아이디: <input type="text" name="userid"> <br>
+            	비번: <input type="text" name="passwd"> <br>
+            	<hr>
+            	취미:<br>
+            	야구: <input type="checkbox" name="**hobby**" value="야구"><br>
+            	농구: <input type="checkbox" name="**hobby**" value="농구"><br>
+            	축구: <input type="checkbox" name="**hobby**" value="축구"><br>
+            	<button>요청</button>
+            </form>
+            
+            ```
+            
+        - **List 사용 가능 ( 권장 )**
+            
+            ```java
+            	// 리스트로 받을 수 있음
+            	@PostMapping("/write1")
+            	public String write1(@RequestParam("userid") String id,
+            						@RequestParam("passwd") String pw,
+            						**@RequestParam("hobby") List<String> list**) {
+            		
+            		logger.info("LOGGER : {}, {}, {}", id, pw, list);
+            		// LOGGER : name1, 11, [야구, 농구]
+            		return "main";
+            	}
+            ```
+            
+        - **배열 사용 가능**
+            
+            ```java
+            	@PostMapping("/write2")
+            	public String write2(@RequestParam("userid") String id,
+            						@RequestParam("passwd") String pw,
+            						**@RequestParam("hobby") String [] hobby**) {
+            		
+            		logger.info("LOGGER : {}, {}, {}", id, pw, hobby);
+            		// LOGGER : guhaa03@nate.com, 123, [야구, 농구, 축구]
+            		return "main";
+            	}
+            ```
+            
+        - **DTO 사용 가능**
+            - **DTO로 사용시 URL로 넘어오는 파라미터의 이름과 DTO로 받을 변수명이 동일**해야 한다.
+            - **Login.dto**
+                
+                ```java
+                public class LoginDTO {
+                	String userid;
+                	String passwd;
+                	List<String> hobby;
+                	...
+                }
+                ```
+                
+            - java
+                
+                ```java
+                	@PostMapping("/write")
+                	public String write(LoginDTO dto) {
+                		
+                		logger.info("LOGGER : {}, {}, {}", dto.getUserid(), dto.getPasswd(), dto.getHobby());
+                		// LOGGER : name, 5555, [야구, 축구]
+                		return "main";
+                	}
+                ```
+                
+
+## 2) **요청 헤더값 보기**
+
+1. 서블릿에서 헤더값 처리
+    
+    ```java
+    **public void doGet(HttpServletRequest request, HttpServletResponse response){
+    	Enumeration<String> enu = request.getHeaderNames();
+    }**
+    ```
+    
+
+1. **Spring Controller 처리**
+    - **`@RequestHeader()` 이용**
+        
+        ```java
+        @GetMapping("/main")
+        		public String list(@RequestHeader("user-agent") String s,
+        					   @RequestHeader("accept-language") String s2) {
+        		
+        			 logger.info("LOGGER:user-agent={}", s);
+        			 logger.info("LOGGER:accept-language={}", s2);  // ko-KR,ko
+        			return "main";
+        		}
+        
+        ```
+        
+        - 나중에 **다국어처리(I18N)** 처리할 때 **`accept-language`** 헤더값을 사용하게 된다.
+
+## 3) 요청 쿠키값 보기
+
+1. 서블릿에서 쿠키 정보 
+    
+    ```java
+    	// 서블릿 쿠키
+    	@GetMapping("/set")
+    	public String set(HttpServletRequest request, HttpServletResponse response) {
+    		**Cookie c = new Cookie("userid", "홍길동");**
+    		c.setMaxAge(3600); // 1시간
+    		response.addCookie(c);
+    		return "main";
+    	}
+    	
+    	
+    	// 서블릿 쿠키
+    	@GetMapping("/get")
+    	public String get(HttpServletRequest request, HttpServletResponse response) {
+    		Cookie [] cookies = request.getCookies();
+    		for (Cookie cookie : cookies) {
+    			String name = cookie.getName();
+    			String value = cookie.getValue();
+    			logger.info("LOGGER : {}, {}", name, value);
+    		}
+    		return "main";
+    	}
+    ```
+    
+
+1. **Spring에서 Cookie 값 얻어오기**
+    - **`@CookieValue`**
+    ```java
+      	// Spring 쿠키
+	@GetMapping("/get2")
+	public String get2(@CookieValue("userid") String s,
+			               @CookieValue("JSESSIONID") String s2) {
+		logger.info("LOGGER : userid = {}, JSESSIONID= {}", s, s2);
+		return "main";
+
+	}
+```
+---
