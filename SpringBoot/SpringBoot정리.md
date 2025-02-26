@@ -1720,3 +1720,93 @@ public class TestController {
 ```
 
 ---
+# 20. @RequestMapping
+
+## 1) 용도
+
+: 요청 URL에서 사용하는 요청맵핑명을 **`@RequestMapping(”/요청맵핑명”)`** 에 설정해서 요청에 대한 실제 처리를 위한 메서드를 선택할 수 있다.
+
+## 2) 패턴
+
+### 1. 메서드 레벨
+
+- `@RequestMapping(”/list”)`
+- `@RequestMapping(value=”/list”)`
+- `@RequestMapping(value={”/list”, “/select”})`
+- `@RequestMapping(value=”/board/list”)`
+- `@RequestMapping(value=”/list*”)`
+- `@RequestMapping(value=”/list/*”)`    :  *은 하나의 디렉터리
+- `@RequestMapping(value=”/list/**”)`  :  **는 여러개의 디렉터리
+- `@RequestMapping(value=”/list/*/some”)`
+    - @`RequestMapping(value=”/list/******/some”)` : **에러발생**
+        - 해결방법 :
+            - `application.properties`에
+                
+                **`spring.mvc.pathmatch.matching-strategy=ant-path-matcher`** 추가하기
+                
+
+### 2. 클래스 레벨
+
+: **클래스 레벨의 요청값과 메서드 레벨의 요청값이 결합**되어 **최종적으로 결합된 요청값으로 매핑**된다.
+
+- 같은 클래스의 각 메서드들의 요청매핑값에 반복되는 값을 클래스 레벨 요청값으로 둬서 코드를 간단히 할 수 있다.
+
+```java
+@Controller
+**@RequestMapping("/member")**
+public class MemberController {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());   
+	**@RequestMapping("/list")**
+	public String list() {
+		logger.info("LOGGER : {}", "member/list 호출" );
+	
+		return "sayHello";
+	}
+}
+```
+
+- 최종 요청매핑값 : `/**member/list**`
+
+1. **GET 및 POST 요청1**
+    - **매핑값과 method가 다른 경우**
+    
+    ```java
+    	@RequestMapping(value = "/req/get", method = RequestMethod.GET)
+    	public String req_get() {
+    		logger.info("LOGGER : {}", "GET");
+    		return "main";
+    	}
+    	
+    	@RequestMapping(value = "/req/post", method = RequestMethod.POST)
+    	public String req_post() {
+    		logger.info("LOGGER : {}", "POST");
+    		return "main";
+    	}
+    ```
+    
+    - `Get` 요청은 `/req/get` 으로 들어오고, `Post` 요청은 `/req/post` 으로 들어온다.
+    - 서로 다른 URL을 사용하기에 두 요청을 완전히 분리할 수 있다.
+    
+2. **GET 및 POST 요청2** 
+    
+    **: 매핑값은 같고 method만 다른 경우**
+    
+    ```java
+    	// 요청매핑값은 같고 메서드가 모두 다른 경우
+    	@RequestMapping(value = "/write", method = RequestMethod.GET)
+    	public String writeForm() {
+    		logger.info("LOGGER : {}", "GET-writeFrom");
+    		return "main";
+    	}
+    	
+    	@RequestMapping(value = "/write", method = RequestMethod.POST)
+    	public String write() {
+    		logger.info("LOGGER : {}", "POST-write");
+    		return "main";
+    	}
+    ```
+    
+    - 같은 URL이지만, 요청 방식에 따라서 다른 메서드가 실행된다.
+    - `GET` 요청 시 `writeForm()` 실행, `POST` 요청시 `write()` 실행
+    - **보통 GET 요청은 폼을 제공하고, POST 요청은 데이터를 처리하는 방식으로 많이 사용된다.**
